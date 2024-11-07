@@ -53,3 +53,22 @@ sf::gdal_utils("warp",
                  "-co", "INTERLEAVE=BIL"      # Add BIL interleave option
                )
 )
+
+
+
+
+
+# Construct the gdalwarp command for rectification and reprojection
+gdal_command <- sprintf(
+  "gdalwarp -of ENVI -t_srs %s -co INTERLEAVE=BIL %s %s",
+  target_srs,
+  raw_image_file_path,
+  rectified_image_file_path
+)
+
+# Print the command to check if it's correctly formed
+# print(gdal_command)
+
+# Execute the command in R
+system(gdal_command)
+
