@@ -54,6 +54,8 @@ cover/
 # Translations
 *.mo
 *.pot
+*.tif
+*.RData
 
 # Django stuff:
 *.log
@@ -164,3 +166,4 @@ cython_debug/
 # Project folders
 code/input/
 data/
+.Rproj.user
