@@ -11,9 +11,9 @@ library(terra)
 library(zip)
 
 # Define parameters
-centroid_coords <- c(-17521528, 11218319)  # Coordinates for the centroid
-x_dim_m <- 2000  # Width in meters
-y_dim_m <- 2000  # Height in meters
+centroid_coords <- c(-17514270,11193817)  # Coordinates for the centroid
+x_dim_m <- 2700  # Width in meters
+y_dim_m <- 35000  # Height in meters
 crs <- 3857  # Geographic CRS
 crs_meters <- 32606  # Projected CRS for UTM Zone 6N
 subzone <- "d"

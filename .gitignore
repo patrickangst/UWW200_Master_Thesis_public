@@ -164,6 +164,8 @@ cython_debug/
 #.idea/
 
 # Project folders
-code/input/
-data/
+MasterThesisRCode/input/
+MasterThesisRCode/data/
+MasterThesisRCode/result/
+MasterThesisPythonCode/result/
 .Rproj.user
