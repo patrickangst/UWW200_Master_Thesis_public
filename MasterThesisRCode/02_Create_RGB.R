@@ -5,11 +5,14 @@ graphics.off()
 # Define your image path and output path
 
 
-# raw_image_file_path <- "data/hs_raw_image/ang20190712t231624_rfl_v2v2_img"
-# rgb_image_file_path <- "data/rgb/ang20190712t231624_rfl_v2v2_img_rgb.tif"
+# ===============================================================================
+# set important variables
+base_path <- getwd()
 
-raw_image_file_path <- "data/rectified/ang20190712t231624_rfl_v2v2_img_rectified_v2"
-rgb_image_file_path <- "data/rgb/ang20190712t231624_rfl_v2v2_img_rectified_v2_rgb.tif"
+file_name <- 'ang20190712t231624_rfl_v2v2_img'
+
+raw_image_file_path <- paste0(base_path,'/data/hs_raw_image/',file_name)
+rgb_image_file_path <- paste0(base_path,'/data/rgb/',file_name,'_rgb.tif')
 
 # Define the bands you want to select
 bandselection <- "-b 59 -b 34 -b 20"

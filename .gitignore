@@ -141,6 +141,7 @@ venv.bak/
 
 # mkdocs documentation
 /site
+/mask
 
 # mypy
 .mypy_cache/
@@ -166,6 +167,7 @@ cython_debug/
 # Project folders
 MasterThesisRCode/input/
 MasterThesisRCode/data/
+MasterThesisRCode/mask/
 MasterThesisRCode/result/
 MasterThesisPythonCode/result/
 .Rproj.user

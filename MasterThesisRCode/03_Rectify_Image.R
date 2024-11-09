@@ -5,23 +5,39 @@ graphics.off()
 library(sf)
 library(terra)
 
-boundary_file_path <- "cutline/crop_large/crop_large.shp"
-raw_image_file_path <- "data/hs_raw_image/ang20190712t231624_rfl_v2v2_img"
-rectified_image_file_path <- "data/rectified/ang20190712t231624_rfl_v2v2_img_rectified_v2"
+# ===============================================================================
+# set important variables
+base_path <- getwd()
+
+file_name <- 'ang20190712t231624_rfl_v2v2_img'
+
+boundary_file_path <- paste0(base_path,'/cutline/crop_large/crop_large.shp')
+raw_image_file_path <- paste0(base_path,'/data/hs_raw_image/',file_name)
+rectified_image_file_path <- paste0(base_path,'/data/rectified/',file_name,'_rectified')
 
 target_srs <- "EPSG:32604"  # Define target CRS
 
-if (file.exists(boundary_file_path)) {
-  message("Boundary File found.")
-} else {
-  message("Boundary File not found. Check the path and working directory.")
-}
+# Construct the gdalwarp command for rectification and reprojection
+gdal_command_cutline <- sprintf(
+  #"gdalwarp -of ENVI -t_srs %s -co INTERLEAVE=BIL %s %s",
+  "gdalwarp -of ENVI -co INTERLEAVE=BIL -srcnodata -9999 -dstnodata 0 -cutline %s -crop_to_cutline %s %s",
+  boundary_file_path,
+  raw_image_file_path,
+  rectified_image_file_path
+)
 
-if (file.exists(raw_image_file_path)) {
-  message("Raw File found.")
-} else {
-  message("Raw File not found. Check the path and working directory.")
-}
+gdal_command_rectify <- sprintf(
+  "gdalwarp -of ENVI -co INTERLEAVE=BIL -srcnodata -9999 -dstnodata 0 %s %s",
+  raw_image_file_path,
+  rectified_image_file_path
+)
+
+# Print the command to check if it's correctly formed
+# print(gdal_command)
+
+# Execute the command in R
+system(gdal_command_rectify)
+
 
 # # Rectification of the flight strip
 # sf::gdal_utils("warp",
@@ -53,23 +69,3 @@ if (file.exists(raw_image_file_path)) {
 #                  "-co", "INTERLEAVE=BIL"      # Add BIL interleave option
 #                )
 # )
-
-
-
-
-# Construct the gdalwarp command for rectification and reprojection
-gdal_command <- sprintf(
-  #"gdalwarp -of ENVI -t_srs %s -co INTERLEAVE=BIL %s %s",
-  "gdalwarp -of ENVI -t_srs %s -co INTERLEAVE=BIL -srcnodata -9999 -dstnodata 0 -cutline %s -crop_to_cutline %s %s",
-  target_srs,
-  boundary_file_path,
-  raw_image_file_path,
-  rectified_image_file_path
-)
-
-# Print the command to check if it's correctly formed
-# print(gdal_command)
-
-# Execute the command in R
-system(gdal_command)
-

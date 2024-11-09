@@ -16,37 +16,29 @@ base_path <- getwd()
 
 # input image folder path rectified
 Datadir <- paste0(base_path,'/data/rectified')
+# name of the image file
 NameRaster <- 'ang20190712t231624_rfl_v2v2_img_rectified_v2'
-destfile <- file.path(Datadir,NameRaster)
-destfile_HDR <- get_HDR_name(destfile,showWarnings = FALSE)
+Input_Image_File <- file.path(Datadir,NameRaster)
+Input_HDR_File <- get_HDR_name(Input_Image_File,showWarnings = FALSE)
 
 
 dir.create(path = Datadir,recursive = T,showWarnings = F)
-
-
-
-# ===============================================================================
-# name your raster HDR with the same name as the binary raster, with .hdr extension
-
-
-# ===============================================================================
-# url for the vector files corresponding to different vegetation types
-
 
 ################################################################################
 ##                      Set parameters for biodivMapR                         ##
 ## https://jbferet.github.io/biodivMapR/articles/biodivMapR_2.html            ##
 ################################################################################
 # Define path for image file to be processed
-Input_Image_File <- file.path(Datadir,NameRaster)
+
 # Define path for corresponding mask file
 # Set to FALSE if no mask available
 #Input_Mask_File <- FALSE
-Input_Mask_File <- '~/Documents/GitHub/UWW200_Master_Thesis_public/MasterThesisRCode/mask/savi_mask'
+Input_Mask_File <- '~/Documents/GitHub/UWW200_Master_Thesis_public/MasterThesisRCode/mask/savi_mask_02'
 # Define path for master output directory where files produced during the process are saved
 
-Output_Dir <- paste0('~/Documents/GitHub/UWW200_Master_Thesis_public/MasterThesisRCode/result/',NameRaster)
-dir.create(path = Output_Dir,recursive = T,showWarnings = F)
+# Master output directory (remove unnecessary line break)
+Output_Dir <- '~/Documents/GitHub/UWW200_Master_Thesis_public/MasterThesisRCode/result'
+dir.create(path = Output_Dir, recursive = TRUE, showWarnings = FALSE)
 
 dir.create(path = Output_Dir,recursive = T,showWarnings = F)
 # Define levels for radiometric filtering
@@ -64,7 +56,7 @@ FilterPCA <- FALSE
 # window size forcomputation of spectral diversity
 window_size <- 10
 # computational parameters
-nbCPU <- 6
+nbCPU <- 8
 MaxRAM <- 8
 # number of clusters (spectral species)
 nbclusters <- 20
@@ -131,32 +123,50 @@ PCA_Output <- perform_PCA(Input_Image_File = Input_Image_File,
 # path for the updated mask
 Input_Mask_File <- PCA_Output$MaskPath
 
-pca_output_image_file_path = paste0(Output_Dir,TypePCA,"/PCA/","OutputPCA_30_PCs")
+var_exp <- (PCA_Output$PCA_model$sdev^2/sum(PCA_Output$PCA_model$sdev^2))*100
+barplot(var_exp, names.arg = colnames(PCA_Output$PCA_model$x))
+
+pca_output_image_file_path = paste0(Output_Dir,"/",NameRaster,"/",TypePCA,"/PCA/","OutputPCA_30_PCs")
+print(pca_output_image_file_path)
 pca_output_image <- rast(pca_output_image_file_path)
 plot(pca_output_image, main = "Principal Components", nc = 5, maxnl = 30)  # maxnl allows all 30 layers to be shown
 
 
-# Loop through each component, plot and save
-output_plots <- list()
-for (i in 1:nlyr(pca_output_image)) {
-  pc_layer <- pca_output_image[[i]]  # Extract each PC as a separate layer
+# Define the path for PCA plots
+# Define the path for individual PCA component plots
+pca_plots_file_path <- paste0(Output_Dir, "/", NameRaster, "/", TypePCA, "/PCA/PCA_Plots")
 
-  # Plot each PC layer with the variance explained in the title
+# Create the directory if it doesn't exist
+if (!dir.exists(pca_plots_file_path)) {
+  dir.create(pca_plots_file_path, recursive = TRUE, showWarnings = FALSE)
+}
+
+
+# Initialize a list to store output plot file paths
+output_plots <- list()
+
+# Loop through each layer in the PCA output image
+for (i in 1:nlyr(pca_output_image)) {
+  # Extract each PC layer as a separate raster
+  pc_layer <- pca_output_image[[i]]
+
+  # Define the output file path for the plot
+  output_file <- paste0(pca_plots_file_path, "/PCA_PC_", i, ".png")
+
+  # Save the plot as a PNG
+  png(filename = output_file, width = 800, height = 600)
   plot(pc_layer,
        main = paste0("Principal Component ", i),
        col = terrain.colors(100))  # Customize colors if needed
+  dev.off()  # Close the PNG device
 
-  # Optionally, save each plot to a file
-
-
-  output_file <-paste0(Output_Dir,TypePCA,"/PCA/PC_Plots/PCA_PC_", i, ".png")
-  png(output_file, width = 800, height = 600)
-  plot(pc_layer, main = paste0("PC ", i), col = terrain.colors(100))
-  dev.off()
-
-  # Store the plot output paths
+  # Store the output file path
   output_plots[[i]] <- output_file
 }
+
+# Optional: print confirmation
+print("PCA plots saved to:")
+print(pca_plots_file_path)
 
 
 
@@ -222,3 +232,106 @@ map_functional_div(Original_Image_File = Input_Image_File,
                    MaxRAM = MaxRAM,
                    TypePCA = TypePCA)
 
+################################################################################
+##            Perform validation based on a vectorized plot network           ##
+## https://jbferet.github.io/biodivMapR/articles/biodivMapR_8.html            ##
+################################################################################
+# location of the directory where shapefiles used for validation are saved
+VectorDir <- destunz
+# list vector data
+Path_Vector <- list_shp(VectorDir)
+Name_Vector <- tools::file_path_sans_ext(basename(Path_Vector))
+# location of the spectral species raster needed for validation
+Path_SpectralSpecies <- Kmeans_info$SpectralSpecies
+# get diversity indicators corresponding to shapefiles (no partitioning of spectral dibversity based on field plots so far...)
+Biodiv_Indicators <- diversity_from_plots(Raster_SpectralSpecies = Path_SpectralSpecies,
+                                          Plots = Path_Vector,
+                                          nbclusters = nbclusters,
+                                          Raster_Functional = PCA_Output$PCA_Files,
+                                          Selected_Features = Selected_Features)
+
+Shannon_RS <- c(Biodiv_Indicators$Shannon)[[1]]
+FRic <- c(Biodiv_Indicators$FunctionalDiversity$FRic)
+FEve <- c(Biodiv_Indicators$FunctionalDiversity$FEve)
+FDiv <- c(Biodiv_Indicators$FunctionalDiversity$FDiv)
+# if no name for plots
+Biodiv_Indicators$Name_Plot = seq(1,length(Biodiv_Indicators$Shannon[[1]]),by = 1)
+
+# write a table for Shannon index
+Path_Results <- file.path(Output_Dir,NameRaster,TypePCA,'VALIDATION')
+dir.create(Path_Results, showWarnings = FALSE,recursive = TRUE)
+write.table(Shannon_RS, file = file.path(Path_Results,"ShannonIndex.csv"),
+            sep="\t", dec=".", na=" ", row.names = Biodiv_Indicators$Name_Plot, col.names= F,quote=FALSE)
+
+# write a table for all spectral diversity indices corresponding to alpha diversity
+Results <- data.frame(Name_Vector, Biodiv_Indicators$Richness, Biodiv_Indicators$Fisher,
+                      Biodiv_Indicators$Shannon, Biodiv_Indicators$Simpson,
+                      Biodiv_Indicators$FunctionalDiversity$FRic,
+                      Biodiv_Indicators$FunctionalDiversity$FEve,
+                      Biodiv_Indicators$FunctionalDiversity$FDiv)
+names(Results)  = c("ID_Plot", "Species_Richness", "Fisher", "Shannon", "Simpson", "FRic", "FEve", "FDiv")
+write.table(Results, file = paste(Path_Results,"AlphaDiversity.csv",sep=''),
+            sep="\t", dec=".", na=" ", row.names = F, col.names= T,quote=FALSE)
+
+# write a table for Bray Curtis dissimilarity
+BC_mean <- Biodiv_Indicators$BCdiss
+colnames(BC_mean) <- rownames(BC_mean) <- Biodiv_Indicators$Name_Plot
+write.table(BC_mean, file = paste(Path_Results,"BrayCurtis.csv",sep=''),
+            sep="\t", dec=".", na=" ", row.names = F, col.names= T,quote=FALSE)
+
+# apply ordination using PCoA (same as done for map_beta_div)
+MatBCdist <- as.dist(BC_mean, diag = FALSE, upper = FALSE)
+BetaPCO <- labdsv::pco(MatBCdist, k = 3)
+
+# assign a type of vegetation to each plot, assuming that the type of vegetation
+# is defined by the name of the shapefile
+nbSamples <- shpName <- c()
+for (i in 1:length(Path_Vector)){
+  shp <- Path_Vector[i]
+  nbSamples[i] <- nrow(sf::read_sf(shp))
+  shpName[i] <- tools::file_path_sans_ext(basename(shp))
+}
+
+Type_Vegetation = c()
+for (i in 1: length(nbSamples)){
+  for (j in 1:nbSamples[i]){
+    Type_Vegetation = c(Type_Vegetation,shpName[i])
+  }
+}
+
+# create data frame including a selection of alpha diversity metrics and beta diversity expressed as coordinates in the PCoA space
+Results <- data.frame('vgtype'=Type_Vegetation,'pco1'= BetaPCO$points[,1],'pco2'= BetaPCO$points[,2],'pco3' = BetaPCO$points[,3],
+                      'shannon'=Shannon_RS,'FRic' = FRic, 'FEve' = FEve, 'FDiv' = FDiv)
+
+# plot field data in the PCoA space, with size corresponding to shannon index
+g1 <-ggplot (Results, aes (x=pco1, y=pco2, color=vgtype,size=shannon)) +
+  geom_point(alpha=0.6) +
+  scale_color_manual(values=c("#e6140a", "#e6d214", "#e68214", "#145ae6"))
+
+g2 <-ggplot (Results, aes (x=pco1, y=pco3, color=vgtype,size=shannon)) +
+  geom_point(alpha=0.6) +
+  scale_color_manual(values=c("#e6140a", "#e6d214", "#e68214", "#145ae6"))
+
+g3 <-ggplot (Results, aes (x=pco2, y=pco3, color=vgtype,size=shannon)) +
+  geom_point(alpha=0.6) +
+  scale_color_manual(values=c("#e6140a", "#e6d214", "#e68214", "#145ae6"))
+
+#extract legend
+#https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs
+get_legend <- function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)
+}
+
+legend <- get_legend(g3)
+gAll <- grid.arrange(arrangeGrob(g1 + theme(legend.position="none"),
+                                 g2 + theme(legend.position="none"),
+                                 g3 + theme(legend.position="none"),
+                                 nrow=1),legend,nrow=2,heights=c(5, 4))
+
+filename <- file.path(Path_Results,'BetaDiversity_PcoA1_vs_PcoA2_vs_PcoA3.png')
+ggsave(filename, plot = gAll, device = 'png', path = NULL,
+       scale = 1, width = 12, height = 7, units = "in",
+       dpi = 600, limitsize = TRUE)
