@@ -8,7 +8,7 @@ library(terra)
 base_path <- getwd()
 
 file_name <- 'ang20190712t231624_rfl_v2v2_img_rectified'
-cell <- paste0(base_path,'/rectified/',file_name)
+cell <- paste0(base_path,'/data/rectified/',file_name)
 tile <- rast(file.path(cell))
 
 # Plot the RGB image for a quick check
@@ -84,7 +84,7 @@ ndvi_mask <- ifel(ndvi_mask==0, NA, 1)
 ndvi_threshold_modified <- gsub("\\.", "", ndvi_threshold)
 
 ndvi_filename <- paste0("mask/ndvi_mask_",ndvi_threshold_modified)
-writeRaster(ndvi_mask, filename = w(ndvi_filename),
+writeRaster(ndvi_mask, filename = file.path(ndvi_filename),
             filetype = "ENVI",
             gdal = "INTERLEAVE=BSQ",
             overwrite = TRUE,
