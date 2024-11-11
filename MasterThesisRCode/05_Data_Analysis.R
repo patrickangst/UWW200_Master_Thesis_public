@@ -17,7 +17,7 @@ base_path <- getwd()
 # input image folder path rectified
 Datadir <- paste0(base_path,'/data/rectified')
 # name of the image file
-NameRaster <- 'ang20190712t231624_rfl_v2v2_img_rectified_v2'
+NameRaster <- 'ang20190712t231624_rfl_v2v2_img_rectified'
 Input_Image_File <- file.path(Datadir,NameRaster)
 Input_HDR_File <- get_HDR_name(Input_Image_File,showWarnings = FALSE)
 
@@ -33,11 +33,11 @@ dir.create(path = Datadir,recursive = T,showWarnings = F)
 # Define path for corresponding mask file
 # Set to FALSE if no mask available
 #Input_Mask_File <- FALSE
-Input_Mask_File <- '~/Documents/GitHub/UWW200_Master_Thesis_public/MasterThesisRCode/mask/savi_mask_02'
+Input_Mask_File <- paste0(base_path,'/mask/savi_mask_02')
 # Define path for master output directory where files produced during the process are saved
 
 # Master output directory (remove unnecessary line break)
-Output_Dir <- '~/Documents/GitHub/UWW200_Master_Thesis_public/MasterThesisRCode/result'
+Output_Dir <- paste0(base_path,'/result')
 dir.create(path = Output_Dir, recursive = TRUE, showWarnings = FALSE)
 
 dir.create(path = Output_Dir,recursive = T,showWarnings = F)
@@ -56,7 +56,7 @@ FilterPCA <- FALSE
 # window size forcomputation of spectral diversity
 window_size <- 10
 # computational parameters
-nbCPU <- 8
+nbCPU <- 6
 MaxRAM <- 8
 # number of clusters (spectral species)
 nbclusters <- 20
@@ -119,6 +119,15 @@ PCA_Output <- perform_PCA(Input_Image_File = Input_Image_File,
                           nbCPU = nbCPU,
                           MaxRAM = MaxRAM,
                           Continuum_Removal = Continuum_Removal)
+
+
+# Save the list as an RDS file
+pca_output_rds_file_path = paste0(Output_Dir,"/",NameRaster,"/",TypePCA,"/PCA/","PCA_Output.rds")
+saveRDS(PCA_Output, file = pca_output_rds_file_path)
+
+# Later, load the list back into R
+PCA_Output <- readRDS(pca_output_rds_file_path)
+
 
 # path for the updated mask
 Input_Mask_File <- PCA_Output$MaskPath
