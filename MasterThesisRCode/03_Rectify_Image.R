@@ -5,27 +5,24 @@ graphics.off()
 library(sf)
 library(terra)
 
-# ===============================================================================
-# set important variables
-base_path <- getwd()
+# Define parameter script
+source('00_Project_Parameter.R')
 
-file_name <- 'ang20190712t231624_rfl_v2v2_img'
-
-boundary_file_path <- paste0(base_path, '/cutline/crop_large/crop_large.shp')
+#boundary_file_path <- paste0(base_path, '/cutline/crop_large/crop_large.shp')
 raw_image_file_path <- paste0(base_path, '/data/hs_raw_image/', file_name)
-rectified_image_file_path <- paste0(base_path, '/data/rectified/', file_name, '_rectified')
+rectified_image_file_path <- paste0(base_path, '/data/rectified/', file_name_rectified)
 rectified_hdr_file_path <- paste0(rectified_image_file_path, '.hdr')
 
 target_srs <- "EPSG:32604"  # Define target CRS
 
 # Construct the gdalwarp command for rectification and reprojection
-gdal_command_cutline <- sprintf(
-  #"gdalwarp -of ENVI -t_srs %s -co INTERLEAVE=BIL %s %s",
-  "gdalwarp -of ENVI -co INTERLEAVE=BIL -srcnodata -9999 -dstnodata 0 -cutline %s -crop_to_cutline %s %s",
-  boundary_file_path,
-  raw_image_file_path,
-  rectified_image_file_path
-)
+# gdal_command_cutline <- sprintf(
+#   #"gdalwarp -of ENVI -t_srs %s -co INTERLEAVE=BIL %s %s",
+#   "gdalwarp -of ENVI -co INTERLEAVE=BIL -srcnodata -9999 -dstnodata 0 -cutline %s -crop_to_cutline %s %s",
+#   boundary_file_path,
+#   raw_image_file_path,
+#   rectified_image_file_path
+# )
 
 gdal_command_rectify <- sprintf(
   "gdalwarp -of ENVI -co INTERLEAVE=BIL -srcnodata -9999 -dstnodata 0 %s %s",
