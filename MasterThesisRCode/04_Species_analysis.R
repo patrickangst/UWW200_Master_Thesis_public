@@ -15,7 +15,12 @@ graphics.off()
 
 library(ggplot2)
 
-data <- read.csv('data/species_analysis/14_Flux_Towers_Zona_Species_List.csv', header = TRUE, fileEncoding = "latin1")
+# Define parameter script
+source('00_Project_Parameter.R')
+
+csv_file_path <- paste0(base_path,'/data/species_analysis/',csv_file_name)
+
+data <- read.csv(csv_file_path, header = TRUE, fileEncoding = "latin1")
 
 species_data <- data[, -c(1, ncol(data))]  # Remove the first and last columns
 
@@ -40,11 +45,24 @@ relative_abundance_df <- data.frame(
   RelativeAbundance = relative_abundance
 )
 
-# Create the plot
+# Calculate the number of species above the threshold
+num_significant_species <- sum(relative_abundance >= threshold)
+
+# Function to round up to the nearest multiple of n
+round_up <- function(x, multiple) {
+  ceiling(x / multiple) * multiple
+}
+
+nbclusters_calculated <- round_up(num_significant_species, 5)
+
+# Create the plot with the additional annotation
 relative_abundance_plot <- ggplot(relative_abundance_df, aes(x = reorder(Species, -RelativeAbundance), y = RelativeAbundance)) +
   geom_bar(stat = "identity", aes(fill = RelativeAbundance >= threshold), show.legend = FALSE) +
   scale_fill_manual(values = c("TRUE" = "steelblue", "FALSE" = "lightgray")) +
   geom_hline(yintercept = threshold, linetype = "dashed", color = "red", size = 1) +
+  annotate("text", x = nrow(relative_abundance_df) / 2, y = max(relative_abundance) * 0.9,
+           label = paste(num_significant_species, "species above", threshold, "% threshold"),
+           color = "blue", size = 5, angle = 0, hjust = 0.5) +  # Annotation for number of significant species
   annotate("text", x = nrow(relative_abundance_df) / 2, y = threshold + 0.5,
            label = paste("Threshold =", threshold, "%"), color = "red", size = 4, angle = 0, hjust = 0.5) +
   labs(
@@ -65,7 +83,7 @@ if (!dir.exists("data/species_analysis/plots")) dir.create("species_analysis/plo
 print(relative_abundance_plot)
 
 # Save the relative abundance plot
-ggsave("data/species_analysis/plots/relative_abundance_plot.png", relative_abundance_plot, dpi = 300, width = 10, height = 6)
+ggsave(paste0(base_path,"/data/species_analysis/plots/relative_abundance_plot.png"), relative_abundance_plot, dpi = 300, width = 10, height = 6)
 
 
 
@@ -80,7 +98,7 @@ print(significant_species)
 
 
 # Define threshold for cumulative percentage
-cumulative_threshold <- 99  # You can change this value to any percentage
+cumulative_threshold <- 95  # You can change this value to any percentage
 
 # Prepare the data for Pareto chart
 species_df <- data.frame(
@@ -134,4 +152,4 @@ pareto_plot <- ggplot(species_df, aes(x = reorder(Species, -Abundance), y = Abun
 print(pareto_plot)
 
 # Save the Pareto chart
-ggsave("data/species_analysis/plots/pareto_chart.png", pareto_plot, dpi = 300, width = 12, height = 7)
+ggsave(paste0(base_path,"/data/species_analysis/plots/pareto_chart.png"), pareto_plot, dpi = 300, width = 12, height = 7)

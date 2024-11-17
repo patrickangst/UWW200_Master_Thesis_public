@@ -1,6 +1,12 @@
 
 # filename of the raw hyperspectral image
-file_name <- 'ang20190712t231624_rfl_v2v2_img'
+folder_name <- 'ang20180812t231551rfl'
+file_name <- 'ang20180812t231551_rfl_v2r2_img'
+csv_file_name <- 'subzone_c.csv'
+
+# folder_name <- 'ang20190712t231624rfl'
+# file_name <- 'ang20180812t231551_rfl_v2r2_img'
+# csv_file_name <- '14_Flux_Towers_Zona_Species_List.csv'
 
 # definition of the subzone (c, d or e)
 subzone <- 'c'
@@ -16,6 +22,9 @@ savi_L <- 0.5
 mask_name_suffix <- gsub("\\.", "", savi_threshold)
 mask_name <- paste0(file_name_rectified,'_savi_mask_',mask_name_suffix)
 
+# number of clusters (spectral species)
+nbclusters_calculated <- NA
+
 # get the base path of the project
-base_path <- getwd()
+base_path <- paste0(getwd(),'/',folder_name)
 

@@ -58,7 +58,7 @@ window_size <- 20
 nbCPU <- 4
 MaxRAM <- 8
 # number of clusters (spectral species)
-nbclusters <- 25
+nbclusters <- nbclusters_calculated
 
 
 
