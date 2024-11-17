@@ -70,7 +70,7 @@ print(significant_species)
 
 
 # Define threshold for cumulative percentage
-cumulative_threshold <- 98  # You can change this value to any percentage
+cumulative_threshold <- 99  # You can change this value to any percentage
 
 # Prepare the data for Pareto chart
 species_df <- data.frame(
