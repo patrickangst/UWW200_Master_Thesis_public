@@ -15,7 +15,7 @@ graphics.off()
 
 library(ggplot2)
 
-data <- read.csv("species_csv/14_Flux_Towers_Zona_Species_List.csv", header = TRUE, fileEncoding = "latin1")
+data <- read.csv('data/species_analysis/14_Flux_Towers_Zona_Species_List.csv', header = TRUE, fileEncoding = "latin1")
 
 species_data <- data[, -c(1, ncol(data))]  # Remove the first and last columns
 
@@ -41,7 +41,7 @@ relative_abundance_df <- data.frame(
 )
 
 # Create the plot
-ggplot(relative_abundance_df, aes(x = reorder(Species, -RelativeAbundance), y = RelativeAbundance)) +
+relative_abundance_plot <- ggplot(relative_abundance_df, aes(x = reorder(Species, -RelativeAbundance), y = RelativeAbundance)) +
   geom_bar(stat = "identity", aes(fill = RelativeAbundance >= threshold), show.legend = FALSE) +
   scale_fill_manual(values = c("TRUE" = "steelblue", "FALSE" = "lightgray")) +
   geom_hline(yintercept = threshold, linetype = "dashed", color = "red", size = 1) +
@@ -57,6 +57,16 @@ ggplot(relative_abundance_df, aes(x = reorder(Species, -RelativeAbundance), y = 
     axis.text.x = element_text(angle = 45, hjust = 1),
     axis.line.x = element_line(color = "black")
   )
+
+# Create the directory
+if (!dir.exists("data/species_analysis/plots")) dir.create("species_analysis/plots", recursive = TRUE)
+
+
+print(relative_abundance_plot)
+
+# Save the relative abundance plot
+ggsave("data/species_analysis/plots/relative_abundance_plot.png", relative_abundance_plot, dpi = 300, width = 10, height = 6)
+
 
 
 # Print summary
@@ -86,7 +96,7 @@ species_df$Cumulative <- cumsum(species_df$Abundance) / sum(species_df$Abundance
 n_species_threshold <- which(species_df$Cumulative >= cumulative_threshold)[1]  # First species to exceed the threshold
 
 # Create Pareto chart
-ggplot(species_df, aes(x = reorder(Species, -Abundance), y = Abundance)) +
+pareto_plot <- ggplot(species_df, aes(x = reorder(Species, -Abundance), y = Abundance)) +
   # Bar chart
   geom_bar(stat = "identity", fill = "steelblue") +
 
@@ -120,3 +130,8 @@ ggplot(species_df, aes(x = reorder(Species, -Abundance), y = Abundance)) +
     axis.text.x = element_text(angle = 45, hjust = 1),
     axis.line.x = element_line(color = "black")  # Add x-axis line
   )
+
+print(pareto_plot)
+
+# Save the Pareto chart
+ggsave("data/species_analysis/plots/pareto_chart.png", pareto_plot, dpi = 300, width = 12, height = 7)

@@ -52,13 +52,13 @@ TypePCA <- 'SPCA'
 # Slower process
 # Automatically set to FALSE if TypePCA     = 'MNF'
 FilterPCA <- FALSE
-# window size forcomputation of spectral diversity
-window_size <- 10
+# window size for computation of spectral diversity
+window_size <- 20
 # computational parameters
 nbCPU <- 4
 MaxRAM <- 8
 # number of clusters (spectral species)
-nbclusters <- 20
+nbclusters <- 25
 
 
 
