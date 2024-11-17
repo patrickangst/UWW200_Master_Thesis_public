@@ -4,10 +4,10 @@ graphics.off()
 
 library(terra)
 
-# Read in hyperspectral image
-base_path <- getwd()
+# Define parameter script
+source('00_Project_Parameter.R')
 
-file_name <- 'ang20190712t231624_rfl_v2v2_img_rectified'
+file_name <- file_name_rectified
 cell <- paste0(base_path,'/data/rectified/',file_name)
 tile <- rast(file.path(cell))
 
@@ -40,7 +40,7 @@ hist(NDWI, breaks = seq(terra::minmax(NDWI)[1], terra::minmax(NDWI)[2] + 0.05, b
      main = "Histogram of NDWI", xlab = "NDWI")
 
 # Create the NDWI mask (binary values) with a threshold of 0.1
-ndwi_threshold <- 0.1
+#ndwi_threshold <- ndwi_threshold
 ndwi_mask <- ifel(NDWI>ndwi_threshold, 0, 1)
 
 # Plot the NDWI mask
@@ -52,7 +52,7 @@ ndwi_mask <- ifel(ndwi_mask==0, NA, 1)
 # If desired, save the NDWI mask to a file
 ndwi_threshold_modified <- gsub("\\.", "", ndwi_threshold)
 
-ndwi_filename <- paste0("mask/ndwi_mask_",ndwi_threshold_modified)
+ndwi_filename <- paste0(base_path,"/mask/",file_name_rectified,"_ndwi_mask_",ndwi_threshold_modified)
 writeRaster(ndwi_mask, filename = file.path(ndwi_filename),
             filetype = "ENVI",
             gdal = "INTERLEAVE=BSQ",
@@ -71,7 +71,7 @@ hist(NDVI, breaks = seq(terra::minmax(NDVI)[1], terra::minmax(NDVI)[2] + 0.05, b
      main = "Histogram of NDVI", xlab = "NDVI")
 
 # Create the NDVI mask (binary values) with a threshold of 0.1
-ndvi_threshold <- 0.3
+#ndvi_threshold <- 0.3
 ndvi_mask <- ifel(NDVI>ndvi_threshold, 1, 0)
 
 # Plot the NDVI mask
@@ -83,7 +83,7 @@ ndvi_mask <- ifel(ndvi_mask==0, NA, 1)
 # If desired, save the NDVI mask to a file
 ndvi_threshold_modified <- gsub("\\.", "", ndvi_threshold)
 
-ndvi_filename <- paste0("mask/ndvi_mask_",ndvi_threshold_modified)
+ndvi_filename <- paste0(base_path,"/mask/",file_name_rectified,"_ndvi_mask_",ndvi_threshold_modified)
 writeRaster(ndvi_mask, filename = file.path(ndvi_filename),
             filetype = "ENVI",
             gdal = "INTERLEAVE=BSQ",
@@ -97,7 +97,7 @@ writeRaster(ndvi_mask, filename = file.path(ndvi_filename),
 ################################################################################
 
 # Set the L parameter for SAVI
-L <- 0.5
+L <- savi_L
 
 # Calculate the SAVI
 SAVI <- ((NIR_average - red_average) * (1 + L)) / (NIR_average + red_average + L)
@@ -108,7 +108,7 @@ hist(SAVI, breaks = seq(terra::minmax(SAVI)[1], terra::minmax(SAVI)[2] + 0.05, b
 
 # Create a SAVI mask (e.g., thresholding SAVI to identify vegetation)
 # This threshold can be adjusted based on your analysis needs
-savi_threshold <- 0.2
+#savi_threshold <- 0.2
 
 savi_mask <- ifel(SAVI > savi_threshold, 1, 0)  # Here, 0.2 is an example threshold
 
@@ -121,7 +121,7 @@ savi_mask <- ifel(savi_mask==0, NA, 1)
 # If desired, save the SAVI mask to a file
 savi_threshold_modified <- gsub("\\.", "", savi_threshold)
 
-savi_filename <- paste0("mask/savi_mask_",savi_threshold_modified)
+savi_filename <- paste0(base_path,"/mask/",file_name_rectified,"_savi_mask_",savi_threshold_modified)
 writeRaster(savi_mask, filename = file.path(savi_filename),
             filetype = "ENVI",
             gdal = "INTERLEAVE=BSQ",
@@ -138,7 +138,8 @@ plot(mask)
 mask <- ifel(mask==0, NA, 1)
 
 # Now write the raster file
-writeRaster(mask, filename = file.path("mask/mask_stack"),
+stack_filename <- paste0(base_path,"/mask/",file_name_rectified,"_stacked_mask")
+writeRaster(mask, filename = file.path(stack_filename),
             filetype = "ENVI",
             gdal = "INTERLEAVE=BSQ",
             overwrite = TRUE,

@@ -99,7 +99,7 @@ Excluded_WL <- rbind(Excluded_WL, c(2400, 2501))
 #                                                  Mask_Path = Input_Mask_File,
 #                                                  Output_Dir = Output_Dir,
 #                                                  TypePCA = TypePCA,
-#                                                  NDVI_Thresh = NDVI_Thresh,
+#                                                  NDVI_Thresh = ndvi_threshold,
 #                                                  Blue_Thresh = Blue_Thresh,
 #                                                  NIR_Thresh = NIR_Thresh)
 
