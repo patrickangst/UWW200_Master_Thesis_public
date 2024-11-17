@@ -644,6 +644,6 @@ map_beta_div(Input_Image_File = Input_Image_File,
 
 ### Sample of a flight strip in subzone d (Atqasuk Airport)
 
-| RGB image                 | **Result 2**                  |
+| **RGB image**                 | **SAVI Mask**                  |
 |-------------------------------|-------------------------------|
-| ![Result 1](path/to/image1.png) | ![Result 2](path/to/image2.png) |
+| ![Result 1]([path/to/image1.png](https://github.com/patrickangst/UWW200_Master_Thesis_public/blob/main/images/rgb.png)) | ![Result 2]([path/to/image2.png](https://github.com/patrickangst/UWW200_Master_Thesis_public/blob/main/images/savi.png)) |
