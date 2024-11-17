@@ -21,6 +21,9 @@ Input_Image_File <- file.path(Datadir,NameRaster)
 Input_HDR_File <- get_HDR_name(Input_Image_File,showWarnings = FALSE)
 
 
+
+
+
 dir.create(path = Datadir,recursive = T,showWarnings = F)
 
 ################################################################################
@@ -59,6 +62,7 @@ nbCPU <- 4
 MaxRAM <- 8
 # number of clusters (spectral species)
 nbclusters <- nbclusters_calculated
+nbclusters <- 25
 
 
 
