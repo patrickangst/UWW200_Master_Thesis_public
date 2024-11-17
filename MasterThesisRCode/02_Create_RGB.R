@@ -23,7 +23,7 @@ if (file.exists(rgb_image_file_path)) {
   cat("Output file created successfully:", rgb_image_file_path, "\n")
 
   # GDAL edit command to set color interpretation for each band
-  gdal_edit_command <- sprintf("gdal_edit -colorinterp_1 Red -colorinterp_2 Green -colorinterp_3 Blue %s", rgb_image_file_path)
+  gdal_edit_command <- sprintf("gdal_edit.py -colorinterp_1 Red -colorinterp_2 Green -colorinterp_3 Blue %s", rgb_image_file_path)
 
   # Execute the GDAL edit command
   system(gdal_edit_command)

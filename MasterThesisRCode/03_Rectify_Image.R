@@ -31,7 +31,7 @@ gdal_command_rectify <- sprintf(
 )
 
 # Print the command to check if it's correctly formed
-# print(gdal_command)
+print(gdal_command_rectify)
 
 # Execute the command in R
 system(gdal_command_rectify)
@@ -489,33 +489,4 @@ if (file.exists(rectified_hdr_file_path)) {
   cat("Error: The .hdr file does not exist. Check the file path.\n")
 }
 
-# # Rectification of the flight strip
-# sf::gdal_utils("warp",
-#                source = raw_image_file_path,
-#                destination = rectified_image_file_path,
-#                options = c(
-#                  "-of", "ENVI",               # Output format (ENVI)
-#                  "-t_srs", target_srs,      # Target CRS
-#                  "-cutline", boundary_file_path, # Path to shapefile for cutline
-#                  "-crop_to_cutline",          # Crop to the cutline shape
-#                  "-co", "INTERLEAVE=BIL"      # Add BIL interleave option
-#                )
-# )
-#
-#
-# boundary_file_path <- "cutline/output_rectangle_subzone_d/output_rectangle.shp"
-# raw_image_file_path <- "data/hs_raw_image/ang20190712t231624_rfl_v2v2_img"
-# rectified_image_file_path <- "data/rectified/ang20190712t231624_rfl_v2v2_img_rectified_V2"
-#
-# target_srs <- "EPSG:32613"  # Define target CRS
-#
-# # Rectification of the flight strip
-# sf::gdal_utils("warp",
-#                source = raw_image_file_path,
-#                destination = rectified_image_file_path,
-#                options = c(
-#                  "-of", "ENVI",               # Output format (ENVI)
-#                  "-t_srs", target_srs,      # Target CRS
-#                  "-co", "INTERLEAVE=BIL"      # Add BIL interleave option
-#                )
-# )
+print(paste0('Rectification done for ', file_name))
