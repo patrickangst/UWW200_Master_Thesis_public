@@ -383,7 +383,7 @@ ggsave(paste0(base_path,"/data/species_analysis/plots/pareto_chart.png"), pareto
 ```
 
 ### Relative abundance
-![SAVI](images/relative_abundance_pl.png)
+![SAVI](images/relative_abundance_plot.png)
 
 ### Pareto chart
 ![SAVI](images/pareto_chart.png)
