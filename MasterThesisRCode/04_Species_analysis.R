@@ -53,7 +53,7 @@ round_up <- function(x, multiple) {
   ceiling(x / multiple) * multiple
 }
 
-nbclusters_calculated <- round_up(num_significant_species, 5)
+nbclusters_calculated <-round_up(num_significant_species, 5)
 
 # Create the plot with the additional annotation
 relative_abundance_plot <- ggplot(relative_abundance_df, aes(x = reorder(Species, -RelativeAbundance), y = RelativeAbundance)) +

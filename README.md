@@ -2,23 +2,26 @@
 
 This document outlines the progress of my masters thesis. The objective of this project is to assess biodiversity in the Arctic Tundra using spectral species analysis.The key tasks include:
 
-- Data collection and pre-processing
-- Calculating relative abundance and variance for each species.
-- Identifying significant species based on defined thresholds.
-- Use the R-package BiodivmapR package to calculate $\alpha$ and $\beta$- diversity
+-   Data collection and pre-processing
+-   Calculating relative abundance and variance for each species.
+-   Identifying significant species based on defined thresholds.
+-   Use the R-package BiodivmapR package to calculate $\alpha$ and $\beta$- diversity
 
----
+------------------------------------------------------------------------
 
 # Data Preparation and Code
 
 The following steps were taken to prepare the data and perform the analysis:
 
 ## Define project parameters
-All of the scripts access the information set in the parameter document [00_Project_Parameter.R](https://github.com/patrickangst/UWW200_Master_Thesis_public/blob/main/MasterThesisRCode/00_Project_Parameter.R)
-```r
 
-# filename of the raw hyperspectral image
-file_name <- 'ang20190712t231624_rfl_v2v2_img'
+All of the scripts access the information set in the parameter document [00_Project_Parameter.R](https://github.com/patrickangst/UWW200_Master_Thesis_public/blob/main/MasterThesisRCode/00_Project_Parameter.R)
+
+``` r
+# file and folder name
+folder_name <- 'ang20190712t231624rfl'
+file_name <- 'ang20180812t231551_rfl_v2r2_img'
+csv_file_name <- '14_Flux_Towers_Zona_Species_List.csv'
 
 # definition of the subzone (c, d or e)
 subzone <- 'c'
@@ -34,12 +37,20 @@ savi_L <- 0.5
 mask_name_suffix <- gsub("\\.", "", savi_threshold)
 mask_name <- paste0(file_name_rectified,'_savi_mask_',mask_name_suffix)
 
+# number of clusters (spectral species)
+nbclusters_calculated <- NA
+
 # get the base path of the project
-base_path <- getwd()
+base_path <- paste0(getwd(),'/',folder_name)
+
+
 ```
+
 ## Create an RGB image of the flightstrip
+
 For quick analysis the RGB bands are extracted from the hyperspectal image and saved as a GeoTiff file [01_Create_RGB.R](https://github.com/patrickangst/UWW200_Master_Thesis_public/blob/main/MasterThesisRCode/01_Create_RGB.R)
-```r
+
+``` r
 # Clear workspace and graphics
 rm(list = ls())
 graphics.off()
@@ -78,9 +89,14 @@ if (file.exists(rgb_image_file_path)) {
 }
 ```
 
-## Image reactification
+### RGB example
+![RGB](images/rgb.png)
+
+## Image rectification
+
 To follow the format set by the BiodivmapR package, the raw hyperspectral image has to be transformed. Using [gdalwarp](https://gdal.org/en/latest/programs/gdalwarp.html), the no-data values -9999 have to be replaced with 0 and the image organization has to be set to [BIL](https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/bil-bip-and-bsq-raster-files.htm) (Band interleaved by line). [02_Rectify_Image.R](https://github.com/patrickangst/UWW200_Master_Thesis_public/blob/main/MasterThesisRCode/02_Rectify_Image.R)
-```r
+
+``` r
 # Clear workspace and graphics
 rm(list = ls())
 graphics.off()
@@ -95,8 +111,6 @@ source('00_Project_Parameter.R')
 raw_image_file_path <- paste0(base_path, '/data/hs_raw_image/', file_name)
 rectified_image_file_path <- paste0(base_path, '/data/rectified/', file_name_rectified)
 rectified_hdr_file_path <- paste0(rectified_image_file_path, '.hdr')
-
-target_srs <- "EPSG:32604"  # Define target CRS
 
 gdal_command_rectify <- sprintf(
   "gdalwarp -of ENVI -co INTERLEAVE=BIL -srcnodata -9999 -dstnodata 0 %s %s",
@@ -143,8 +157,10 @@ print(paste0('Rectification done for ', file_name))
 ```
 
 ## Mask creation
+
 Since not all pixels have to be processed, only the "valid" have to be selected. For this purpose, a [Soil Adjusted Vegetation Index (SAVI)](https://www.usgs.gov/landsat-missions/landsat-soil-adjusted-vegetation-index) mask is created. [03_Create_MASK.R](https://github.com/patrickangst/UWW200_Master_Thesis_public/blob/main/MasterThesisRCode/03_Create_MASK.R)
-```r
+
+``` r
 # clean environment
 rm(list=ls(all=TRUE));gc()
 graphics.off()
@@ -174,68 +190,6 @@ red_average <- mean(tile[[c(56, 57, 58, 59, 60, 61, 62, 63, 64, 65)]])
 hist(NIR_average, breaks = seq(terra::minmax(NIR_average)[1], terra::minmax(NIR_average)[2] + 0.05, by = 0.01),
      main = "Histogram of NIR average", xlab = "NIR_average")
 
-
-################################################################################
-# Create NDWI Mask NDWI = (Red - NIR) / (Red + NIR)
-################################################################################
-
-# Calculate the NDWI
-NDWI <- (green_average-NIR_average)/(green_average+NIR_average)
-
-# Plot histogram of the value distribution
-hist(NDWI, breaks = seq(terra::minmax(NDWI)[1], terra::minmax(NDWI)[2] + 0.05, by = 0.01),
-     main = "Histogram of NDWI", xlab = "NDWI")
-
-# Create the NDWI mask (binary values) with a threshold of 0.1
-#ndwi_threshold <- ndwi_threshold
-ndwi_mask <- ifel(NDWI>ndwi_threshold, 0, 1)
-
-# Plot the NDWI mask
-plot(ndwi_mask, main = "NDWI Mask")
-
-# Set value 0 to NA to exclude the unwanted pixels
-ndwi_mask <- ifel(ndwi_mask==0, NA, 1)
-
-# If desired, save the NDWI mask to a file
-ndwi_threshold_modified <- gsub("\\.", "", ndwi_threshold)
-
-ndwi_filename <- paste0(base_path,"/mask/",file_name_rectified,"_ndwi_mask_",ndwi_threshold_modified)
-writeRaster(ndwi_mask, filename = file.path(ndwi_filename),
-            filetype = "ENVI",
-            gdal = "INTERLEAVE=BSQ",
-            overwrite = TRUE,
-            datatype = "INT1U")
-
-################################################################################
-# Create NDVI Mask NDVI = (NIR - Red) / (NIR + Red)
-################################################################################
-
-# Calculate the NDVI
-NDVI <- (NIR_average-red_average)/(NIR_average+red_average)
-
-# Plot histogram of the value distribution
-hist(NDVI, breaks = seq(terra::minmax(NDVI)[1], terra::minmax(NDVI)[2] + 0.05, by = 0.01),
-     main = "Histogram of NDVI", xlab = "NDVI")
-
-# Create the NDVI mask (binary values) with a threshold of 0.1
-#ndvi_threshold <- 0.3
-ndvi_mask <- ifel(NDVI>ndvi_threshold, 1, 0)
-
-# Plot the NDVI mask
-plot(ndvi_mask, main = "NDVI Mask")
-
-# Set value 0 to NA to exclude the unwanted pixels
-ndvi_mask <- ifel(ndvi_mask==0, NA, 1)
-
-# If desired, save the NDVI mask to a file
-ndvi_threshold_modified <- gsub("\\.", "", ndvi_threshold)
-
-ndvi_filename <- paste0(base_path,"/mask/",file_name_rectified,"_ndvi_mask_",ndvi_threshold_modified)
-writeRaster(ndvi_mask, filename = file.path(ndvi_filename),
-            filetype = "ENVI",
-            gdal = "INTERLEAVE=BSQ",
-            overwrite = TRUE,
-            datatype = "INT1U")
 
 ################################################################################
 # Create SAVI Mask SAVI = ((NIR - Red) / (NIR + Red + L)) * (1 + L)
@@ -272,29 +226,16 @@ writeRaster(savi_mask, filename = file.path(savi_filename),
             gdal = "INTERLEAVE=BSQ",
             overwrite = TRUE,
             datatype = "INT1U")
-
-################################################################################
-# Create stacked Mask
-################################################################################
-
-mask <- mosaic(savi_mask, ndwi_mask, ndvi_mask, fun="min")
-
-plot(mask)
-mask <- ifel(mask==0, NA, 1)
-
-# Now write the raster file
-stack_filename <- paste0(base_path,"/mask/",file_name_rectified,"_stacked_mask")
-writeRaster(mask, filename = file.path(stack_filename),
-            filetype = "ENVI",
-            gdal = "INTERLEAVE=BSQ",
-            overwrite = TRUE,
-            datatype = "INT1U")
 ```
 
+### SAVI example
+`r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/savi.png")`
+
 ## Plot location species analysis
+
 To estimate how many spectral species are to be expected, the plot locations lying withing the flight strips are examined. The count of the number of species that make up more than 1% ot the coverage is set as an input for the BiodivmapR calculations. [04_Species_analysis.R](https://github.com/patrickangst/UWW200_Master_Thesis_public/blob/main/MasterThesisRCode/04_Species_analysis.R).
 
-```r
+``` r
 # clean environment
 rm(list=ls(all=TRUE));gc()
 graphics.off()
@@ -441,8 +382,18 @@ print(pareto_plot)
 ggsave(paste0(base_path,"/data/species_analysis/plots/pareto_chart.png"), pareto_plot, dpi = 300, width = 12, height = 7)
 ```
 
+### Relative abundance
+
+`r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/relative_abundance_plot.png")`
+
+### Pareto chart
+
+`r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/pareto_chart.png")`
+
 ## Spectral species analysis
+
 The last script is run in four steps:
+
 1. Perform dimensionality reduction using PCA
 2. Select relevant PCs (for now a visual process using QGIS)
 3. Perform the mapping of spectral species, $\alpha$ and $\beta$- diversity
@@ -472,10 +423,6 @@ Datadir <- paste0(base_path,'/data/rectified')
 NameRaster <- file_name_rectified
 Input_Image_File <- file.path(Datadir,NameRaster)
 Input_HDR_File <- get_HDR_name(Input_Image_File,showWarnings = FALSE)
-
-
-
-
 
 dir.create(path = Datadir,recursive = T,showWarnings = F)
 
@@ -521,7 +468,6 @@ Excluded_WL <- rbind(Excluded_WL, c(1368, 1499))
 Excluded_WL <- rbind(Excluded_WL, c(1779, 2055))
 Excluded_WL <- rbind(Excluded_WL, c(2400, 2501))
 
-
 ################################################################################
 ##                  Perform PCA & Dimensionality reduction                    ##
 ## https://jbferet.github.io/biodivMapR/articles/biodivMapR_4.html            ##
@@ -538,14 +484,12 @@ PCA_Output <- perform_PCA(Input_Image_File = Input_Image_File,
                           MaxRAM = MaxRAM,
                           Continuum_Removal = Continuum_Removal)
 
-
 # Save the list as an RDS file
 pca_output_rds_file_path = paste0(Output_Dir,"/",NameRaster,"/",TypePCA,"/PCA/","PCA_Output.rds")
 saveRDS(PCA_Output, file = pca_output_rds_file_path)
 
 # Later, load the list back into R
 PCA_Output <- readRDS(pca_output_rds_file_path)
-
 
 # path for the updated mask
 Input_Mask_File <- PCA_Output$MaskPath
@@ -557,7 +501,6 @@ pca_output_image_file_path = paste0(Output_Dir,"/",NameRaster,"/",TypePCA,"/PCA/
 print(pca_output_image_file_path)
 pca_output_image <- rast(pca_output_image_file_path)
 plot(pca_output_image, main = "Principal Components", nc = 5, maxnl = 30)  # maxnl allows all 30 layers to be shown
-
 
 # Define the path for PCA plots
 # Define the path for individual PCA component plots
@@ -640,10 +583,18 @@ map_beta_div(Input_Image_File = Input_Image_File,
              nbclusters = nbclusters)
 ```
 
-## Script results
+## Sample of a flight strip in subzone d (Atqasuk Airport)
 
-### Sample of a flight strip in subzone d (Atqasuk Airport)
+### Diversity calculations
 
-| **RGB image**                 | **SAVI Mask**                  |
-|-------------------------------|-------------------------------|
-| ![Result 1]([path/to/image1.png](https://github.com/patrickangst/UWW200_Master_Thesis_public/blob/main/images/rgb.png)) | ![Result 2]([path/to/image2.png](https://github.com/patrickangst/UWW200_Master_Thesis_public/blob/main/images/savi.png)) |
+#### Alpha
+
+| Shannon diversity | Index |
+|---------------------------------------|---------------------------------|
+| `r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/shannon.png")` | `r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/shannon_idx.png")` |
+
+#### Beta
+`r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/beta_diversity.png")`
+
+#### Spectral Species
+`r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/spectral_species.png")`
