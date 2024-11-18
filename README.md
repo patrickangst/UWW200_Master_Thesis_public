@@ -229,7 +229,7 @@ writeRaster(savi_mask, filename = file.path(savi_filename),
 ```
 
 ### SAVI example
-`r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/savi.png")`
+![SAVI](images/savi.png)
 
 ## Plot location species analysis
 
@@ -383,12 +383,10 @@ ggsave(paste0(base_path,"/data/species_analysis/plots/pareto_chart.png"), pareto
 ```
 
 ### Relative abundance
-
-`r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/relative_abundance_plot.png")`
+![SAVI](images/relative_abundance_pl.png)
 
 ### Pareto chart
-
-`r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/pareto_chart.png")`
+![SAVI](images/pareto_chart.png)
 
 ## Spectral species analysis
 
@@ -585,16 +583,14 @@ map_beta_div(Input_Image_File = Input_Image_File,
 
 ## Sample of a flight strip in subzone d (Atqasuk Airport)
 
-### Diversity calculations
-
-#### Alpha
+### Alpha
 
 | Shannon diversity | Index |
 |---------------------------------------|---------------------------------|
-| `r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/shannon.png")` | `r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/shannon_idx.png")` |
+| ![SAVI](images/shannon.png) | ![SAVI](images/shannon_idx.png) |
 
-#### Beta
-`r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/beta_diversity.png")`
+### Beta
+![SAVI](images/beta_diversity.png)
 
-#### Spectral Species
-`r knitr::include_graphics("~/Documents/GitHub/UWW200_Master_Thesis_public/images/spectral_species.png")`
+### Spectral Species
+![SAVI](images/spectral_species.png)
