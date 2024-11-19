@@ -24,8 +24,14 @@ target_srs <- "EPSG:32604"  # Define target CRS
 #   rectified_image_file_path
 # )
 
+# gdal_command_rectify <- sprintf(
+#   "gdalwarp -of ENVI -co INTERLEAVE=BIL -srcnodata -9999 -dstnodata 0 %s %s",
+#   raw_image_file_path,
+#   rectified_image_file_path
+# )
+
 gdal_command_rectify <- sprintf(
-  "gdalwarp -of ENVI -co INTERLEAVE=BIL -srcnodata -9999 -dstnodata 0 %s %s",
+  "gdalwarp -of ENVI -co INTERLEAVE=BIL %s %s",
   raw_image_file_path,
   rectified_image_file_path
 )
