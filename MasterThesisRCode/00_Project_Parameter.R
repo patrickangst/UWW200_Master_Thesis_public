@@ -5,7 +5,7 @@
 # csv_file_name <- 'subzone_c.csv'
 
 folder_name <- 'ang20190712t231624rfl'
-file_name <- 'ang20180812t231551_rfl_v2r2_img'
+file_name <- 'ang20190712t231624_rfl_v2v2_img'
 csv_file_name <- '14_Flux_Towers_Zona_Species_List.csv'
 
 # definition of the subzone (c, d or e)
