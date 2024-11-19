@@ -1,9 +1,8 @@
 library(biodivMapR2)
 library(terra)
 
-input_file_path <- 'DATA/ang20190712t231624_rfl_v2v2_img_cutline_V3_BIL.tif'
-mask_file_path <- 'DATA/savi_above_008.tif'
-result_directory <- 'RESULT/'
+input_file_path <- 'data/ang20180729t212542_rfl_v2r2_img_rectified.tif'
+result_directory <- 'RESULT'
 
 
 hs_image <- rast(input_file_path)
@@ -32,7 +31,7 @@ max_values <- c(442, 1499, 2055, 2501)  # Maximum wavelength values
 # Create the data frame
 Excluded_WL <- data.frame(min = min_values, max = max_values)
 
-
+debug(biodivMapR2::perform_PCA)
 pca_result <- biodivMapR2::perform_PCA(input_raster_path = input_file_path,
                                        output_dir = result_directory,
                                        input_rast_wl = input_rast_wl,
