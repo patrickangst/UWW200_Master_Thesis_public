@@ -1,19 +1,19 @@
 Package: SpectralPatang
-Title: Package for Hyperspectral image analysis
+Title: Package for Hyperspectral Image Analysis
 Version: 0.0.0.9000
 Authors@R: 
-    person("Patrick", "Angst", , "patrickangst@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Patrick", "Angst", email = "patrickangst@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0000-0000-0000"))
+Description: A package for the analysis and visualization of hyperspectral images, 
+    including support for biodiversity mapping and spectral analysis workflows.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
-	terra
-	biodivMapR
-	labdsv
-	tools
-	ggplot2
-	gridExtra
+    terra,
+    biodivMapR,
+    labdsv,
+    tools,
+    ggplot2,
+    gridExtra

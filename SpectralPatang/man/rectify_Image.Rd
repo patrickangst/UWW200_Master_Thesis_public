@@ -4,10 +4,10 @@
 \alias{rectify_Image}
 \title{Rectify hyperspectral image}
 \usage{
-rectify_Image(Raw_Image_Folder_Path, Rectified_Image_Folder_Path)
+rectify_Image(Hyperspectral_Raw_Image_Folder_Path, Rectified_Image_Folder_Path)
 }
 \arguments{
-\item{Raw_Image_Folder_Path}{character. Path of the image to be processed}
+\item{Hyperspectral_Raw_Image_Folder_Path}{character. Path of the image to be processed}
 
 \item{Rectified_Image_Folder_Path}{character. Path of the rectified image}
 }

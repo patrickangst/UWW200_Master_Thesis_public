@@ -2,14 +2,14 @@
 #'
 #' This function is a wrapper for the biodiversity calculations using the
 #' package BiodivmapR.
-#' @param Rectified_Image_File_Path character. Path of the image to be processed
-#' @param Mask_Image_File_Path character. Path of the rectified image
+#' @param Hyperspectral_Image_File_Path character. Path of the image to be processed
+#' @param Mask_Image_File_Path character. Path of the mask file image
 #'
 #' @return Returns the full rectified image file path
 #' @export
 #'
 
-analyse_biodiversity <- function(Rectified_Image_File_Path,
+analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
                                  Mask_Image_File_Path,
                                  NBbclusters = 20,
                                  Window_size = 20,
@@ -17,10 +17,14 @@ analyse_biodiversity <- function(Rectified_Image_File_Path,
                                  MaxRAM = 8) {
 
   Input_Mask_File <- Mask_Image_File_Path
-  Input_Image_File <- Rectified_Image_File_Path
-  Input_HDR_File <- biodivMapR::get_HDR_name(Rectified_Image_File_Path,showWarnings = FALSE)
-  rectified_image_file_name <- basename(Rectified_Image_File_Path)
-  Output_Dir <- paste0(rectified_image_file_name,'/result')
+  Input_Image_File <- Hyperspectral_Image_File_Path
+  Input_HDR_File <- biodivMapR::get_HDR_name(Hyperspectral_Image_File_Path,showWarnings = FALSE)
+  rectified_image_file_name <- basename(Hyperspectral_Image_File_Path)
+
+  output_folder_path <- dirname(Hyperspectral_Image_File_Path)
+  output_folder_path <- sub("data/rectified", "result", output_folder_path)
+
+  Output_Dir <- file.path(output_folder_path,rectified_image_file_name)
   dir.create(path = Output_Dir, recursive = TRUE, showWarnings = FALSE)
 
   # Apply normalization without continuum removal
@@ -111,8 +115,10 @@ analyse_biodiversity <- function(Rectified_Image_File_Path,
                MaxRAM = MaxRAM,
                nbclusters = NBbclusters)
 
+  return('Hugo')
+
 }
 
 #debug(analyse_biodiversity)
-path_name <- analyse_biodiversity('ang20180729t212542rfl/data/rectified/ang20180729t212542_rfl_v2r2_img_rectified','ang20180729t212542rfl/mask/ang20180729t212542_rfl_v2r2_img_rectified_savi_mask_02')
+#path_name <- analyse_biodiversity('ang20180729t212542rfl/data/rectified/ang20180729t212542_rfl_v2r2_img_rectified','ang20180729t212542rfl/mask/ang20180729t212542_rfl_v2r2_img_rectified_savi_mask_02')
 

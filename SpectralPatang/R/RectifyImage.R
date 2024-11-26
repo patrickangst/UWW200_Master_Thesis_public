@@ -2,18 +2,18 @@
 #'
 #' This function is used to rectify hyperspectral images using gdalwarp
 #'
-#' @param Raw_Image_Folder_Path character. Path of the image to be processed
+#' @param Hyperspectral_Raw_Image_Folder_Path character. Path of the image to be processed
 #' @param Rectified_Image_Folder_Path character. Path of the rectified image
 #'
 #' @return Returns the full rectified image file path
 #' @export
 
-rectify_Image  <- function(Raw_Image_Folder_Path,
+rectify_Image  <- function(Hyperspectral_Raw_Image_Folder_Path,
                            Rectified_Image_Folder_Path) {
 
 
   # List all files in the folder
-  files <- list.files(Raw_Image_Folder_Path, full.names = TRUE)
+  files <- list.files(Hyperspectral_Raw_Image_Folder_Path, full.names = TRUE)
 
   # Filter files without an extension
   file_without_ext <- files[!grepl("\\.[a-zA-Z0-9]+$", basename(files))]
@@ -27,7 +27,7 @@ rectify_Image  <- function(Raw_Image_Folder_Path,
   raw_image_file_name <- basename(file_without_ext)
 
   # Construct the full raw file path
-  raw_image_file_path <- file.path(Raw_Image_Folder_Path, raw_image_file_name)
+  raw_image_file_path <- file.path(Hyperspectral_Raw_Image_Folder_Path, raw_image_file_name)
 
   # Construct the full output file path
   rectified_image_file_path <- file.path(Rectified_Image_Folder_Path, paste0(raw_image_file_name,'_rectified'))
@@ -115,4 +115,4 @@ rectify_Image  <- function(Raw_Image_Folder_Path,
 }
 
 #debug(rectify_Image)
-# path_name <- rectify_Image('ang20180729t212542rfl/data/hs_raw_image','ang20180729t212542rfl/data/rectified')
+#path_name <- rectify_Image('ang20180729t212542rfl/data/hs_raw_image','ang20180729t212542rfl/data/rectified')
