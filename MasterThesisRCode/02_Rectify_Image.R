@@ -13,7 +13,7 @@ raw_image_file_path <- paste0(base_path, '/data/hs_raw_image/', file_name)
 rectified_image_file_path <- paste0(base_path, '/data/rectified/', file_name_rectified)
 rectified_hdr_file_path <- paste0(rectified_image_file_path, '.hdr')
 
-target_srs <- "EPSG:32604"  # Define target CRS
+#target_srs <- "EPSG:32604"  # Define target CRS
 
 # Construct the gdalwarp command for rectification and reprojection
 # gdal_command_cutline <- sprintf(
@@ -24,8 +24,14 @@ target_srs <- "EPSG:32604"  # Define target CRS
 #   rectified_image_file_path
 # )
 
+# gdal_command_rectify <- sprintf(
+#   "gdalwarp -of ENVI -co INTERLEAVE=BIL -srcnodata -9999 -dstnodata 0 %s %s",
+#   raw_image_file_path,
+#   rectified_image_file_path
+# )
+
 gdal_command_rectify <- sprintf(
-  "gdalwarp -of ENVI -co INTERLEAVE=BIL -srcnodata -9999 -dstnodata 0 %s %s",
+  "gdalwarp -of ENVI -co INTERLEAVE=BIL %s %s",
   raw_image_file_path,
   rectified_image_file_path
 )

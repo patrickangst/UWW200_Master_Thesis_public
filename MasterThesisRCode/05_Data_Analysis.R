@@ -16,6 +16,7 @@ source('00_Project_Parameter.R')
 # input image folder path rectified
 Datadir <- paste0(base_path,'/data/rectified')
 # name of the image file
+#file_name_rectified <- 'ang20180729t212542_rfl_v2r2_img_rect_9999'
 NameRaster <- file_name_rectified
 Input_Image_File <- file.path(Datadir,NameRaster)
 Input_HDR_File <- get_HDR_name(Input_Image_File,showWarnings = FALSE)
@@ -58,7 +59,7 @@ FilterPCA <- FALSE
 # window size for computation of spectral diversity
 window_size <- 20
 # computational parameters
-nbCPU <- 4
+nbCPU <- 10
 MaxRAM <- 8
 # number of clusters (spectral species)
 nbclusters <- nbclusters_calculated
@@ -166,7 +167,7 @@ for (i in 1:nlyr(pca_output_image)) {
   output_file <- paste0(pca_plots_file_path, "/PCA_PC_", i, ".png")
 
   # Save the plot as a PNG
-  png(filename = output_file, width = 800, height = 600)
+  png(filename = output_file, width = 2000, height = 1500, res = 300)
   plot(pc_layer,
        main = paste0("Principal Component ", i),
        col = terrain.colors(100))  # Customize colors if needed

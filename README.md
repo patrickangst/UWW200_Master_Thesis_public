@@ -94,8 +94,7 @@ if (file.exists(rgb_image_file_path)) {
 
 ## Image rectification
 
-To follow the format set by the BiodivmapR package, the raw hyperspectral image has to be transformed. Using [gdalwarp](https://gdal.org/en/latest/programs/gdalwarp.html), the no-data values -9999 have to be replaced with 0 and the image organization has to be set to [BIL](https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/bil-bip-and-bsq-raster-files.htm) (Band interleaved by line). [02_Rectify_Image.R](https://github.com/patrickangst/UWW200_Master_Thesis_public/blob/main/MasterThesisRCode/02_Rectify_Image.R)
-
+To follow the format set by the BiodivmapR package, the raw hyperspectral image has to be transformed. Using [gdalwarp](https://gdal.org/en/latest/programs/gdalwarp.html) to set the image organization to [BIL](https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/bil-bip-and-bsq-raster-files.htm) (Band interleaved by line). [02_Rectify_Image.R](https://github.com/patrickangst/UWW200_Master_Thesis_public/blob/main/MasterThesisRCode/02_Rectify_Image.R)
 ``` r
 # Clear workspace and graphics
 rm(list = ls())
@@ -113,7 +112,7 @@ rectified_image_file_path <- paste0(base_path, '/data/rectified/', file_name_rec
 rectified_hdr_file_path <- paste0(rectified_image_file_path, '.hdr')
 
 gdal_command_rectify <- sprintf(
-  "gdalwarp -of ENVI -co INTERLEAVE=BIL -srcnodata -9999 -dstnodata 0 %s %s",
+  "gdalwarp -of ENVI -co INTERLEAVE=BIL %s %s",
   raw_image_file_path,
   rectified_image_file_path
 )
