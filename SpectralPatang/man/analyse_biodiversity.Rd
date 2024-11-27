@@ -10,13 +10,27 @@ analyse_biodiversity(
   NBbclusters = 20,
   Window_size = 20,
   NbCPU = 4,
-  MaxRAM = 8
+  MaxRAM = 8,
+  Perform_PCA = TRUE,
+  PCA_Threshold = 98
 )
 }
 \arguments{
 \item{Hyperspectral_Image_File_Path}{character. Path of the image to be processed}
 
 \item{Mask_Image_File_Path}{character. Path of the mask file image}
+
+\item{NBbclusters}{numeric. number of clusters defined in k-Meansv}
+
+\item{Window_size}{numeric. Size of spatial units (in pixels) to compute diversity.}
+
+\item{NbCPU}{numeric. Number of CPUs to use in parallel.}
+
+\item{MaxRAM}{numeric. MaxRAM maximum size of chunk in GB to limit RAM allocation when reading image file.}
+
+\item{Perform_PCA}{boolean. False if already PCA_Output.rds file available}
+
+\item{PCA_Threshold}{number. Percentage explained by PCs for selecting PCs.}
 }
 \value{
 Returns the full rectified image file path

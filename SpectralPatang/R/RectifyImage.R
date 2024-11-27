@@ -34,38 +34,13 @@ rectify_Image  <- function(Hyperspectral_Raw_Image_Folder_Path,
   rectified_hdr_file_path <- paste0(rectified_image_file_path, '.hdr')
 
   gdal_command_rectify <- sprintf(
-    "gdalwarp -of ENVI -co INTERLEAVE=BIL %s %s",
+    "gdalwarp -of ENVI -co INTERLEAVE=BIL -dstnodata -9999 %s %s",
     raw_image_file_path,
     rectified_image_file_path
   )
 
   # # Execute the command in R
-  # system(gdal_command_rectify)
-
-
-  # Progress bar
-  pb <- txtProgressBar(min = 0, max = 100, style = 3)
-
-  # Run gdalwarp and capture output
-  system2("gdalwarp", args = c("-of", "ENVI", "-co", "INTERLEAVE=BIL", raw_image_file_path, rectified_image_file_path),
-          stdout = pipe("grep '%'"), stderr = pipe("grep '%'"), wait = FALSE)
-
-  con <- pipe("gdalwarp_output.txt", "r")
-
-  while(TRUE) {
-    line <- readLines(con, n = 1, warn = FALSE)
-    if (length(line) == 0) break
-
-    # Extract percentage progress from gdalwarp output
-    if (grepl("\\[[0-9]+%", line)) {
-      progress <- as.numeric(gsub(".*\\[([0-9]+)%\\].*", "\\1", line))
-      setTxtProgressBar(pb, progress)
-    }
-  }
-
-  close(con)
-  close(pb)
-
+  system(gdal_command_rectify)
 
   # ===============================================================================
   # Define wavelength information to add to .hdr file

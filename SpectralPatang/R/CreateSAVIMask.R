@@ -61,4 +61,4 @@ create_SAVI_mask <- function(Hyperspectral_Image_File_Path,
 
 
 # debug(create_SAVI_mask)
-#create_SAVI_mask('ang20180729t212542rfl/data/rectified/ang20180729t212542_rfl_v2r2_img_rectified','ang20180729t212542rfl/mask')
+#create_SAVI_mask('~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data/ang20180729t212542rfl/data/rectified/ang20180729t212542_rfl_v2r2_img_rectified','~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data/ang20180729t212542rfl/mask')
