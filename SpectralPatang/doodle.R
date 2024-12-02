@@ -1,50 +1,86 @@
-rm(list = ls())
+# # clean environment
+rm(list=ls(all=TRUE));gc()
 graphics.off()
 
-library(terra)
-library(future)
-library(future.apply)
-library(ggplot2)
 
-# Load the hyperspectral image (e.g., GeoTIFF file)
-input_image <- "~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data/ang20180729t212542rfl/data/hs_raw_image/ang20180729t212542_rfl_v2r2_img"  # Update with the actual file path
-input_image_rec <- "~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data/ang20180729t212542rfl/data/rectified/ang20180729t212542_rfl_v2r2_img_rectified"  # Update with the actual file path
-hyperspectral <- terra::rast(input_image_rec)
+library(sf)
+library(tidyverse)
+library(leaflet)
 
-# Check basic properties of the image
-print(hyperspectral)
-#plot(hyperspectral[[1]])  # Plot the first band as an example
+plot_locations <- sf::st_read('~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_cut_shp/14_Flux_Towers_Zona.shp')
 
-# Specify the three bands to stack (adjust numbers as needed)
-red_band <- 20    # Band for the Red channel
-green_band <- 34  # Band for the Green channel
-blue_band <- 59   # Band for the Blue channel
+summary(plot_locations)
 
-# Plot the RGB image
-plotRGB(hyperspectral, r = red_band, g = green_band, b = blue_band,
-        scale = TRUE,  # Scales values between 0 and 255 for visualization
-        stretch = "lin",  # Apply linear contrast stretching
-        main = "RGB Composite of Hyperspectral Image")
+plot_locations %>%
+  ggplot() +
+  geom_sf()
 
-# Convert hyperspectral image to a matrix
-data_matrix <- as.matrix(hyperspectral)
 
-# Remove any NA values (if present) to avoid issues during PCA
-data_matrix <- na.omit(data_matrix)
+# Create a leaflet map for point data
+leaflet(plot_locations) %>%
+  addTiles() %>%  # Add default OpenStreetMap tiles
+  addCircleMarkers(
+    radius = 3,          # Circle size
+    color = "blue",      # Circle border color
+    fillColor = "red",   # Circle fill color
+    fillOpacity = 1,   # Transparency of the circle
+    popup = ~paste("Field_rele:", Field_rele)
+  )
 
-# Check the dimensions of the matrix (rows: pixels, columns: bands)
-dim(data_matrix)
 
-# Set up parallel backend (use all available cores)
-plan(multisession)  # Use multicore for parallelization
 
-# Perform PCA in parallel
-pca_result <- future({
-  prcomp(data_matrix, scale. = TRUE)  # PCA with centering and scaling
-})
 
-# Collect results
-pca_result <- value(pca_result)
 
-# Print summary of PCA
-summary(pca_result)
+
+
+
+
+
+
+
+
+create_square_from_points <- function(input_file, output_file, scaling_factor = 2.5) {
+  # Read the input file (e.g., GeoJSON or Shapefile)
+  gdf <- st_read(input_file)
+
+  # Ensure that the input contains only point geometries
+  if (!all(st_geometry_type(gdf) == "POINT")) {
+    stop("The input file does not contain only Point geometries.")
+  }
+
+  # Compute the centroid of all points
+  centroid <- st_union(gdf) %>% st_centroid()
+
+  # Calculate the maximum distance from the centroid to any point
+  max_distance <- max(st_distance(gdf, centroid))
+
+  # Define the side length of the square
+  side_length <- scaling_factor * max_distance
+
+  # Ensure the coordinates of the centroid and side_length are compatible
+  center_coords <- st_coordinates(centroid)
+  center_x <- units::set_units(center_coords[1], units(side_length))  # Ensure units match
+  center_y <- units::set_units(center_coords[2], units(side_length))
+
+  # Create the square polygon
+  square <- st_as_sfc(st_bbox(c(
+    xmin = center_x - side_length / 2,
+    ymin = center_y - side_length / 2,
+    xmax = center_x + side_length / 2,
+    ymax = center_y + side_length / 2
+  ), crs = st_crs(gdf)))
+
+  # Create a new sf object for the square
+  square_gdf <- st_sf(geometry = square, crs = st_crs(gdf))
+
+  # Save the square to the output file
+  st_write(square_gdf, output_file, driver = "ESRI Shapefile")
+
+  cat("Square shapefile created and saved to", output_file, "\n")
+}
+
+# Example usage
+input_file <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_cut_shp/14_Flux_Towers_Zona.shp'
+output_file <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_cut_shp/output_square.shp'
+
+create_square_from_points(input_file, output_file)
