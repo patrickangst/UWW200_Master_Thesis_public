@@ -7,19 +7,59 @@ library(cluster)
 library(terra)
 library(parallel)
 library(stats)
+library(NbClust)
 
 ## Patang test
-pca_hs_image_path <- 'D:\\MasterThesis\\test_data_elbow\\ang20180729t212542rfl\\result\\ang20180729t212542_rfl_v2r2_img_rectified\\SPCA\\PCA\\OutputPCA_30_PCs'
+pca_hs_image_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data_elbow/ang20190712t231624cut/result/ang20190712t231624_rfl_v2v2_img_rectified_cut/SPCA/PCA/OutputPCA_30_PCs'
 pca_hs_image <- terra::rast(pca_hs_image_path)
 num_cores <- parallel::detectCores()
 set.seed(0)
 
-pca_hs_image_subset <- terra::subset(pca_hs_image, 1:4)
+pca_hs_image_subset <- terra::subset(pca_hs_image, 1:9)
 # Downsample the raster (reduce spatial resolution)
-pca_hs_image_downsampled <- terra::aggregate(pca_hs_image_subset, fact = 3, fun = mean, cores = num_cores)
+#pca_hs_image_downsampled <- terra::aggregate(pca_hs_image_subset, fact = 3, fun = mean, cores = num_cores)
 pca_data <- as.matrix(terra::values(pca_hs_image_subset))
 pca_data <- na.omit(pca_data)
-#terra::nlyr(pca_hs_image_subset)
+
+pca_data <- scale(pca_data)   # Standardize the data for better clustering performance
+
+# Check the dimensions of PCA data
+dim(pca_data)
+
+# Perform NbClust to determine the optimal number of clusters
+set.seed(123)  # For reproducibility
+nbclust_result <- NbClust(
+  data = pca_data,         # The matrix with rows as observations and columns as variables
+  distance = "euclidean",  # Distance metric for clustering
+  min.nc = 2,              # Minimum number of clusters to evaluate
+  max.nc = 15,             # Maximum number of clusters to evaluate
+  method = "kmeans",       # Clustering method
+  index = "all"            # Use all available indices to determine the optimal number of clusters
+)
+
+# Display the number of clusters recommended by the majority
+optimal_clusters <- nbclust_result$Best.nc[1]
+cat("Optimal number of clusters:", optimal_clusters, "\n")
+
+# Visualize the number of clusters recommended by various indices
+fviz_nbclust(nbclust_result) +
+  labs(
+    title = "Optimal Number of Clusters",
+    subtitle = "Based on 30 clustering indices",
+    x = "Number of Clusters",
+    y = "Frequency of Indices Supporting Cluster Count"
+  ) +
+  theme_minimal()
+
+
+
+
+
+
+
+
+
+
 
 k.values <- 1:30
 
@@ -108,3 +148,16 @@ ggplot(explained_variance_df, aes(x = k, y = explained_variance)) +
        x = "Number of Clusters (k)",
        y = "Explained Variance") +
   theme_minimal()
+
+
+
+
+
+
+
+
+
+
+
+
+

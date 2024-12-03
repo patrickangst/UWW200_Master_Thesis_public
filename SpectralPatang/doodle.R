@@ -1,86 +1,41 @@
-# # clean environment
-rm(list=ls(all=TRUE));gc()
+rm(list = ls())
 graphics.off()
 
+devtools::load_all()
 
-library(sf)
-library(tidyverse)
-library(leaflet)
+# Load necessary libraries
+library(doParallel)
+library(foreach)
+library(SpectralPatang)
 
-plot_locations <- sf::st_read('~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_cut_shp/14_Flux_Towers_Zona.shp')
+raw_image_file_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data_elbow/ang20190712t231624cut/data/hs_raw_image/ang20190712t231624_rfl_v2v2_img'
+rectified_image_file_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data_elbow/ang20190712t231624cut/data/rectified/ang20190712t231624_rfl_v2v2_img_rectified_cut'
+cut_shp <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data_elbow/ang20190712t231624cut/data/cut_shp/output_square_R.shp'
 
-summary(plot_locations)
+gdal_command_rectify <- sprintf(
+  "gdalwarp -cutline %s -crop_to_cutline -of ENVI -co INTERLEAVE=BIL -dstnodata -9999 %s %s",
+  cut_shp,
+  raw_image_file_path,
+  rectified_image_file_path
+)
 
-plot_locations %>%
-  ggplot() +
-  geom_sf()
+# # Execute the command in R
+system(gdal_command_rectify)
 
+savi_file_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data_elbow/ang20190712t231624cut/mask'
 
-# Create a leaflet map for point data
-leaflet(plot_locations) %>%
-  addTiles() %>%  # Add default OpenStreetMap tiles
-  addCircleMarkers(
-    radius = 3,          # Circle size
-    color = "blue",      # Circle border color
-    fillColor = "red",   # Circle fill color
-    fillOpacity = 1,   # Transparency of the circle
-    popup = ~paste("Field_rele:", Field_rele)
-  )
+SpectralPatang::create_SAVI_mask(rectified_image_file_path,savi_file_path)
 
+savi_file_path <- paste0(savi_file_path,'/ang20190712t231624_rfl_v2v2_img_rectified_cut_savi_mask_02')
 
+num_cores <- parallel::detectCores()
+debug(analyse_biodiversity)
+SpectralPatang::analyse_biodiversity(rectified_image_file_path,
+                                     savi_file_path,
+                                     NBbclusters = 5,
+                                     Window_size = 10,
+                                     NbCPU = num_cores,
+                                     MaxRAM = 8,
+                                     Perform_PCA = FALSE,
+                                     PCA_Threshold = 99)
 
-
-
-
-
-
-
-
-
-
-
-create_square_from_points <- function(input_file, output_file, scaling_factor = 2.5) {
-  # Read the input file (e.g., GeoJSON or Shapefile)
-  gdf <- st_read(input_file)
-
-  # Ensure that the input contains only point geometries
-  if (!all(st_geometry_type(gdf) == "POINT")) {
-    stop("The input file does not contain only Point geometries.")
-  }
-
-  # Compute the centroid of all points
-  centroid <- st_union(gdf) %>% st_centroid()
-
-  # Calculate the maximum distance from the centroid to any point
-  max_distance <- max(st_distance(gdf, centroid))
-
-  # Define the side length of the square
-  side_length <- scaling_factor * max_distance
-
-  # Ensure the coordinates of the centroid and side_length are compatible
-  center_coords <- st_coordinates(centroid)
-  center_x <- units::set_units(center_coords[1], units(side_length))  # Ensure units match
-  center_y <- units::set_units(center_coords[2], units(side_length))
-
-  # Create the square polygon
-  square <- st_as_sfc(st_bbox(c(
-    xmin = center_x - side_length / 2,
-    ymin = center_y - side_length / 2,
-    xmax = center_x + side_length / 2,
-    ymax = center_y + side_length / 2
-  ), crs = st_crs(gdf)))
-
-  # Create a new sf object for the square
-  square_gdf <- st_sf(geometry = square, crs = st_crs(gdf))
-
-  # Save the square to the output file
-  st_write(square_gdf, output_file, driver = "ESRI Shapefile")
-
-  cat("Square shapefile created and saved to", output_file, "\n")
-}
-
-# Example usage
-input_file <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_cut_shp/14_Flux_Towers_Zona.shp'
-output_file <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_cut_shp/output_square.shp'
-
-create_square_from_points(input_file, output_file)

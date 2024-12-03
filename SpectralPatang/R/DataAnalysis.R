@@ -97,6 +97,8 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   # Create a vector of component numbers
   selected_component_numbers <- 1:num_components
 
+  print(paste0("PCs selected: ",selected_component_numbers))
+
   # Write these numbers to a text file, one per line
   selected_components_file_path <- file.path(Output_Dir,rectified_image_file_name,TypePCA,'PCA','Selected_Components.txt')
   writeLines(as.character(selected_component_numbers), selected_components_file_path)
