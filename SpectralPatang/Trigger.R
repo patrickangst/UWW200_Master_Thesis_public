@@ -6,11 +6,11 @@ library(terra)
 nb_cores <- detectCores(all.tests = FALSE, logical = TRUE)
 
 #debug(analyse_biodiversity)
-analyse_biodiversity('~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data/ang20180729t212542rfl/data/rectified/ang20180729t212542_rfl_v2r2_img_rectified',
-                     '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data/ang20180729t212542rfl/mask/ang20180729t212542_rfl_v2r2_img_rectified_savi_mask_02',
+analyse_biodiversity('~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_elbow_method/ang20180729t212542rfl/data/rectified/ang20180729t212542_rfl_v2r2_img_rectified',
+                     '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_elbow_method/ang20180729t212542rfl/mask/ang20180729t212542_rfl_v2r2_img_rectified_savi_mask_02',
                      NbCPU = nb_cores,
                      Window_size = 5,
-                     Perform_PCA = FALSE,
+                     Perform_PCA = TRUE,
                      PCA_Threshold = 99)
 
 

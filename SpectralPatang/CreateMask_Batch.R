@@ -13,10 +13,10 @@ process_subfolder <- function(subfolder_path) {
 
   print(paste0('Start processing ', subfolder_path))
 
-  raw_image_folder_path <- file.path(subfolder_path,'data','hs_raw_image')
   rectified_image_folder_path <- file.path(subfolder_path,'data','rectified')
+  mask_image_folder_path <- file.path(subfolder_path,'mask')
 
-  rectrified <- rectify_Image(raw_image_folder_path,rectified_image_folder_path)
+  mask <- create_SAVI_mask(rectified_image_folder_path,mask_image_folder_path)
 
   # Placeholder for your custom logic
   message(paste("Processing:", subfolder_path))
@@ -52,7 +52,7 @@ process_all_subfolders <- function(main_folder_path, num_cores = 2) {
     subfolder = subfolders,
     .combine = c,
     .packages = c(),  # Add necessary package names here if your logic depends on them
-    .export = c("process_subfolder","rectify_Image")  # Export the custom function
+    .export = c("process_subfolder","create_SAVI_mask")  # Export the custom function
   ) %dopar% {
     process_subfolder(subfolder)
   }
@@ -65,7 +65,7 @@ process_all_subfolders <- function(main_folder_path, num_cores = 2) {
 }
 
 # Example usage
-main_folder <- "D:\\MasterThesis\\test_data_cloud_mask"
+main_folder <- "D://MasterThesis//test_data_cloud_mask"
 num_cores_to_use <- detectCores()  # Adjust the number of cores based on your system
 
 # Call the main function
@@ -74,6 +74,5 @@ results <- process_all_subfolders(main_folder, num_cores = num_cores_to_use)
 
 # Print results
 print(results)
-
 
 

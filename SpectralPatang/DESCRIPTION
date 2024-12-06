@@ -17,3 +17,7 @@ Imports:
     tools,
     ggplot2,
     gridExtra
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

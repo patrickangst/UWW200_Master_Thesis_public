@@ -33,7 +33,7 @@ analyse_biodiversity(
 \item{PCA_Threshold}{number. Percentage explained by PCs for selecting PCs.}
 }
 \value{
-Returns the full rectified image file path
+Returns the full file name
 }
 \description{
 This function is a wrapper for the biodiversity calculations using the

@@ -5,14 +5,14 @@
 \title{Create SAVI mask}
 \usage{
 create_SAVI_mask(
-  Hyperspectral_Image_File_Path,
+  Rectified_Image_Folder_Path,
   SAVI_Mask_Folder_Path,
   SAVI_threshold = 0.2,
   SAVI_L = 0.5
 )
 }
 \arguments{
-\item{Hyperspectral_Image_File_Path}{character. Path of the image to be processed}
+\item{Rectified_Image_Folder_Path}{character. Folderpath of the image to be processed}
 
 \item{SAVI_Mask_Folder_Path}{character. Path of the rectified image}
 

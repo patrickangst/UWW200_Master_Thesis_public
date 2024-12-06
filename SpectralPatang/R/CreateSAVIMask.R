@@ -3,7 +3,7 @@
 #' This Library is used to create a SAVI (soil adjusted vegetation index)
 #' mask for a hyperspectral image
 #'
-#' @param Hyperspectral_Image_File_Path character. Path of the image to be processed
+#' @param Rectified_Image_Folder_Path character. Folderpath of the image to be processed
 #' @param SAVI_Mask_Folder_Path character. Path of the rectified image
 #' @param SAVI_threshold number. SAVI threshold. Default: 0.2
 #' @param SAVI_L number. Canopy background adjustment factor. Default: 0.5
@@ -11,12 +11,29 @@
 #' @return Returns the full mask file path
 #' @export
 
-create_SAVI_mask <- function(Hyperspectral_Image_File_Path,
+create_SAVI_mask <- function(Rectified_Image_Folder_Path,
                              SAVI_Mask_Folder_Path,
                              SAVI_threshold = 0.2,
-                             SAVI_L = 0.5){
+                             SAVI_L = 0.5) {
+  # List all files in the folder
+  files <- list.files(Rectified_Image_Folder_Path, full.names = TRUE)
 
-  tile <- terra::rast(Hyperspectral_Image_File_Path)
+  # Filter files without an extension
+  file_without_ext <- files[!grepl("\\.[a-zA-Z0-9]+$", basename(files))]
+
+  # Check if exactly one file without extension exists
+  if (length(file_without_ext) != 1) {
+    stop("Either no or multiple files without extensions found in the folder.")
+  }
+
+  # Extract the file name
+  rectified_image_file_name <- basename(file_without_ext)
+
+  # Construct the full raw file path
+  rectified_image_file_path <- file.path(Rectified_Image_Folder_Path, rectified_image_file_name)
+
+  # Read raster file with terra
+  tile <- terra::rast(rectified_image_file_path)
 
   # Calculate the mean of a few values of the near infrared bands (used for NDWI and SAVI)
   NIR_average <- terra::app(tile[[86:105]], fun = mean, na.rm = TRUE)
@@ -39,26 +56,29 @@ create_SAVI_mask <- function(Hyperspectral_Image_File_Path,
   savi_mask <- terra::ifel(SAVI > SAVI_threshold, 1, 0)  # Here, 0.2 is an example threshold
 
   # Set value 0 to NA to exclude the unwanted pixels
-  savi_mask <- terra::ifel(savi_mask==0, NA, 1)
+  savi_mask <- terra::ifel(savi_mask == 0, NA, 1)
 
 
   # If desired, save the SAVI mask to a file
   savi_threshold_modified <- gsub("\\.", "", SAVI_threshold)
 
   # Extract the file name
-  savi_image_file_name <- paste0(basename(Hyperspectral_Image_File_Path),'_savi_mask_',savi_threshold_modified)
-  savi_image_file_path <- file.path(SAVI_Mask_Folder_Path,savi_image_file_name)
+  savi_image_file_name <- paste0(rectified_image_file_name,
+                                 '_savi_mask_',
+                                 savi_threshold_modified)
+  savi_image_file_path <- file.path(SAVI_Mask_Folder_Path, savi_image_file_name)
 
-  terra::writeRaster(savi_mask, filename = savi_image_file_path,
-              filetype = "ENVI",
-              gdal = "INTERLEAVE=BSQ",
-              overwrite = TRUE,
-              datatype = "INT1U")
-
+  terra::writeRaster(
+    savi_mask,
+    filename = savi_image_file_path,
+    filetype = "ENVI",
+    gdal = "INTERLEAVE=BSQ",
+    overwrite = TRUE,
+    datatype = "INT1U"
+  )
 
   return(savi_image_file_path)
-  }
-
+}
 
 # debug(create_SAVI_mask)
 #create_SAVI_mask('~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data/ang20180729t212542rfl/data/rectified/ang20180729t212542_rfl_v2r2_img_rectified','~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data/ang20180729t212542rfl/mask')

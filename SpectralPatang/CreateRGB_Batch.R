@@ -66,7 +66,7 @@ process_all_subfolders <- function(main_folder_path, num_cores = 2) {
 
 # Example usage
 #main_folder <- "~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/subzone_c"  # Replace with your folder path
-main_folder <- "/Volumes/AvirisNG/osx/subzone_c"
+main_folder <- "D:\\MasterThesis\\test_data_cloud_mask"
 num_cores_to_use <- detectCores()  # Adjust the number of cores based on your system
 
 # Call the main function

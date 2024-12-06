@@ -11,7 +11,7 @@
 #' @param Perform_PCA boolean. False if already PCA_Output.rds file available
 #' @param PCA_Threshold number. Percentage explained by PCs for selecting PCs.
 #'
-#' @return Returns the full rectified image file path
+#' @return Returns the full file name
 #' @export
 #'
 
@@ -23,15 +23,16 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
                                  MaxRAM = 8,
                                  Perform_PCA = TRUE,
                                  PCA_Threshold = 98) {
-
   Input_Mask_File <- Mask_Image_File_Path
   Input_Image_File <- Hyperspectral_Image_File_Path
-  Input_HDR_File <- biodivMapR::get_HDR_name(Hyperspectral_Image_File_Path,showWarnings = FALSE)
+  Input_HDR_File <- biodivMapR::get_HDR_name(Hyperspectral_Image_File_Path, showWarnings = FALSE)
   rectified_image_file_name <- basename(Hyperspectral_Image_File_Path)
 
   output_folder_path <- dirname(Hyperspectral_Image_File_Path)
   Output_Dir <- sub("data/rectified", "result", output_folder_path)
-  dir.create(path = Output_Dir, recursive = TRUE, showWarnings = FALSE)
+  dir.create(path = Output_Dir,
+             recursive = TRUE,
+             showWarnings = FALSE)
 
   # Apply normalization without continuum removal
   Continuum_Removal <- FALSE
@@ -48,27 +49,30 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   Excluded_WL <- rbind(Excluded_WL, c(1779, 2055))
   Excluded_WL <- rbind(Excluded_WL, c(2400, 2501))
 
-  pca_output_rds_file_path = file.path(Output_Dir,rectified_image_file_name,TypePCA,'PCA','PCA_Output.rds')
-  #dir.create(dirname(pca_output_rds_file_path), recursive = TRUE, showWarnings = FALSE)
+  pca_output_rds_file_path = file.path(Output_Dir,
+                                       rectified_image_file_name,
+                                       TypePCA,
+                                       'PCA',
+                                       'PCA_Output.rds')
 
-
-  if(Perform_PCA){
+  if (Perform_PCA) {
     ################################################################################
     ##                  Perform PCA & Dimensionality reduction                    ##
     ## https://jbferet.github.io/biodivMapR/articles/biodivMapR_4.html            ##
     ################################################################################
     print("PERFORM DIMENSIONALITY REDUCTION")
     #debug(perform_PCA)
-    PCA_Output <- biodivMapR::perform_PCA(Input_Image_File = Input_Image_File,
-                                          Input_Mask_File = Input_Mask_File,
-                                          Output_Dir = Output_Dir,
-                                          TypePCA = TypePCA,
-                                          FilterPCA = FilterPCA,
-                                          Excluded_WL = Excluded_WL,
-                                          nbCPU = NbCPU,
-                                          MaxRAM = MaxRAM,
-                                          Continuum_Removal = Continuum_Removal)
-
+    PCA_Output <- biodivMapR::perform_PCA(
+      Input_Image_File = Input_Image_File,
+      Input_Mask_File = Input_Mask_File,
+      Output_Dir = Output_Dir,
+      TypePCA = TypePCA,
+      FilterPCA = FilterPCA,
+      Excluded_WL = Excluded_WL,
+      nbCPU = NbCPU,
+      MaxRAM = MaxRAM,
+      Continuum_Removal = Continuum_Removal
+    )
 
     # Save the list as an RDS file
     saveRDS(PCA_Output, file = pca_output_rds_file_path)
@@ -77,14 +81,13 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
     PCA_Output <- readRDS(pca_output_rds_file_path)
   }
 
-
   # path for the updated mask
   Input_Mask_File <- PCA_Output$MaskPath
 
   # Auto-select components
   pca_model <- PCA_Output$PCA_model
   # Get the proportion of variance explained by each principal component
-  prop_variance <- pca_model$sdev^2 / sum(pca_model$sdev^2)  # Variance explained by each component
+  prop_variance <- pca_model$sdev ^ 2 / sum(pca_model$sdev ^ 2)  # Variance explained by each component
 
   # Calculate the cumulative proportion of variance
   cumulative_variance <- cumsum(prop_variance)
@@ -97,11 +100,16 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   # Create a vector of component numbers
   selected_component_numbers <- 1:num_components
 
-  print(paste0("PCs selected: ",selected_component_numbers))
+  print(paste0("PCs selected: ", selected_component_numbers))
 
   # Write these numbers to a text file, one per line
-  selected_components_file_path <- file.path(Output_Dir,rectified_image_file_name,TypePCA,'PCA','Selected_Components.txt')
-  writeLines(as.character(selected_component_numbers), selected_components_file_path)
+  selected_components_file_path <- file.path(Output_Dir,
+                                             rectified_image_file_name,
+                                             TypePCA,
+                                             'PCA',
+                                             'Selected_Components.txt')
+  writeLines(as.character(selected_component_numbers),
+             selected_components_file_path)
 
   # Select the components that explain 98% of the variance
   # selected_components <- pca_model$x[, 1:num_components]
@@ -119,42 +127,47 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   ## https://jbferet.github.io/biodivMapR/articles/biodivMapR_5.html            ##
   ################################################################################
   print("MAP SPECTRAL SPECIES")
-  Kmeans_info <- biodivMapR::map_spectral_species(Input_Image_File = Input_Image_File,
-                                                  Input_Mask_File = PCA_Output$MaskPath,
-                                                  Output_Dir = Output_Dir,
-                                                  SpectralSpace_Output = PCA_Output,
-                                                  nbclusters = NBbclusters,
-                                                  nbCPU = NbCPU,
-                                                  MaxRAM = MaxRAM,
-                                                  progressbar = TRUE)
+  Kmeans_info <- biodivMapR::map_spectral_species(
+    Input_Image_File = Input_Image_File,
+    Input_Mask_File = PCA_Output$MaskPath,
+    Output_Dir = Output_Dir,
+    SpectralSpace_Output = PCA_Output,
+    nbclusters = NBbclusters,
+    nbCPU = NbCPU,
+    MaxRAM = MaxRAM,
+    progressbar = TRUE
+  )
 
   ################################################################################
   ##                Perform alpha and beta diversity mapping                    ##
   ## https://jbferet.github.io/biodivMapR/articles/biodivMapR_6.html            ##
   ################################################################################
   print("MAP ALPHA DIVERSITY")
-  Index_Alpha   = c('Shannon','Simpson')
+  Index_Alpha   = c('Shannon', 'Simpson')
   #Index_Alpha <- c('Shannon')
-  biodivMapR::map_alpha_div(Input_Image_File = Input_Image_File,
-                            Output_Dir = Output_Dir,
-                            TypePCA = TypePCA,
-                            window_size = Window_size,
-                            nbCPU = NbCPU,
-                            MaxRAM = MaxRAM,
-                            Index_Alpha = Index_Alpha,
-                            nbclusters = NBbclusters,
-                            FullRes = TRUE)
+  biodivMapR::map_alpha_div(
+    Input_Image_File = Input_Image_File,
+    Output_Dir = Output_Dir,
+    TypePCA = TypePCA,
+    window_size = Window_size,
+    nbCPU = NbCPU,
+    MaxRAM = MaxRAM,
+    Index_Alpha = Index_Alpha,
+    nbclusters = NBbclusters,
+    FullRes = TRUE
+  )
 
   print("MAP BETA DIVERSITY")
-  biodivMapR::map_beta_div(Input_Image_File = Input_Image_File,
-                           Output_Dir = Output_Dir,
-                           TypePCA = TypePCA,
-                           window_size = Window_size,
-                           nbCPU = NbCPU,
-                           MaxRAM = MaxRAM,
-                           nbclusters = NBbclusters,
-                           FullRes = TRUE)
-
+  biodivMapR::map_beta_div(
+    Input_Image_File = Input_Image_File,
+    Output_Dir = Output_Dir,
+    TypePCA = TypePCA,
+    window_size = Window_size,
+    nbCPU = NbCPU,
+    MaxRAM = MaxRAM,
+    nbclusters = NBbclusters,
+    FullRes = TRUE
+  )
 
   # print("MAP FUNCTIONAL DIVERSITY")
   # Selected_Features <- read.table(selected_components_file_path)[[1]]
@@ -168,10 +181,8 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   #                    TypePCA = TypePCA)
 
 
-  return('Hugo')
-
+  return(rectified_image_file_name)
 }
 
 #debug(analyse_biodiversity)
 #path_name <- analyse_biodiversity('ang20180729t212542rfl/data/rectified/ang20180729t212542_rfl_v2r2_img_rectified','ang20180729t212542rfl/mask/ang20180729t212542_rfl_v2r2_img_rectified_savi_mask_02')
-
