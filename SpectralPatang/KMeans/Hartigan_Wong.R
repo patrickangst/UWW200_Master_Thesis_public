@@ -18,7 +18,7 @@ num_cores <- parallel::detectCores()
 pca_hs_image_subset <- terra::subset(pca_hs_image, 1:6)
 
 # Downsample the raster (reduce spatial resolution)
-pca_hs_image_subset <- terra::aggregate(pca_hs_image_subset, fact = 16, fun = mean, cores = num_cores)
+pca_hs_image_subset <- terra::aggregate(pca_hs_image_subset, fact = 1, fun = mean, cores = num_cores)
 
 # read values as a matrix
 pca_data_convex <- as.matrix(terra::values(pca_hs_image_subset))
