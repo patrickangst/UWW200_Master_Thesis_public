@@ -8,16 +8,15 @@ library(parallel)
 
 
 ## Patang test
-pca_hs_image_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data_elbow/ang20190712t231624cut/result/ang20190712t231624_rfl_v2v2_img_rectified_cut/SPCA/PCA/OutputPCA_30_PCs'
+pca_hs_image_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data_elbow/ang20180729t212542rfl/result/ang20180729t212542_rfl_v2r2_img_rectified/SPCA/PCA/OutputPCA_30_PCs_selection.tif'
 pca_hs_image <- terra::rast(pca_hs_image_path)
 num_cores <- parallel::detectCores()
 
-pca_hs_image_subset <- terra::subset(pca_hs_image, 1:9)
-pca_data <- as.matrix(terra::values(pca_hs_image_subset))
+pca_data <- as.matrix(terra::values(pca_hs_image))
 
 # Prepare the data
-pca_data <- na.omit(pca_data)   # Clean the data (remove NAs)
-pca_data <- scale(pca_data)     # Standardize data for clustering
+pca_data_na_omitted <- na.omit(pca_data)   # Clean the data (remove NAs)
+pca_data_na_omitted_scaled <- scale(pca_data_na_omitted)     # Standardize data for clustering
 
 set.seed(123)  # Set the seed for reproducibility within each worker
 nbclust_result <- NbClust(

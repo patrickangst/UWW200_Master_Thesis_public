@@ -1,27 +1,26 @@
-# Clean Environment
-rm(list = ls(all = TRUE))
-gc()
+# # clean environment
+rm(list=ls(all=TRUE));gc()
 graphics.off()
 
-# Load Required Libraries
+library(NbClust)
 library(factoextra)
-library(cluster)
-library(terra)
 library(parallel)
-library(stats)
-library(ggplot2)
+library(terra)
 
-# Load and Prepare Data
-pca_hs_image_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data_elbow/ang20190712t231624cut/result/ang20190712t231624_rfl_v2v2_img_rectified_cut/SPCA/PCA/OutputPCA_30_PCs'
+
+## Patang test
+pca_hs_image_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data_elbow/ang20180729t212542rfl/result/ang20180729t212542_rfl_v2r2_img_rectified/SPCA/PCA/OutputPCA_30_PCs_selection.tif'
 pca_hs_image <- terra::rast(pca_hs_image_path)
-num_cores <- parallel::detectCores()
+num_cores <- parallel::detectCores() - 2
 
-pca_hs_image_subset <- terra::subset(pca_hs_image, 1:6)
+pca_hs_image_subset <- terra::aggregate(pca_hs_image, fact = 4, fun = mean, cores = num_cores)
+
 pca_data <- as.matrix(terra::values(pca_hs_image_subset))
 
 # Prepare the data
-pca_data <- na.omit(pca_data)   # Clean the data (remove NAs)
-pca_data <- scale(pca_data)     # Standardize data for clustering
+pca_data_na_omitted <- na.omit(pca_data)   # Clean the data (remove NAs)
+pca_data_na_omitted_scaled <- scale(pca_data_na_omitted)     # Standardize data for clustering
+kmeans_clustering_data <- pca_data_na_omitted_scaled
 
 # Define Range of Clusters
 k.values <- 2:30
@@ -42,12 +41,12 @@ compute_silhouette <- function(data, k, seed = 123) {
 
 # Setup Parallel Cluster
 cl <- makeCluster(num_cores)
-clusterExport(cl, varlist = c("pca_data", "compute_wss", "compute_silhouette"))
+clusterExport(cl, varlist = c("kmeans_clustering_data", "compute_wss", "compute_silhouette"))
 clusterEvalQ(cl, library(cluster))  # Load `cluster` library on workers
 
 # Compute Metrics in Parallel
-wss_values <- parSapply(cl, k.values, function(k) compute_wss(pca_data, k))
-sil_values <- parSapply(cl, k.values, function(k) compute_silhouette(pca_data, k))
+wss_values <- parSapply(cl, k.values, function(k) compute_wss(kmeans_clustering_data, k))
+sil_values <- parSapply(cl, k.values, function(k) compute_silhouette(kmeans_clustering_data, k))
 
 # Stop Cluster
 stopCluster(cl)

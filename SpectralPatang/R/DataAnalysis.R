@@ -49,7 +49,7 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   Excluded_WL <- rbind(Excluded_WL, c(1779, 2055))
   Excluded_WL <- rbind(Excluded_WL, c(2400, 2501))
 
-  pca_output_rds_file_path = file.path(Output_Dir,
+  pca_output_rds_file_path <- file.path(Output_Dir,
                                        rectified_image_file_name,
                                        TypePCA,
                                        'PCA',
@@ -110,6 +110,27 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
                                              'Selected_Components.txt')
   writeLines(as.character(selected_component_numbers),
              selected_components_file_path)
+
+  # Save selected PCs as a separate file
+  # Dynamically generate the band selection string
+  bandselection_pca <- paste(sprintf("-b %d", 1:num_components), collapse = " ")
+  # GDAL translate command to extract the specified bands
+  pca_output_envi_file_path <- file.path(Output_Dir,
+                                        rectified_image_file_name,
+                                        TypePCA,
+                                        'PCA',
+                                        'OutputPCA_30_PCs')
+  pca_selection_file_path <- paste0(pca_output_envi_file_path,'_selection.tif')
+
+  gdal_translate_command <- sprintf(
+    "gdal_translate %s -of GTiff %s %s",
+    bandselection_pca,
+    pca_output_envi_file_path,
+    pca_selection_file_path
+  )
+
+  # Execute the GDAL edit command
+  system(gdal_translate_command)
 
   # Select the components that explain 98% of the variance
   # selected_components <- pca_model$x[, 1:num_components]

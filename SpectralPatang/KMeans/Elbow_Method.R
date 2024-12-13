@@ -12,15 +12,15 @@ library(stats)
 library(NbClust)
 
 ## Patang test
-pca_hs_image_path <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_elbow_method/ang20180729t212542rfl/result/ang20180729t212542_rfl_v2r2_img_rectified/SPCA/PCA/OutputPCA_30_PCs'
+pca_hs_image_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data_elbow/ang20180729t212542rfl/result/ang20180729t212542_rfl_v2r2_img_rectified/SPCA/PCA/OutputPCA_30_PCs'
 pca_hs_image <- terra::rast(pca_hs_image_path)
 num_cores <- parallel::detectCores()
 set.seed(0)
 
-pca_hs_image_subset <- terra::subset(pca_hs_image, 1:4)
+pca_hs_image_subset <- terra::subset(pca_hs_image, 1:17)
 # Downsample the raster (reduce spatial resolution)
-pca_hs_image_downsampled <- terra::aggregate(pca_hs_image_subset, fact = 8, fun = mean, cores = num_cores)
-pca_data <- as.matrix(terra::values(pca_hs_image_downsampled))
+pca_hs_image_subset <- terra::aggregate(pca_hs_image_subset, fact = 8, fun = mean, cores = num_cores)
+pca_data <- as.matrix(terra::values(pca_hs_image_subset))
 pca_data <- na.omit(pca_data)
 
 pca_data <- scale(pca_data)   # Standardize the data for better clustering performance
