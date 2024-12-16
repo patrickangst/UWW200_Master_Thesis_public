@@ -65,7 +65,7 @@ process_all_subfolders <- function(main_folder_path, num_cores = 2) {
 }
 
 # Example usage
-main_folder <- "D:\\MasterThesis\\test_data_cloud_mask"
+main_folder <- "~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data"
 num_cores_to_use <- detectCores()  # Adjust the number of cores based on your system
 
 # Call the main function

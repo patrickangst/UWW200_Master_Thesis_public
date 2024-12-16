@@ -16,7 +16,14 @@ process_subfolder <- function(subfolder_path) {
   rectified_image_folder_path <- file.path(subfolder_path,'data','rectified')
   mask_image_folder_path <- file.path(subfolder_path,'mask')
 
-  mask <- create_SAVI_mask(rectified_image_folder_path,mask_image_folder_path)
+  analysis_result <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
+                                                          savi_file_path,
+                                                          NBbclusters = 5,
+                                                          Window_size = 10,
+                                                          NbCPU = num_cores,
+                                                          MaxRAM = 8,
+                                                          Perform_PCA = FALSE,
+                                                          PCA_Threshold = 99)
 
   # Placeholder for your custom logic
   message(paste("Processing:", subfolder_path))
