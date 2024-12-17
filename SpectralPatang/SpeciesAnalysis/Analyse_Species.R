@@ -15,9 +15,9 @@ graphics.off()
 
 library(ggplot2)
 
-csv_file_path <- paste0(base_path,'/data/species_analysis/',csv_file_name)
-
-data <- read.csv(csv_file_path, header = TRUE, fileEncoding = "latin1")
+csv_file_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/clustertest/data/species_analysis/06_Utqiagvik_IBP_R_Input_V2.csv'
+plot_folder_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/clustertest/data/species_analysis/plots'
+data <- read.csv(csv_file_path, header = TRUE)
 
 species_data <- data[, -c(1, ncol(data))]  # Remove the first and last columns
 
@@ -74,13 +74,13 @@ relative_abundance_plot <- ggplot(relative_abundance_df, aes(x = reorder(Species
   )
 
 # Create the directory
-if (!dir.exists("data/species_analysis/plots")) dir.create("species_analysis/plots", recursive = TRUE)
+#if (!dir.exists(plot_folder_path)) dir.create("species_analysis/plots", recursive = TRUE)
 
 
 print(relative_abundance_plot)
 
 # Save the relative abundance plot
-ggsave(paste0(base_path,"/data/species_analysis/plots/relative_abundance_plot.png"), relative_abundance_plot, dpi = 300, width = 10, height = 6)
+ggsave(paste0(plot_folder_path,"/relative_abundance_plot.png"), relative_abundance_plot, dpi = 300, width = 10, height = 6)
 
 
 
@@ -95,7 +95,7 @@ print(significant_species)
 
 
 # Define threshold for cumulative percentage
-cumulative_threshold <- 95  # You can change this value to any percentage
+cumulative_threshold <- 90  # You can change this value to any percentage
 
 # Prepare the data for Pareto chart
 species_df <- data.frame(
@@ -149,4 +149,4 @@ pareto_plot <- ggplot(species_df, aes(x = reorder(Species, -Abundance), y = Abun
 print(pareto_plot)
 
 # Save the Pareto chart
-ggsave(paste0(base_path,"/data/species_analysis/plots/pareto_chart.png"), pareto_plot, dpi = 300, width = 12, height = 7)
+ggsave(paste0(plot_folder_path,"/pareto_chart.png"), pareto_plot, dpi = 300, width = 10, height = 6)
