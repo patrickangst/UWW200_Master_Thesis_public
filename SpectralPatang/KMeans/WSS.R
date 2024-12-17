@@ -9,7 +9,7 @@ library(terra)
 
 
 ## Patang test
-pca_hs_image_path <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/result/ang20190706t235120_rfl_v2v2_img_rectified/SPCA/PCA/OutputPCA_30_PCs_selection_cutline.tif'
+pca_hs_image_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/result/ang20190706t235120_rfl_v2v2_img_rectified/SPCA/PCA/OutputPCA_30_PCs_selection_cutline.tif'
 pca_hs_image <- terra::rast(pca_hs_image_path)
 num_cores <- parallel::detectCores() - 2
 
@@ -22,7 +22,7 @@ pca_data_na_omitted_scaled <- scale(pca_data_na_omitted)     # Standardize data 
 kmeans_clustering_data <- pca_data_na_omitted_scaled
 
 # Define Range of Clusters
-k.values <- 2:50
+k.values <- 2:40
 
 # Define Clustering Metrics Functions
 compute_wss <- function(data, k, seed = 123) {
@@ -31,7 +31,7 @@ compute_wss <- function(data, k, seed = 123) {
 }
 
 # Setup Parallel Cluster
-cl <- makeCluster(num_cores)
+cl <- parallel::makeCluster(num_cores)
 clusterExport(cl, varlist = c("kmeans_clustering_data", "compute_wss"))
 clusterEvalQ(cl, library(cluster))  # Load `cluster` library on workers
 

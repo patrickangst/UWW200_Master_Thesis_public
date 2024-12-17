@@ -16,7 +16,10 @@ Imports:
     labdsv,
     tools,
     ggplot2,
-    gridExtra
+    gridExtra,
+    sf,
+    tools,
+    parallel
 Suggests: 
     knitr,
     rmarkdown

@@ -9,6 +9,9 @@
 #' @param NbCPU numeric. Number of CPUs to use in parallel.
 #' @param MaxRAM numeric. MaxRAM maximum size of chunk in GB to limit RAM allocation when reading image file.
 #' @param Perform_PCA boolean. False if already PCA_Output.rds file available
+#' @param Map_Species boolean. True if spectral species mapping has to be done
+#' @param Map_Alpha boolean. True if calculating alpha diversity has to be done
+#' @param MAP_Beta boolean. True if calculating beta diversity has to be done
 #' @param PCA_Threshold number. Percentage explained by PCs for selecting PCs.
 #'
 #' @return Returns the full file name
@@ -22,7 +25,10 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
                                  NbCPU = 4,
                                  MaxRAM = 8,
                                  Perform_PCA = TRUE,
-                                 PCA_Threshold = 98) {
+                                 Map_Species = TRUE,
+                                 Map_Alpha = TRUE,
+                                 MAP_Beta = TRUE,
+                                 PCA_Threshold = 99) {
   Input_Mask_File <- Mask_Image_File_Path
   Input_Image_File <- Hyperspectral_Image_File_Path
   Input_HDR_File <- biodivMapR::get_HDR_name(Hyperspectral_Image_File_Path, showWarnings = FALSE)
@@ -50,10 +56,10 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   Excluded_WL <- rbind(Excluded_WL, c(2400, 2501))
 
   pca_output_rds_file_path <- file.path(Output_Dir,
-                                       rectified_image_file_name,
-                                       TypePCA,
-                                       'PCA',
-                                       'PCA_Output.rds')
+                                        rectified_image_file_name,
+                                        TypePCA,
+                                        'PCA',
+                                        'PCA_Output.rds')
 
   if (Perform_PCA) {
     ################################################################################
@@ -116,11 +122,11 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   bandselection_pca <- paste(sprintf("-b %d", 1:num_components), collapse = " ")
   # GDAL translate command to extract the specified bands
   pca_output_envi_file_path <- file.path(Output_Dir,
-                                        rectified_image_file_name,
-                                        TypePCA,
-                                        'PCA',
-                                        'OutputPCA_30_PCs')
-  pca_selection_file_path <- paste0(pca_output_envi_file_path,'_selection.tif')
+                                         rectified_image_file_name,
+                                         TypePCA,
+                                         'PCA',
+                                         'OutputPCA_30_PCs')
+  pca_selection_file_path <- paste0(pca_output_envi_file_path, '_selection.tif')
 
   gdal_translate_command <- sprintf(
     "gdal_translate %s -of GTiff %s %s",
@@ -147,48 +153,55 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   ##                  Perform Spectral species mapping                          ##
   ## https://jbferet.github.io/biodivMapR/articles/biodivMapR_5.html            ##
   ################################################################################
-  print("MAP SPECTRAL SPECIES")
-  Kmeans_info <- biodivMapR::map_spectral_species(
-    Input_Image_File = Input_Image_File,
-    Input_Mask_File = PCA_Output$MaskPath,
-    Output_Dir = Output_Dir,
-    SpectralSpace_Output = PCA_Output,
-    nbclusters = NBbclusters,
-    nbCPU = NbCPU,
-    MaxRAM = MaxRAM,
-    progressbar = TRUE
-  )
+  if (Map_Species) {
+    print("MAP SPECTRAL SPECIES")
+    Kmeans_info <- biodivMapR::map_spectral_species(
+      Input_Image_File = Input_Image_File,
+      Input_Mask_File = PCA_Output$MaskPath,
+      Output_Dir = Output_Dir,
+      SpectralSpace_Output = PCA_Output,
+      nbclusters = NBbclusters,
+      nbCPU = NbCPU,
+      MaxRAM = MaxRAM,
+      progressbar = TRUE
+    )
+  }
+
 
   ################################################################################
   ##                Perform alpha and beta diversity mapping                    ##
   ## https://jbferet.github.io/biodivMapR/articles/biodivMapR_6.html            ##
   ################################################################################
-  print("MAP ALPHA DIVERSITY")
-  Index_Alpha   = c('Shannon', 'Simpson')
-  #Index_Alpha <- c('Shannon')
-  biodivMapR::map_alpha_div(
-    Input_Image_File = Input_Image_File,
-    Output_Dir = Output_Dir,
-    TypePCA = TypePCA,
-    window_size = Window_size,
-    nbCPU = NbCPU,
-    MaxRAM = MaxRAM,
-    Index_Alpha = Index_Alpha,
-    nbclusters = NBbclusters,
-    FullRes = TRUE
-  )
+  if (Map_Alpha) {
+    print("MAP ALPHA DIVERSITY")
+    Index_Alpha   = c('Shannon', 'Simpson')
+    #Index_Alpha <- c('Shannon')
+    biodivMapR::map_alpha_div(
+      Input_Image_File = Input_Image_File,
+      Output_Dir = Output_Dir,
+      TypePCA = TypePCA,
+      window_size = Window_size,
+      nbCPU = NbCPU,
+      MaxRAM = MaxRAM,
+      Index_Alpha = Index_Alpha,
+      nbclusters = NBbclusters,
+      FullRes = TRUE
+    )
+  }
 
-  print("MAP BETA DIVERSITY")
-  biodivMapR::map_beta_div(
-    Input_Image_File = Input_Image_File,
-    Output_Dir = Output_Dir,
-    TypePCA = TypePCA,
-    window_size = Window_size,
-    nbCPU = NbCPU,
-    MaxRAM = MaxRAM,
-    nbclusters = NBbclusters,
-    FullRes = TRUE
-  )
+  if (MAP_Beta) {
+    print("MAP BETA DIVERSITY")
+    biodivMapR::map_beta_div(
+      Input_Image_File = Input_Image_File,
+      Output_Dir = Output_Dir,
+      TypePCA = TypePCA,
+      window_size = Window_size,
+      nbCPU = NbCPU,
+      MaxRAM = MaxRAM,
+      nbclusters = NBbclusters,
+      FullRes = TRUE
+    )
+  }
 
   # print("MAP FUNCTIONAL DIVERSITY")
   # Selected_Features <- read.table(selected_components_file_path)[[1]]

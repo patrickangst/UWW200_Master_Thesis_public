@@ -12,7 +12,10 @@ analyse_biodiversity(
   NbCPU = 4,
   MaxRAM = 8,
   Perform_PCA = TRUE,
-  PCA_Threshold = 98
+  Map_Species = TRUE,
+  Map_Alpha = TRUE,
+  MAP_Beta = TRUE,
+  PCA_Threshold = 99
 )
 }
 \arguments{
@@ -29,6 +32,12 @@ analyse_biodiversity(
 \item{MaxRAM}{numeric. MaxRAM maximum size of chunk in GB to limit RAM allocation when reading image file.}
 
 \item{Perform_PCA}{boolean. False if already PCA_Output.rds file available}
+
+\item{Map_Species}{boolean. True if spectral species mapping has to be done}
+
+\item{Map_Alpha}{boolean. True if calculating alpha diversity has to be done}
+
+\item{MAP_Beta}{boolean. True if calculating beta diversity has to be done}
 
 \item{PCA_Threshold}{number. Percentage explained by PCs for selecting PCs.}
 }

@@ -1,218 +1,152 @@
-rm(list = ls())
+# To evaluate the significance of species and determine if some are too insignificant to include in further analysis, you can perform the following steps in R:
+#
+# 1. Statistical Approach
+# Relative Abundance: Calculate the proportion of each species' total abundance relative to the total abundance of all species. Species with low proportions may be considered insignificant.
+#
+# Variance Analysis: Evaluate the variability of each species across samples. Species with very low variance might contribute little information.
+#
+# Plot Significance: Create visualizations such as a cumulative proportion curve or bar plots highlighting significant vs. insignificant species.
+
+
+
+# clean environment
+rm(list=ls(all=TRUE));gc()
 graphics.off()
 
-devtools::load_all()
-
-# Load necessary libraries
-library(SpectralPatang)
-library(parallel)
-library(factoextra)
-library(cluster)
-library(terra)
-library(stats)
-library(NbClust)
 library(ggplot2)
 
-raw_image_file_path <- 'C:/Users/Patrick/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_cropped_flightstrip/ang20190712t231624rfl/data/hs_raw_image/ang20190712t231624_rfl_v2v2_img'
-rectified_image_folder_path <- 'C:/Users/Patrick/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_cropped_flightstrip/ang20190712t231624rfl/data/rectified'
-rectified_image_file_path <- file.path(rectified_image_folder_path,'ang20190712t231624_rfl_v2v2_img_rectified_cut')
-cut_shp <- 'C:/Users/Patrick/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_cut_shp/output_square_R/output_square_R.shp'
+csv_file_path <- paste0(base_path,'/data/species_analysis/',csv_file_name)
 
-gdal_command_rectify <- sprintf(
-  "gdalwarp -cutline %s -crop_to_cutline -of ENVI -co INTERLEAVE=BIL -dstnodata -9999 %s %s",
-  cut_shp,
-  raw_image_file_path,
-  rectified_image_file_path
+data <- read.csv(csv_file_path, header = TRUE, fileEncoding = "latin1")
+
+species_data <- data[, -c(1, ncol(data))]  # Remove the first and last columns
+
+# Calculate total abundance for each species
+species_sums <- sort(colSums(species_data, na.rm = TRUE), decreasing = TRUE)
+
+# Calculate relative abundance
+total_abundance <- sum(species_sums)  # Total abundance across all species
+relative_abundance <- species_sums / total_abundance * 100  # Convert to percentages
+
+# Variance of each species across samples
+species_variance <- apply(species_data, 2, var, na.rm = TRUE)
+
+# Set threshold for significance (e.g., minimum relative abundance of 1%)
+threshold <- 1
+significant_species <- names(relative_abundance[relative_abundance >= threshold])
+insignificant_species <- names(relative_abundance[relative_abundance < threshold])
+
+# Calculate relative abundance
+relative_abundance_df <- data.frame(
+  Species = names(relative_abundance),
+  RelativeAbundance = relative_abundance
 )
 
-# # Execute the command in R
-system(gdal_command_rectify)
+# Calculate the number of species above the threshold
+num_significant_species <- sum(relative_abundance >= threshold)
 
-savi_file_path <- 'C:/Users/Patrick/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_cropped_flightstrip/ang20190712t231624rfl/mask'
-
-SpectralPatang::create_SAVI_mask(rectified_image_folder_path,savi_file_path)
-
-savi_file_path <- paste0(savi_file_path,'/ang20190712t231624_rfl_v2v2_img_rectified_cut_savi_mask_02')
-
-num_cores <- parallel::detectCores()
-
-SpectralPatang::analyse_biodiversity(rectified_image_file_path,
-                                     savi_file_path,
-                                     NBbclusters = 5,
-                                     Window_size = 10,
-                                     NbCPU = num_cores,
-                                     MaxRAM = 8,
-                                     Perform_PCA = TRUE,
-                                     PCA_Threshold = 99)
-
-
-################################################################################
-################################################################################
-# Analyse cluster performance
-################################################################################
-################################################################################
-
-################################################################################
-# Using fviz_cluster
-################################################################################
-
-pca_hs_image_path <- 'C:/Users/Patrick/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_cropped_flightstrip/ang20190712t231624rfl/result/ang20190712t231624_rfl_v2v2_img_rectified_cut/SPCA/PCA/OutputPCA_30_PCs'
-pca_hs_image <- terra::rast(pca_hs_image_path)
-num_cores <- parallel::detectCores()
-
-# select only relevant principle components
-pca_hs_image_subset <- terra::subset(pca_hs_image, 1:17)
-downsamle <- FALSE
-# Downsample the raster (reduce spatial resolution)
-if (downsamle){
-  pca_hs_image_subset <- terra::aggregate(pca_hs_image_subset, fact = 1, fun = mean, cores = num_cores)
+# Function to round up to the nearest multiple of n
+round_up <- function(x, multiple) {
+  ceiling(x / multiple) * multiple
 }
 
+nbclusters_calculated <-round_up(num_significant_species, 5)
 
-# read values as a matrix
-pca_data_convex <- as.matrix(terra::values(pca_hs_image_subset))
+# Create the plot with the additional annotation
+relative_abundance_plot <- ggplot(relative_abundance_df, aes(x = reorder(Species, -RelativeAbundance), y = RelativeAbundance)) +
+  geom_bar(stat = "identity", aes(fill = RelativeAbundance >= threshold), show.legend = FALSE) +
+  scale_fill_manual(values = c("TRUE" = "steelblue", "FALSE" = "lightgray")) +
+  geom_hline(yintercept = threshold, linetype = "dashed", color = "red", size = 1) +
+  annotate("text", x = nrow(relative_abundance_df) / 2, y = max(relative_abundance) * 0.9,
+           label = paste(num_significant_species, "species above", threshold, "% threshold"),
+           color = "blue", size = 5, angle = 0, hjust = 0.5) +  # Annotation for number of significant species
+  annotate("text", x = nrow(relative_abundance_df) / 2, y = threshold + 0.5,
+           label = paste("Threshold =", threshold, "%"), color = "red", size = 4, angle = 0, hjust = 0.5) +
+  labs(
+    title = "Relative Abundance of Species",
+    x = "Species",
+    y = "Relative Abundance (%)"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.line.x = element_line(color = "black")
+  )
 
-# Omit NA values
-pca_data_convex <- na.omit(pca_data_convex)
-
-# Standardize the data for better clustering performance
-pca_data_convex <- scale(pca_data_convex)
-
-
-set.seed(123)
-km.res <- kmeans(pca_data_convex, centers = 2, nstart = 50, algorithm = "Hartigan-Wong")
-
-fviz_cluster(km.res, data = pca_data_convex, geom = "point",
-             stand = FALSE, ellipse = TRUE, ellipse.type = "convex") +
-  labs(title = "K-Means Clustering with Convex Hulls")
-
-
-
-################################################################################
-# Using WSS and Silhouette
-################################################################################
-
-# Define Range of Clusters
-k.values <- 2:30
-
-# Define Clustering Metrics Functions
-compute_wss <- function(data, k, seed = 123) {
-  set.seed(seed)
-  kmeans(data, centers = k, nstart = 10)$tot.withinss
-}
-
-compute_silhouette <- function(data, k, seed = 123) {
-  set.seed(seed)
-  km <- kmeans(data, centers = k, nstart = 10)
-  ss <- silhouette(km$cluster, dist(data))
-  mean(ss[, 3])
-}
+# Create the directory
+if (!dir.exists("data/species_analysis/plots")) dir.create("species_analysis/plots", recursive = TRUE)
 
 
-# Setup Parallel Cluster
-cl <- makeCluster(num_cores)
-clusterExport(cl, varlist = c("pca_data_convex", "compute_wss", "compute_silhouette"))
-clusterEvalQ(cl, library(cluster))  # Load `cluster` library on workers
+print(relative_abundance_plot)
 
-# Compute Metrics in Parallel
-wss_values <- parSapply(cl, k.values, function(k) compute_wss(pca_data_convex, k))
-sil_values <- parSapply(cl, k.values, function(k) compute_silhouette(pca_data_convex, k))
+# Save the relative abundance plot
+ggsave(paste0(base_path,"/data/species_analysis/plots/relative_abundance_plot.png"), relative_abundance_plot, dpi = 300, width = 10, height = 6)
 
-# Stop Cluster
-stopCluster(cl)
 
-# Create Data Frame with Metrics
-cluster_metrics <- data.frame(
-  k = k.values,
-  WSS = wss_values,
-  Silhouette = sil_values
+
+# Print summary
+cat("Total species:", length(species_sums), "\n")
+cat("Significant species (>= 1%):", length(significant_species), "\n")
+cat("Insignificant species (< 1%):", length(insignificant_species), "\n\n")
+
+cat("Significant Species:\n")
+print(significant_species)
+
+
+
+# Define threshold for cumulative percentage
+cumulative_threshold <- 95  # You can change this value to any percentage
+
+# Prepare the data for Pareto chart
+species_df <- data.frame(
+  Species = names(species_sums),
+  Abundance = species_sums
 )
 
-# Determine Optimal Clusters
-# Elbow Method: Find the point where the second derivative is minimized
-diff_wss <- diff(cluster_metrics$WSS)
-diff2_wss <- diff(diff_wss)
-optimal_clusters_elbow <- which.min(diff2_wss) + 2  # +2 to account for the two diffs
+# Sort species by abundance in descending order and calculate cumulative percentage
+species_df <- species_df[order(-species_df$Abundance), ]
+species_df$Cumulative <- cumsum(species_df$Abundance) / sum(species_df$Abundance) * 100
 
-# Silhouette Method: Find the maximum silhouette width
-optimal_clusters_sil <- which.max(cluster_metrics$Silhouette) + 1  # +1 because k starts at 2
+# Find the number of species required for the given cumulative threshold
+n_species_threshold <- which(species_df$Cumulative >= cumulative_threshold)[1]  # First species to exceed the threshold
 
-cat("Optimal number of clusters (Elbow Method):", optimal_clusters_elbow, "\n")
-cat("Optimal number of clusters (Silhouette Method):", optimal_clusters_sil, "\n")
-
-# Visualize the Metrics
-# Elbow Method Plot
-ggplot(cluster_metrics, aes(x = k, y = WSS)) +
-  geom_point() +
-  geom_line() +
-  geom_vline(xintercept = optimal_clusters_elbow, linetype = "dashed", color = "red") +
-  annotate("text", x = optimal_clusters_elbow, y = max(cluster_metrics$WSS), label = paste("Optimal k =", optimal_clusters_elbow), vjust = -1, color = "red") +
-  labs(title = "Elbow Method for Optimal Clusters",
-       x = "Number of Clusters (k)",
-       y = "Total Within-Cluster Sum of Squares (WSS)") +
-  theme_minimal()
-
-# Silhouette Method Plot
-ggplot(cluster_metrics, aes(x = k, y = Silhouette)) +
-  geom_point() +
-  geom_line() +
-  geom_vline(xintercept = optimal_clusters_sil, linetype = "dashed", color = "blue") +
-  annotate("text", x = optimal_clusters_sil, y = max(cluster_metrics$Silhouette), label = paste("Optimal k =", optimal_clusters_sil), vjust = -1, color = "blue") +
-  labs(title = "Silhouette Method for Optimal Clusters",
-       x = "Number of Clusters (k)",
-       y = "Average Silhouette Width") +
-  theme_minimal()
-
-################################################################################
-# Using NbClust
-################################################################################
-
-# Perform NbClust to determine the optimal number of clusters
-set.seed(123)  # For reproducibility
-nbclust_result <- NbClust(
-  data = pca_data_convex,         # The matrix with rows as observations and columns as variables
-  distance = "euclidean",  # Distance metric for clustering
-  min.nc = 2,              # Minimum number of clusters to evaluate
-  max.nc = 30,             # Maximum number of clusters to evaluate
-  method = "kmeans",       # Clustering method
-  index = "all"            # Use all available indices to determine the optimal number of clusters
-)
-
-# Extract the number of clusters suggested by each index
-optimal_clusters <- nbclust_result$Best.nc
-
-# Create a frequency table for the suggested cluster numbers
-cluster_votes <- table(optimal_clusters)
-
-# Determine the optimal number of clusters based on the majority vote
-best_number_of_clusters <- as.numeric(names(which.max(cluster_votes)))
-cat("The optimal number of clusters is:", best_number_of_clusters, "\n")
-
-
-cluster_freq <- as.data.frame(table(optimal_clusters))
-colnames(cluster_freq) <- c("Number_of_Clusters", "Frequency")
-
-
-# Plot the frequency of recommended cluster numbers
-ggplot(cluster_freq, aes(x = Number_of_Clusters, y = Frequency)) +
+# Create Pareto chart
+pareto_plot <- ggplot(species_df, aes(x = reorder(Species, -Abundance), y = Abundance)) +
+  # Bar chart
   geom_bar(stat = "identity", fill = "steelblue") +
-  labs(
-    title = "Optimal Number of Clusters",
-    subtitle = "Based on 30 clustering indices",
-    x = "Number of Clusters",
-    y = "Frequency of Indices Supporting Cluster Count"
+
+  # Cumulative line
+  geom_line(aes(y = (Cumulative / 100) * max(Abundance), group = 1), color = "red", size = 1) +
+  geom_point(aes(y = (Cumulative / 100) * max(Abundance)), color = "red", size = 2) +
+
+  # Threshold line
+  geom_hline(yintercept = (cumulative_threshold / 100) * max(species_df$Abundance),
+             linetype = "dashed", color = "darkgreen", size = 1) +
+
+  # Annotate the number of species required for the threshold
+  annotate("text", x = n_species_threshold,
+           y = (cumulative_threshold / 100) * max(species_df$Abundance) * 0.9,
+           label = paste(n_species_threshold, "species for", cumulative_threshold, "%"),
+           color = "darkgreen", angle = 45, hjust = 1) +
+
+  # Customize y-axis with dual axes
+  scale_y_continuous(
+    name = "Abundance",
+    sec.axis = sec_axis(~ . / max(species_df$Abundance) * 100, name = "Cumulative Percentage")
   ) +
-  theme_minimal()
 
-# Visualize the number of clusters recommended by various indices
-fviz_nbclust(nbclust_result) +
-  labs(
-    title = "Optimal Number of Clusters",
-    subtitle = "Based on 30 clustering indices",
-    x = "Number of Clusters",
-    y = "Frequency of Indices Supporting Cluster Count"
-  ) +
-  theme_minimal()
+  # Titles and labels
+  labs(title = paste("Pareto Chart of Species Abundance (", cumulative_threshold, "% Threshold)", sep = ""),
+       x = "Species", y = "Abundance") +
 
-save.image(file = "C:/Users/Patrick/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_cropped_flightstrip/ang20190712t231624rfl/result/ang20190712t231624_rfl_v2v2_img_rectified_cut/SPCA/PCA/kmeans_analytics.RData")
+  # Rotate x-axis labels and add axis line
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    axis.line.x = element_line(color = "black")  # Add x-axis line
+  )
 
+print(pareto_plot)
+
+# Save the Pareto chart
+ggsave(paste0(base_path,"/data/species_analysis/plots/pareto_chart.png"), pareto_plot, dpi = 300, width = 12, height = 7)
