@@ -1,3 +1,11 @@
+directory_path <- "/path/to/your/tewe.txt"
+
+# Replace the last directory with "mine"
+new_directory_path <- file.path(dirname(directory_path), "mine")
+
+print(new_directory_path)
+
+
 rm(list = ls())
 graphics.off()
 

@@ -64,6 +64,63 @@ get_optimal_cluster_number <- function(Image_File_Path,
       optimal_clusters_elbow,
       "\n")
 
+  # Visualize the Metrics
+  # Elbow Method Plot
+  # Create the WSS plot
+
+  ggplot2::ggplot(cluster_metrics) +
+    ggplot2::geom_point(mapping = aes(x = k, y = WSS), color = "blue", size = 2) +
+    ggplot2::geom_line(mapping = aes(x = k, y = WSS), color = "blue", linewidth = 1) +
+    ggplot2::geom_vline(xintercept = optimal_clusters_elbow, linetype = "dashed", color = "red", linewidth = 1) +
+    annotate("text", x = optimal_clusters_elbow, y = max(cluster_metrics$WSS),
+             label = paste("Optimal k =", optimal_clusters_elbow),
+             vjust = -1, color = "red", size = 4) +
+    labs(
+      title = "Elbow Method for Optimal Clusters",
+      x = "Number of Clusters (k)",
+      y = "Total Within-Cluster Sum of Squares (WSS)"
+    ) +
+    theme_minimal(base_size = 14) +
+    theme(
+      plot.title = element_text(hjust = 0.5, face = "bold")
+    )
+
+
+
+  # ggplot2::ggplot(cluster_metrics, aes(x = k, y = WSS)) +
+  #   geom_point(color = "blue", size = 2) +                      # Add points with styling
+  #   geom_line(color = "blue", linewidth = 1) +                 # Add a line with styling
+  #   geom_vline(xintercept = optimal_clusters_elbow,
+  #              linetype = "dashed", color = "red", linewidth = 1) +  # Add dashed vertical line
+  #   annotate("text", x = optimal_clusters_elbow,
+  #            y = max(cluster_metrics$WSS),
+  #            label = paste("Optimal k =", optimal_clusters_elbow),
+  #            vjust = -1, color = "red", size = 4) +             # Add annotation
+  #   labs(
+  #     title = "Elbow Method for Optimal Clusters",             # Title
+  #     x = "Number of Clusters (k)",                            # X-axis label
+  #     y = "Total Within-Cluster Sum of Squares (WSS)"          # Y-axis label
+  #   ) +
+  #   theme_minimal(base_size = 14) +                            # Use minimal theme with larger text
+  #   theme(
+  #     plot.title = element_text(hjust = 0.5, face = "bold")    # Center and bold the title
+  #   )
+
+
+
+  directory_path <- dirname(Image_File_Path)
+  directory_path <- sub('rectified$', 'species_analyses', directory_path)
+
+  Plot_File_Path <- file.path(directory_path, 'plots','relative_abundance_plot.png')
+
+  # Save the relative abundance plot
+  ggplot2::ggsave(Plot_File_Path, relative_abundance_plot, dpi = 300, width = 10, height = 6)
+
   return(optimal_clusters_elbow)
 
 }
+
+#debug(get_optimal_cluster_number)
+path_name <- get_optimal_cluster_number(
+  '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/clustertest/result/ang20190706t235120_rfl_v2v2_img_rectified_clustertest/SPCA/PCA/OutputPCA_30_PCs_selection.tif'
+)

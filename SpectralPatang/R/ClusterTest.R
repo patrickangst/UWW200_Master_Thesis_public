@@ -43,10 +43,12 @@ test_cluster <- function(Main_Folder_Path,
 
   cut_image <- function(input_image_file_path,
                         output_image_file_path,
-                        shp_file_path) {
+                        shp_file_path,
+                        file_format) {
     gdal_cut_command <- sprintf(
-      "gdalwarp -cutline %s -crop_to_cutline -of ENVI -co INTERLEAVE=BIL -dstnodata -9999 %s %s",
+      "gdalwarp -cutline %s -crop_to_cutline -of %s %s %s",
       shp_file_path,
+      file_format,
       input_image_file_path,
       output_image_file_path
     )
@@ -62,6 +64,7 @@ test_cluster <- function(Main_Folder_Path,
   cluster_rectified_image_folder_path <- file.path(Main_Folder_Path, 'clustertest', 'data', 'rectified')
   cluster_rgb_image_folder_path <- file.path(Main_Folder_Path, 'clustertest', 'data', 'rgb')
   cluster_plotlocations_shp_folder_path <- file.path(Main_Folder_Path, 'clustertest', 'data', 'plotlocations')
+  cluster_species_analysis_folder_path <- file.path(Main_Folder_Path, 'clustertest', 'data', 'species_analysis')
   cluster_cutfile_shp_folder_path <- file.path(Main_Folder_Path, 'clustertest', 'data', 'cutfile')
   cluster_mask_folder_path <- file.path(Main_Folder_Path, 'clustertest', 'mask')
   cluster_result_folder_path <- file.path(Main_Folder_Path, 'clustertest', 'result')
@@ -99,14 +102,16 @@ test_cluster <- function(Main_Folder_Path,
   cut_image(
     raw_image_file_path,
     cluster_raw_image_file_path,
-    cluster_cutfile_shp_file_path
+    cluster_cutfile_shp_file_path,
+    'ENVI'
   )
 
   # cut rectified image
   cut_image(
     rectified_image_file_path,
     cluster_rectified_image_file_path,
-    cluster_cutfile_shp_file_path
+    cluster_cutfile_shp_file_path,
+    'ENVI'
   )
 
   # create mask file
@@ -150,7 +155,7 @@ test_cluster <- function(Main_Folder_Path,
 
   selected_pc_file_name <- basename(selected_pc_file_path)
   selected_pc_file_name_without_ext <- sub("\\.tif$", "", selected_pc_file_name)
-  selected_pc_cut_file_name <- paste0(selected_pc_file_name_without_ext,'_cut.tif')
+  selected_pc_cut_file_name <- paste0(selected_pc_file_name_without_ext, '_cut.tif')
   selected_pc_cut_file_path <- file.path(
     result_folder_path,
     rectified_image_file_name,
@@ -159,22 +164,33 @@ test_cluster <- function(Main_Folder_Path,
     selected_pc_cut_file_name
   )
 
+  # cut rectified image
+  cut_image(
+    selected_pc_file_path,
+    selected_pc_cut_file_path,
+    cluster_cutfile_shp_file_path,
+    'GTiff'
+  )
 
   optimal_cluster_number_cut <- get_optimal_cluster_number(selected_pc_cut_file_path,
-                                                       Min_Cluster = 2,
-                                                       Max_Cluster = 30)
-
-  cat("Optimal number of optimal_cluster_number_cut (Elbow Method):",
-      optimal_cluster_number_cut,
-      "\n")
-
-  optimal_cluster_number <- get_optimal_cluster_number(selected_pc_file_path,
                                                            Min_Cluster = 2,
                                                            Max_Cluster = 30)
 
-  cat("Optimal number of optimal_cluster_number_cut (Elbow Method):",
-      optimal_cluster_number_cut,
-      "\n")
+  cat(
+    "Optimal number of optimal_cluster_number_cut (Elbow Method):",
+    optimal_cluster_number_cut,
+    "\n"
+  )
+
+  optimal_cluster_number <- get_optimal_cluster_number(selected_pc_file_path,
+                                                       Min_Cluster = 2,
+                                                       Max_Cluster = 30)
+
+  cat(
+    "Optimal number of optimal_cluster_number_cut (Elbow Method):",
+    optimal_cluster_number_cut,
+    "\n"
+  )
 
   # SpectralPatang::analyse_biodiversity(
   #   rectified_image_file_path,
@@ -193,7 +209,7 @@ test_cluster <- function(Main_Folder_Path,
   return(rectified_image_file_name)
 }
 
-#debug(test_cluster)
+debug(test_cluster)
 path_name <- test_cluster(
   '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl'
 )
