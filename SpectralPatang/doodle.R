@@ -51,3 +51,9 @@ SpectralPatang::analyse_biodiversity(rectified_image_file_path,
 
 
 uesche <- read.csv("~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/data/species_analysis/tvexport.csv")
+
+dirpath <- "~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/data/species_analysis/tvexport.csv"
+
+Image_File_Path <- '/media/patang/T9/d_done/d_ang20190713t002123rfl/result/ang20190713t002123_rfl_v2v2_img_rectified/SPCA/PCA/OutputPCA_30_PCs_selection.tif'
+
+clusters <- SpectralPatang::get_optimal_cluster_number(Image_File_Path)

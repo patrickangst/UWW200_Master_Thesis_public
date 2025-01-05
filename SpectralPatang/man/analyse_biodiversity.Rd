@@ -42,7 +42,7 @@ analyse_biodiversity(
 \item{PCA_Threshold}{number. Percentage explained by PCs for selecting PCs.}
 }
 \value{
-Returns the full file name
+Returns the full file path of the selected PCA file
 }
 \description{
 This function is a wrapper for the biodiversity calculations using the

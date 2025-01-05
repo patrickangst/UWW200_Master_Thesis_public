@@ -14,7 +14,7 @@
 #' @param MAP_Beta boolean. True if calculating beta diversity has to be done
 #' @param PCA_Threshold number. Percentage explained by PCs for selecting PCs.
 #'
-#' @return Returns the full file name
+#' @return Returns the full file path of the selected PCA file
 #' @export
 #'
 
@@ -215,7 +215,7 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   #                    TypePCA = TypePCA)
 
 
-  return(rectified_image_file_name)
+  return(pca_selection_file_path)
 }
 
 #debug(analyse_biodiversity)

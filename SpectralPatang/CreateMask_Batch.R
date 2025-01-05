@@ -19,17 +19,18 @@ process_subfolder <- function(subfolder_path) {
   mask <- create_SAVI_mask(rectified_image_folder_path,mask_image_folder_path)
 
   # Placeholder for your custom logic
-  message(paste("Processing:", subfolder_path))
+  #message(paste("Processing:", subfolder_path))
 
   # Example function call (replace with your actual processing functions)
   # result <- your_function(subfolder_path)
 
   # Return a result (optional)
-  return(paste("Processed", basename(subfolder_path)))
+  message(paste("Processed:", basename(subfolder_path)))
+
 }
 
 # Main function to process all subfolders in parallel
-process_all_subfolders <- function(main_folder_path, num_cores = 2) {
+process_all_subfolders_cluster <- function(main_folder_path, num_cores = 2) {
   # Check if the main folder exists
   if (!dir.exists(main_folder_path)) {
     stop("The specified folder does not exist!")
@@ -64,15 +65,38 @@ process_all_subfolders <- function(main_folder_path, num_cores = 2) {
   return(results)
 }
 
+# Main function to process all subfolders in parallel
+process_all_subfolders <- function(main_folder_path) {
+  # Check if the main folder exists
+  if (!dir.exists(main_folder_path)) {
+    stop("The specified folder does not exist!")
+  }
+
+  # List subfolders in the main folder
+  subfolders <- list.dirs(main_folder_path, recursive = FALSE)
+
+  # Ensure there are subfolders to process
+  if (length(subfolders) == 0) {
+    stop("No subfolders found in the specified folder.")
+  }
+
+  # Export the custom function to the workers
+  for(folder in subfolders){
+    process_subfolder(folder)
+  }
+
+}
+
 # Example usage
-main_folder <- "~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data"
+main_folder <- "/media/patang/T9/e_done"
 num_cores_to_use <- detectCores()  # Adjust the number of cores based on your system
 
 # Call the main function
 #debug(process_all_subfolders)
-results <- process_all_subfolders(main_folder, num_cores = num_cores_to_use)
+#results <- process_all_subfolders_cluster(main_folder, num_cores = num_cores_to_use)
+process_all_subfolders(main_folder)
 
 # Print results
-print(results)
+# print(results)
 
 

@@ -108,13 +108,18 @@ get_optimal_cluster_number <- function(Image_File_Path,
 
 
 
-  directory_path <- dirname(Image_File_Path)
-  directory_path <- sub('rectified$', 'species_analyses', directory_path)
+  # directory_path <- dirname(Image_File_Path)
+  # directory_path <- sub('rectified$', 'species_analyses', directory_path)
+  #
+  # Plot_File_Path <- file.path(directory_path, 'plots','relative_abundance_plot.png')
+  #
+  # # Save the relative abundance plot
+  # ggplot2::ggsave(Plot_File_Path, relative_abundance_plot, dpi = 300, width = 10, height = 6)
 
-  Plot_File_Path <- file.path(directory_path, 'plots','relative_abundance_plot.png')
-
-  # Save the relative abundance plot
-  ggplot2::ggsave(Plot_File_Path, relative_abundance_plot, dpi = 300, width = 10, height = 6)
+  # Save to a text file
+  output_folder_path <- dirname(Image_File_Path)
+  output_file_path <- file.path(output_folder_path,'optimal_number_of_clusters.txt')
+  write(optimal_clusters_elbow, file = output_file_path)
 
   return(optimal_clusters_elbow)
 
