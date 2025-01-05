@@ -68,22 +68,22 @@ get_optimal_cluster_number <- function(Image_File_Path,
   # Elbow Method Plot
   # Create the WSS plot
 
-  ggplot2::ggplot(cluster_metrics) +
-    ggplot2::geom_point(mapping = aes(x = k, y = WSS), color = "blue", size = 2) +
-    ggplot2::geom_line(mapping = aes(x = k, y = WSS), color = "blue", linewidth = 1) +
-    ggplot2::geom_vline(xintercept = optimal_clusters_elbow, linetype = "dashed", color = "red", linewidth = 1) +
-    annotate("text", x = optimal_clusters_elbow, y = max(cluster_metrics$WSS),
-             label = paste("Optimal k =", optimal_clusters_elbow),
-             vjust = -1, color = "red", size = 4) +
-    labs(
-      title = "Elbow Method for Optimal Clusters",
-      x = "Number of Clusters (k)",
-      y = "Total Within-Cluster Sum of Squares (WSS)"
-    ) +
-    theme_minimal(base_size = 14) +
-    theme(
-      plot.title = element_text(hjust = 0.5, face = "bold")
-    )
+  # ggplot2::ggplot(cluster_metrics) +
+  #   ggplot2::geom_point(mapping = aes(x = k, y = WSS), color = "blue", size = 2) +
+  #   ggplot2::geom_line(mapping = aes(x = k, y = WSS), color = "blue", linewidth = 1) +
+  #   ggplot2::geom_vline(xintercept = optimal_clusters_elbow, linetype = "dashed", color = "red", linewidth = 1) +
+  #   annotate("text", x = optimal_clusters_elbow, y = max(cluster_metrics$WSS),
+  #            label = paste("Optimal k =", optimal_clusters_elbow),
+  #            vjust = -1, color = "red", size = 4) +
+  #   labs(
+  #     title = "Elbow Method for Optimal Clusters",
+  #     x = "Number of Clusters (k)",
+  #     y = "Total Within-Cluster Sum of Squares (WSS)"
+  #   ) +
+  #   theme_minimal(base_size = 14) +
+  #   theme(
+  #     plot.title = element_text(hjust = 0.5, face = "bold")
+  #   )
 
 
 
@@ -121,6 +121,6 @@ get_optimal_cluster_number <- function(Image_File_Path,
 }
 
 #debug(get_optimal_cluster_number)
-path_name <- get_optimal_cluster_number(
-  '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/clustertest/result/ang20190706t235120_rfl_v2v2_img_rectified_clustertest/SPCA/PCA/OutputPCA_30_PCs_selection.tif'
-)
+# path_name <- get_optimal_cluster_number(
+#   '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/clustertest/result/ang20190706t235120_rfl_v2v2_img_rectified_clustertest/SPCA/PCA/OutputPCA_30_PCs_selection.tif'
+# )

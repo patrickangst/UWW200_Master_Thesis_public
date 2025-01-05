@@ -16,13 +16,18 @@ process_subfolder <- function(subfolder_path) {
   rectified_image_folder_path <- file.path(subfolder_path,'data','rectified')
   mask_image_folder_path <- file.path(subfolder_path,'mask')
 
+
+
   analysis_result <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
                                                           savi_file_path,
-                                                          NBbclusters = 5,
-                                                          Window_size = 10,
-                                                          NbCPU = num_cores,
+                                                          NBbclusters = 20,
+                                                          Window_size = 20,
+                                                          NbCPU = num_cores_to_use,
                                                           MaxRAM = 8,
-                                                          Perform_PCA = FALSE,
+                                                          Perform_PCA = TRUE,
+                                                          Map_Species = TRUE,
+                                                          Map_Alpha = TRUE,
+                                                          MAP_Beta = TRUE,
                                                           PCA_Threshold = 99)
 
   # Placeholder for your custom logic
@@ -36,7 +41,7 @@ process_subfolder <- function(subfolder_path) {
 }
 
 # Main function to process all subfolders in parallel
-process_all_subfolders <- function(main_folder_path, num_cores = 2) {
+process_all_subfolders_cluster <- function(main_folder_path, num_cores = 2) {
   # Check if the main folder exists
   if (!dir.exists(main_folder_path)) {
     stop("The specified folder does not exist!")
@@ -71,14 +76,35 @@ process_all_subfolders <- function(main_folder_path, num_cores = 2) {
   return(results)
 }
 
+# Main function to process all subfolders
+process_all_subfolders <- function(main_folder_path) {
+  # Check if the main folder exists
+  if (!dir.exists(main_folder_path)) {
+    stop("The specified folder does not exist!")
+  }
+
+  # List subfolders in the main folder
+  subfolders <- list.dirs(main_folder_path, recursive = FALSE)
+
+  # Ensure there are subfolders to process
+  if (length(subfolders) == 0) {
+    stop("No subfolders found in the specified folder.")
+  }
+
+  process_subfolder(subfolder)
+
+  # Return results
+  return(results)
+}
+
 # Example usage
 main_folder <- "~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data"
 num_cores_to_use <- detectCores()  # Adjust the number of cores based on your system
 
 # Call the main function
 #debug(process_all_subfolders)
-results <- process_all_subfolders(main_folder, num_cores = num_cores_to_use)
-
+#results <- process_all_subfolders_cluster(main_folder, num_cores = num_cores_to_use)
+results <- process_all_subfolders(main_folder)
 # Print results
 print(results)
 

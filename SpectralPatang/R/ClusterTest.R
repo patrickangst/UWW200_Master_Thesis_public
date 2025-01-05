@@ -209,7 +209,7 @@ test_cluster <- function(Main_Folder_Path,
   return(rectified_image_file_name)
 }
 
-debug(test_cluster)
-path_name <- test_cluster(
-  '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl'
-)
+#debug(test_cluster)
+# path_name <- test_cluster(
+#   '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl'
+# )
