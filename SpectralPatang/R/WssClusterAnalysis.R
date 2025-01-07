@@ -2,6 +2,9 @@
 #'
 #' This uses wss to get the optimal kmeans cluster number.
 #' @param Image_File_Path character. Path of the selected PC image
+#' @param Downsample boolean. Should the dataset be down sampled
+#' @param Downsample_factor numeric. Factor to down sample (eg. 2 means 2x2 pixel)
+#' @param Downsample_function character. Dwon sample function (sd, mean, range)
 #' @param Min_Cluster numeric. Minimal amount of clusters to test.
 #' @param Max_Cluster numeric. Maximal amount of clusters to test.
 #'
@@ -10,10 +13,21 @@
 #'
 
 get_optimal_cluster_number <- function(Image_File_Path,
+                                       Downsample = TRUE,
+                                       Downsample_factor = 2,
+                                       Downsample_function = "sd",
                                        Min_Cluster = 2,
                                        Max_Cluster = 30) {
   # Load the raster image
   pca_hs_image <- terra::rast(Image_File_Path)
+
+  if(Downsample){
+    pca_hs_image <- terra::aggregate(pca_hs_image,
+                                                 fact = Downsample_factor,
+                                                 fun = Downsample_function,
+                                                 na.rm = TRUE)
+  }
+
   pca_data <- as.matrix(terra::values(pca_hs_image))
 
   # Define cores for parallel processing

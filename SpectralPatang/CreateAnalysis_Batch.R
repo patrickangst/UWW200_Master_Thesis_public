@@ -34,8 +34,6 @@ process_subfolder <- function(subfolder_path) {
 
 
 
-
-
   mask_image_folder_path <- file.path(subfolder_path,'mask')
   # List all files in the folder
   mask_image_files <- list.files(mask_image_folder_path, full.names = TRUE)
@@ -54,11 +52,13 @@ process_subfolder <- function(subfolder_path) {
   # Construct the full raw file path
   mask_image_file_path <- file.path(mask_image_folder_path, mask_image_file_name)
 
+  Window_size <- 10
 
-  analysis_result <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
+  message(paste("Start PCA for :", basename(subfolder_path)))
+  pca_selection_file_path <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
                                                           mask_image_file_path,
                                                           NBbclusters = 20,
-                                                          Window_size = 20,
+                                                          Window_size = Window_size,
                                                           NbCPU = num_cores_to_use,
                                                           MaxRAM = 8,
                                                           Perform_PCA = TRUE,
@@ -67,51 +67,65 @@ process_subfolder <- function(subfolder_path) {
                                                           MAP_Beta = FALSE,
                                                           PCA_Threshold = 99)
 
-  # Placeholder for your custom logic
-  message(paste("Processed:", basename(subfolder_path)))
+  message(paste("PCA done for :", basename(subfolder_path)))
 
-  # Example function call (replace with your actual processing functions)
-  # result <- your_function(subfolder_path)
+  # Check, if cluster ananlysis has to be done.
+  perform_cluster_analysis <- FALSE
+  output_folder_path <- dirname(rectified_image_file_path)
+  Output_Dir <- sub("data/rectified", "result", output_folder_path)
+  cluster_number_file_path <- file.path(Output_Dir,
+                                        rectified_image_file_name,
+                                        'SPCA',
+                                        'PCA',
+                                        'optimal_number_of_clusters.txt')
 
-  # Return a result (optional)
-  #return(paste("Processed", basename(subfolder_path)))
+  # Check if the file exists
+  if (file.exists(cluster_number_file_path)) {
+    # Read the number from the file
+    NBbclusters <- as.numeric(readLines(cluster_number_file_path))
+
+    # Check if the value is numeric
+    if (!is.na(NBbclusters)) {
+      cat("The optimal number of clusters is:", NBbclusters, "\n")
+    } else {
+      cat("The file exists, but it does not contain a valid number.\n")
+      perform_cluster_analysis <- TRUE
+    }
+  } else {
+    cat("The file does not exist:", cluster_number_file_path, "\n")
+    perform_cluster_analysis <- TRUE
+  }
+
+
+  if(perform_cluster_analysis){
+    message(paste("Start cluster analysis for :", basename(subfolder_path)))
+    NBbclusters <- SpectralPatang::get_optimal_cluster_number(pca_selection_file_path,
+                                                              Downsample = TRUE,
+                                                              Downsample_factor = 2,
+                                                              Downsample_function = "sd",
+                                                              Min_Cluster = 2,
+                                                              Max_Cluster = 30)
+    message(paste("Cluster analysis done for :", basename(subfolder_path), " number of clusters: ", NBbclusters))
+  }
+
+
+  message(paste("Start spectral analysis for :", basename(subfolder_path)))
+  spectral_analysis <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
+                                                                  mask_image_file_path,
+                                                                  NBbclusters = NBbclusters,
+                                                                  Window_size = Window_size,
+                                                                  NbCPU = num_cores_to_use,
+                                                                  MaxRAM = 8,
+                                                                  Perform_PCA = FALSE,
+                                                                  Map_Species = TRUE,
+                                                                  Map_Alpha = TRUE,
+                                                                  MAP_Beta = TRUE,
+                                                                  PCA_Threshold = 99)
+  message(paste("Spectral analysis done for :", basename(subfolder_path)))
+
+
 }
 
-# # Main function to process all subfolders in parallel
-# process_all_subfolders_cluster <- function(main_folder_path, num_cores = 2) {
-#   # Check if the main folder exists
-#   if (!dir.exists(main_folder_path)) {
-#     stop("The specified folder does not exist!")
-#   }
-#
-#   # List subfolders in the main folder
-#   subfolders <- list.dirs(main_folder_path, recursive = FALSE)
-#
-#   # Ensure there are subfolders to process
-#   if (length(subfolders) == 0) {
-#     stop("No subfolders found in the specified folder.")
-#   }
-#
-#   # Set up parallel backend
-#   cl <- makeCluster(num_cores)
-#   registerDoParallel(cl)
-#
-#   # Export the custom function to the workers
-#   results <- foreach(
-#     subfolder = subfolders,
-#     .combine = c,
-#     .packages = c(),  # Add necessary package names here if your logic depends on them
-#     .export = c("process_subfolder","create_SAVI_mask")  # Export the custom function
-#   ) %dopar% {
-#     process_subfolder(subfolder)
-#   }
-#
-#   # Stop the parallel backend
-#   stopCluster(cl)
-#
-#   # Return results
-#   return(results)
-# }
 
 # Main function to process all subfolders
 process_all_subfolders <- function(main_folder_path) {
@@ -123,7 +137,7 @@ process_all_subfolders <- function(main_folder_path) {
   # List subfolders in the main folder
   subfolders <- list.dirs(main_folder_path, recursive = FALSE)
 
-  # Ensure there are subfolders to process
+  # Ensure there are sub folders to process
   if (length(subfolders) == 0) {
     stop("No subfolders found in the specified folder.")
   }

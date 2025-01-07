@@ -4,10 +4,23 @@
 \alias{get_optimal_cluster_number}
 \title{Perform cluster analysis with wss}
 \usage{
-get_optimal_cluster_number(Image_File_Path, Min_Cluster = 2, Max_Cluster = 30)
+get_optimal_cluster_number(
+  Image_File_Path,
+  Downsample = TRUE,
+  Downsample_factor = 2,
+  Downsample_function = "sd",
+  Min_Cluster = 2,
+  Max_Cluster = 30
+)
 }
 \arguments{
 \item{Image_File_Path}{character. Path of the selected PC image}
+
+\item{Downsample}{boolean. Should the dataset be down sampled}
+
+\item{Downsample_factor}{numeric. Factor to down sample (eg. 2 means 2x2 pixel)}
+
+\item{Downsample_function}{character. Dwon sample function (sd, mean, range)}
 
 \item{Min_Cluster}{numeric. Minimal amount of clusters to test.}
 
