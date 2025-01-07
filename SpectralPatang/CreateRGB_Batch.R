@@ -16,13 +16,9 @@ process_subfolder <- function(subfolder_path) {
   raw_image_folder_path <- file.path(subfolder_path,'data','hs_raw_image')
   rgb_image_folder_path <- file.path(subfolder_path,'data','rgb')
 
+  cat(paste0('Start processing ', subfolder_path, '\n'))
   rgb <- create_RGB(raw_image_folder_path,rgb_image_folder_path)
-
-  # Placeholder for your custom logic
-  message(paste("Processing:", subfolder_path))
-
-  # Example function call (replace with your actual processing functions)
-  # result <- your_function(subfolder_path)
+  cat(paste0('Processing ended ', basename(subfolder_path), '\n'))
 
   # Return a result (optional)
   return(paste("Processed", basename(subfolder_path)))

@@ -11,7 +11,7 @@ library(SpectralPatang)
 # Function to process each subfolder (define your custom logic here)
 process_subfolder <- function(subfolder_path) {
 
-  print(paste0('Start processing ', subfolder_path))
+  cat(paste0('Start processing: ', subfolder_path, '\n'))
 
   rectified_image_folder_path <- file.path(subfolder_path,'data','rectified')
 
@@ -32,8 +32,6 @@ process_subfolder <- function(subfolder_path) {
   # Construct the full raw file path
   rectified_image_file_path <- file.path(rectified_image_folder_path, rectified_image_file_name)
 
-
-
   mask_image_folder_path <- file.path(subfolder_path,'mask')
   # List all files in the folder
   mask_image_files <- list.files(mask_image_folder_path, full.names = TRUE)
@@ -52,8 +50,6 @@ process_subfolder <- function(subfolder_path) {
   # Construct the full raw file path
   mask_image_file_path <- file.path(mask_image_folder_path, mask_image_file_name)
 
-  Window_size <- 10
-
   message(paste("Start PCA for :", basename(subfolder_path)))
   pca_selection_file_path <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
                                                           mask_image_file_path,
@@ -67,7 +63,8 @@ process_subfolder <- function(subfolder_path) {
                                                           MAP_Beta = FALSE,
                                                           PCA_Threshold = 99)
 
-  message(paste("PCA done for :", basename(subfolder_path)))
+  # Placeholder for your custom logic
+  cat(paste0('Processed: ', basename(subfolder_path), '\n'))
 
   # Check, if cluster ananlysis has to be done.
   perform_cluster_analysis <- FALSE
