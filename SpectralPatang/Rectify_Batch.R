@@ -11,7 +11,7 @@ library(SpectralPatang)
 # Function to process each subfolder (define your custom logic here)
 process_subfolder <- function(subfolder_path) {
 
-  print(paste0('Start processing ', subfolder_path))
+  cat(paste0('Start processing ', subfolder_path, '\n'))
 
   raw_image_folder_path <- file.path(subfolder_path,'data','hs_raw_image')
   rectified_image_folder_path <- file.path(subfolder_path,'data','rectified')
@@ -25,6 +25,7 @@ process_subfolder <- function(subfolder_path) {
   # result <- your_function(subfolder_path)
 
   # Return a result (optional)
+  cat(paste0('Processing ended', basename(subfolder_path), '\n'))
   return(paste("Processed", basename(subfolder_path)))
 }
 
