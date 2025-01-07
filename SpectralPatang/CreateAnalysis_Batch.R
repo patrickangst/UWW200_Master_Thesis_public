@@ -11,7 +11,7 @@ library(SpectralPatang)
 # Function to process each subfolder (define your custom logic here)
 process_subfolder <- function(subfolder_path) {
 
-  print(paste0('Start processing ', subfolder_path))
+  cat(paste0('Start processing: ', subfolder_path, '\n'))
 
   rectified_image_folder_path <- file.path(subfolder_path,'data','rectified')
 
@@ -68,7 +68,7 @@ process_subfolder <- function(subfolder_path) {
                                                           PCA_Threshold = 99)
 
   # Placeholder for your custom logic
-  message(paste("Processed:", basename(subfolder_path)))
+  cat(paste0('Processed: ', basename(subfolder_path), '\n'))
 
   # Example function call (replace with your actual processing functions)
   # result <- your_function(subfolder_path)
