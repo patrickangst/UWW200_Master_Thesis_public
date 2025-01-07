@@ -16,7 +16,7 @@ process_subfolder <- function(subfolder_path) {
 
   cat(paste0('Start processing ', subfolder_path, '\n'))
   rectrified <- rectify_Image(raw_image_folder_path,rectified_image_folder_path)
-  cat(paste0('Processing ended', basename(subfolder_path), '\n'))
+  cat(paste0('Processing ended ', basename(subfolder_path), '\n'))
 
   # Return a result (optional)
   return(paste("Processed", basename(subfolder_path)))

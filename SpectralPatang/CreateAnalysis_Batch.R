@@ -32,10 +32,6 @@ process_subfolder <- function(subfolder_path) {
   # Construct the full raw file path
   rectified_image_file_path <- file.path(rectified_image_folder_path, rectified_image_file_name)
 
-
-
-
-
   mask_image_folder_path <- file.path(subfolder_path,'mask')
   # List all files in the folder
   mask_image_files <- list.files(mask_image_folder_path, full.names = TRUE)
@@ -53,7 +49,6 @@ process_subfolder <- function(subfolder_path) {
 
   # Construct the full raw file path
   mask_image_file_path <- file.path(mask_image_folder_path, mask_image_file_name)
-
 
   analysis_result <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
                                                           mask_image_file_path,

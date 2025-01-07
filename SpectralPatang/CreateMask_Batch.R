@@ -11,18 +11,12 @@ library(SpectralPatang)
 # Function to process each subfolder (define your custom logic here)
 process_subfolder <- function(subfolder_path) {
 
-  print(paste0('Start processing ', subfolder_path))
-
   rectified_image_folder_path <- file.path(subfolder_path,'data','rectified')
   mask_image_folder_path <- file.path(subfolder_path,'mask')
 
+  cat(paste0('Start processing ', subfolder_path, '\n'))
   mask <- create_SAVI_mask(rectified_image_folder_path,mask_image_folder_path)
-
-  # Placeholder for your custom logic
-  #message(paste("Processing:", subfolder_path))
-
-  # Example function call (replace with your actual processing functions)
-  # result <- your_function(subfolder_path)
+  cat(paste0('Processing ended ', basename(subfolder_path), '\n'))
 
   # Return a result (optional)
   message(paste("Processed:", basename(subfolder_path)))
