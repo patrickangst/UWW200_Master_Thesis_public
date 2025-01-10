@@ -11,7 +11,7 @@ library(SpectralPatang)
 # Function to process each subfolder (define your custom logic here)
 process_subfolder <- function(subfolder_path) {
 
-  cat(paste0('Start processing: ', subfolder_path, '\n'))
+  cat(paste0('Start processing: ', basename(subfolder_path), '\n'))
 
   rectified_image_folder_path <- file.path(subfolder_path,'data','rectified')
 
@@ -50,7 +50,9 @@ process_subfolder <- function(subfolder_path) {
   # Construct the full raw file path
   mask_image_file_path <- file.path(mask_image_folder_path, mask_image_file_name)
 
-  message(paste("Start PCA for :", basename(subfolder_path)))
+  Window_size <- 10
+
+  cat(paste0('Start PCA for: ', basename(subfolder_path), '\n'))
   pca_selection_file_path <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
                                                           mask_image_file_path,
                                                           NBbclusters = 20,
@@ -63,8 +65,7 @@ process_subfolder <- function(subfolder_path) {
                                                           MAP_Beta = FALSE,
                                                           PCA_Threshold = 99)
 
-  # Placeholder for your custom logic
-  cat(paste0('Processed: ', basename(subfolder_path), '\n'))
+  cat(paste0('PCA done for: ', basename(subfolder_path), '\n'))
 
   # Check, if cluster ananlysis has to be done.
   perform_cluster_analysis <- FALSE
@@ -93,20 +94,18 @@ process_subfolder <- function(subfolder_path) {
     perform_cluster_analysis <- TRUE
   }
 
-
   if(perform_cluster_analysis){
-    message(paste("Start cluster analysis for :", basename(subfolder_path)))
+    cat(paste0('Start cluster analysis for: ', basename(subfolder_path), '\n'))
     NBbclusters <- SpectralPatang::get_optimal_cluster_number(pca_selection_file_path,
                                                               Downsample = TRUE,
                                                               Downsample_factor = 2,
                                                               Downsample_function = "sd",
                                                               Min_Cluster = 2,
                                                               Max_Cluster = 30)
-    message(paste("Cluster analysis done for :", basename(subfolder_path), " number of clusters: ", NBbclusters))
+    cat(paste0('Cluster analysis done for: ', basename(subfolder_path), " number of clusters: ", NBbclusters, '\n'))
   }
 
-
-  message(paste("Start spectral analysis for :", basename(subfolder_path)))
+  cat(paste0('Start spectral analysis for: ', basename(subfolder_path), '\n'))
   spectral_analysis <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
                                                                   mask_image_file_path,
                                                                   NBbclusters = NBbclusters,
@@ -118,8 +117,9 @@ process_subfolder <- function(subfolder_path) {
                                                                   Map_Alpha = TRUE,
                                                                   MAP_Beta = TRUE,
                                                                   PCA_Threshold = 99)
-  message(paste("Spectral analysis done for :", basename(subfolder_path)))
+  cat(paste0('Spectral analysis done for: ', basename(subfolder_path), '\n'))
 
+  cat(paste0('Processing done for: ', basename(subfolder_path), '\n'))
 
 }
 
@@ -147,7 +147,7 @@ process_all_subfolders <- function(main_folder_path) {
 }
 
 # Example usage
-main_folder <- "/media/patang/T9/d_done"
+main_folder <- "/media/patang/T9/e_done"
 num_cores_to_use <- detectCores()  # Adjust the number of cores based on your system
 
 # Call the main function
