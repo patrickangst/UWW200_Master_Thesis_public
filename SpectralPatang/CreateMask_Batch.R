@@ -18,9 +18,6 @@ process_subfolder <- function(subfolder_path) {
   mask <- create_SAVI_mask(rectified_image_folder_path,mask_image_folder_path)
   cat(paste0('Processing ended ', basename(subfolder_path), '\n'))
 
-  # Return a result (optional)
-  message(paste("Processed:", basename(subfolder_path)))
-
 }
 
 # Main function to process all subfolders in parallel
