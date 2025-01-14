@@ -9,6 +9,7 @@
 #' @param NbCPU numeric. Number of CPUs to use in parallel.
 #' @param MaxRAM numeric. MaxRAM maximum size of chunk in GB to limit RAM allocation when reading image file.
 #' @param Perform_PCA boolean. False if already PCA_Output.rds file available
+#' @param External_PCA boolean. True if PCA is performed seperately.
 #' @param Map_Species boolean. True if spectral species mapping has to be done
 #' @param Map_Alpha boolean. True if calculating alpha diversity has to be done
 #' @param MAP_Beta boolean. True if calculating beta diversity has to be done
@@ -25,6 +26,7 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
                                  NbCPU = 4,
                                  MaxRAM = 8,
                                  Perform_PCA = TRUE,
+                                 External_PCA = FALSE,
                                  Map_Species = TRUE,
                                  Map_Alpha = TRUE,
                                  MAP_Beta = TRUE,
@@ -50,6 +52,7 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   FilterPCA <- FALSE
   # window size for computation of spectral diversity
 
+  # this defines the wavelength that have to be excluded (e.g. water vaper region)
   Excluded_WL <- c(0, 442)
   Excluded_WL <- rbind(Excluded_WL, c(1368, 1499))
   Excluded_WL <- rbind(Excluded_WL, c(1779, 2055))
@@ -84,7 +87,9 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
     saveRDS(PCA_Output, file = pca_output_rds_file_path)
   } else {
     # Later, load the list back into R
-    PCA_Output <- readRDS(pca_output_rds_file_path)
+    if(!External_PCA){
+      PCA_Output <- readRDS(pca_output_rds_file_path)
+    }
   }
 
   # path for the updated mask
