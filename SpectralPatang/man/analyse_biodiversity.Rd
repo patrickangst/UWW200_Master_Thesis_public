@@ -8,7 +8,8 @@ analyse_biodiversity(
   Hyperspectral_Image_File_Path,
   Mask_Image_File_Path,
   NBbclusters = 20,
-  Window_size = 20,
+  nb_partitions = 1,
+  Window_size = 10,
   NbCPU = 4,
   MaxRAM = 8,
   Perform_PCA = TRUE,
@@ -23,7 +24,9 @@ analyse_biodiversity(
 
 \item{Mask_Image_File_Path}{character. Path of the mask file image}
 
-\item{NBbclusters}{numeric. number of clusters defined in k-Meansv}
+\item{NBbclusters}{numeric. number of clusters defined in k-Means}
+
+\item{nb_partitions}{numeric. Number of repetitions to estimate diversity from the raster (averaging repetitions).}
 
 \item{Window_size}{numeric. Size of spatial units (in pixels) to compute diversity.}
 

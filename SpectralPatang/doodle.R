@@ -178,16 +178,56 @@
 
 
 
-rm(list=ls(all=TRUE));gc()
+# rm(list=ls(all=TRUE));gc()
+# graphics.off()
+#
+# library(stars)
+# library(terra)
+#
+# Image_File_Path <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/PCA_selected.tif'
+# Image_File_Path_rectified <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/PCA_selected_rectified'
+#
+#
+# raster_data <- terra::rast(Image_File_Path_rectified)
+#
+# plot(raster_data)
+
+
+
+
+rm(list = ls())
 graphics.off()
 
-library(stars)
-library(terra)
+devtools::load_all()
 
-Image_File_Path <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/PCA_selected.tif'
-Image_File_Path_rectified <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/PCA_selected_rectified'
+# Load necessary libraries
+library(SpectralPatang)
 
+rectified_image_file_path <- 'D:/MasterThesis/ang20190706t234547rfl/data/rectified/ang20190706t234547_rfl_v2v2_img_rectified'
+mask_image_file_path <- 'D:/MasterThesis/ang20190706t234547rfl/mask/ang20190706t234547_rfl_v2v2_img_rectified_savi_mask_02'
+num_cores <- parallel::detectCores() - 2
+#debug(analyse_biodiversity)
+pca_selection_file_path <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
+                                                                mask_image_file_path,
+                                                                NBbclusters = 20,
+                                                                nb_partitions = 1,
+                                                                Window_size = 10,
+                                                                NbCPU = num_cores,
+                                                                MaxRAM = 8,
+                                                                Perform_PCA = TRUE,
+                                                                Map_Species = TRUE,
+                                                                Map_Alpha = TRUE,
+                                                                MAP_Beta = TRUE,
+                                                                PCA_Threshold = 99)
 
-raster_data <- terra::rast(Image_File_Path_rectified)
-
-plot(raster_data)
+print("MAP SPECTRAL SPECIES")
+Kmeans_info <- biodivMapR::map_spectral_species(
+  Input_Image_File = Input_Image_File,
+  Input_Mask_File = PCA_Output$MaskPath,
+  Output_Dir = Output_Dir,
+  SpectralSpace_Output = PCA_Output,
+  nbclusters = NBbclusters,
+  nbCPU = NbCPU,
+  MaxRAM = MaxRAM,
+  progressbar = TRUE
+)

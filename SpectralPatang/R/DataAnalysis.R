@@ -4,7 +4,8 @@
 #' package BiodivmapR.
 #' @param Hyperspectral_Image_File_Path character. Path of the image to be processed
 #' @param Mask_Image_File_Path character. Path of the mask file image
-#' @param NBbclusters numeric. number of clusters defined in k-Meansv
+#' @param NBbclusters numeric. number of clusters defined in k-Means
+#' @param nb_partitions numeric. Number of repetitions to estimate diversity from the raster (averaging repetitions).
 #' @param Window_size numeric. Size of spatial units (in pixels) to compute diversity.
 #' @param NbCPU numeric. Number of CPUs to use in parallel.
 #' @param MaxRAM numeric. MaxRAM maximum size of chunk in GB to limit RAM allocation when reading image file.
@@ -21,7 +22,8 @@
 analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
                                  Mask_Image_File_Path,
                                  NBbclusters = 20,
-                                 Window_size = 20,
+                                 nb_partitions = 1,
+                                 Window_size = 10,
                                  NbCPU = 4,
                                  MaxRAM = 8,
                                  Perform_PCA = TRUE,
@@ -72,13 +74,20 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
       Input_Image_File = Input_Image_File,
       Input_Mask_File = Input_Mask_File,
       Output_Dir = Output_Dir,
+      Continuum_Removal = Continuum_Removal,
       TypePCA = TypePCA,
+      NbPCs_To_Keep = 30,
       FilterPCA = FilterPCA,
       Excluded_WL = Excluded_WL,
+      nb_partitions = nb_partitions,
       nbCPU = NbCPU,
-      MaxRAM = MaxRAM,
-      Continuum_Removal = Continuum_Removal
+      MaxRAM = MaxRAM
     )
+
+
+
+
+
 
     # Save the list as an RDS file
     saveRDS(PCA_Output, file = pca_output_rds_file_path)
