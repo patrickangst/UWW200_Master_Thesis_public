@@ -13,8 +13,8 @@ import pca_dataflow_V2_variables as vb
 from scipy.ndimage import generic_filter
 from joblib import Parallel, delayed
 
-input_dir = "data\e_ang20180722t212222rfl" 
-file = os.path.join(input_dir, "ang20180722t212222_rfl_v2r2_img")
+input_dir = "data" 
+file = os.path.join(input_dir, "ang20180729t212542_rfl_v2r2_img")
 hdr_file = f"{file}.hdr"
 
 def save_array(output_path, array, num_bands, gdal_dataset, gdal_format = "GTiff", NoDataValue = -9999, data_type=gdal.GDT_Float32):
