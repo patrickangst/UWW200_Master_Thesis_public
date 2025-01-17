@@ -15,8 +15,8 @@ from joblib import Parallel, delayed
 
 #input_dir = "/Volumes/T9/new_pca_test/e_ang20180722t212222rfl/data/hs_raw_image" 
 #file = os.path.join(input_dir, "ang20180722t212222_rfl_v2r2_img")
-input_dir = "data/e_ang20180722t212222rfl" 
-file = os.path.join(input_dir, "ang20180722t212222_rfl_v2r2_img")
+input_dir = "../aviris_data/subzone_d/d_ang20220709t214748rfl/data/hs_raw_image" 
+file = os.path.join(input_dir, "ang20220709t214748_rfl_v2aa2_img")
 hdr_file = f"{file}.hdr"
 
 def save_array(output_path, array, num_bands, gdal_dataset, gdal_format = "GTiff", NoDataValue = -9999, data_type=gdal.GDT_Float32):
