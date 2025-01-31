@@ -79,7 +79,7 @@ process_all_subfolders <- function(main_folder_path) {
 }
 
 # Example usage
-main_folder <- "/media/patang/T9/e_done"
+main_folder <- "~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data"
 num_cores_to_use <- detectCores()  # Adjust the number of cores based on your system
 
 # Call the main function
