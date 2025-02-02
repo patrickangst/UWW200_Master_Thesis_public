@@ -1,233 +1,53 @@
-# directory_path <- "/path/to/your/tewe.txt"
-#
-# # Replace the last directory with "mine"
-# new_directory_path <- file.path(dirname(directory_path), "mine")
-#
-# print(new_directory_path)
-#
-#
-# rm(list = ls())
-# graphics.off()
-#
-# devtools::load_all()
-#
-# # Load necessary libraries
-# library(doParallel)
-# library(foreach)
-# library(SpectralPatang)
-# library(terra)
-#
-# raw_image_file_path <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/data/hs_raw_image/ang20190706t235120_rfl_v2v2_img'
-# rectified_image_file_path <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/data/rectified/ang20190706t235120_rfl_v2v2_img_rectified_cut'
-# cut_shp <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/data/plotlocations/06_Utqiaqvik_IBP_boundingbox_buffered.shp'
-# savi_file_path <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/mask'
-# savi_file_path <- paste0(savi_file_path,'/ang20190706t235120_rfl_v2v2_img_rectified_savi_mask_02_cut')
-#
-# gdal_command_rectify <- sprintf(
-#   "gdalwarp -cutline %s -crop_to_cutline -of ENVI -co INTERLEAVE=BIL -dstnodata -9999 %s %s",
-#   cut_shp,
-#   raw_image_file_path,
-#   rectified_image_file_path
-# )
-#
-# # # Execute the command in R
-# system(gdal_command_rectify)
-#
-#
-#
-# SpectralPatang::create_SAVI_mask(rectified_image_file_path,savi_file_path)
-#
-#
-# num_cores <- parallel::detectCores()
-#
-# SpectralPatang::analyse_biodiversity(rectified_image_file_path,
-#                                      savi_file_path,
-#                                      NBbclusters = 5,
-#                                      Window_size = 10,
-#                                      NbCPU = num_cores,
-#                                      MaxRAM = 8,
-#                                      Perform_PCA = TRUE,
-#                                      PCA_Threshold = 99)
-#
-#
-#
-# uesche <- read.csv("~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/data/species_analysis/tvexport.csv")
-#
-# dirpath <- "~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/data/species_analysis/tvexport.csv"
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-# rm(list = ls())
-# graphics.off()
-#
-# devtools::load_all()
-#
-# # Load necessary libraries
-# library(doParallel)
-# library(foreach)
-# library(SpectralPatang)
-# library(terra)
-#
-#
-#
-# get_optimal_cluster_number_local <- function(SpatRaster,
-#                                        Min_Cluster = 2,
-#                                        Max_Cluster = 30) {
-#   # Load the raster image
-#   pca_data <- as.matrix(terra::values(SpatRaster))
-#
-#   # Define cores for parallel processing
-#   num_cores <- parallel::detectCores() - 2
-#
-#   # Prepare the data
-#   pca_data_na_omitted <- na.omit(pca_data)  # Clean the data (remove NAs)
-#   pca_data_na_omitted_scaled <- scale(pca_data_na_omitted)  # Standardize data for clustering
-#   kmeans_clustering_data <- pca_data_na_omitted_scaled
-#
-#   # Define Range of Clusters
-#   k.values <- Min_Cluster:Max_Cluster
-#
-#   # Define Clustering Metrics Function
-#   compute_wss <- function(data, k, seed = 123) {
-#     set.seed(seed)
-#     kmeans(data, centers = k, nstart = 10)$tot.withinss
-#   }
-#
-#   # Setup Parallel Cluster
-#   cl <- parallel::makeCluster(num_cores)
-#
-#   # Export required objects and functions to the worker nodes
-#   parallel::clusterExport(
-#     cl,
-#     varlist = c("kmeans_clustering_data", "compute_wss"),
-#     envir = environment()
-#   )
-#
-#   # Compute Metrics in Parallel
-#   wss_values <- parallel::parSapply(cl, k.values, function(k) {
-#     compute_wss(kmeans_clustering_data, k)
-#   })
-#
-#   # Stop Cluster
-#   parallel::stopCluster(cl)
-#
-#   # Create Data Frame with Metrics
-#   cluster_metrics <- data.frame(k = k.values, WSS = wss_values)
-#
-#   # Determine Optimal Clusters
-#   # Elbow Method: Find the point where the second derivative is minimized
-#   diff_wss <- diff(cluster_metrics$WSS)
-#   diff2_wss <- diff(diff_wss)
-#   optimal_clusters_elbow <- which.min(diff2_wss) + Min_Cluster  # Adjust by Min_Cluster
-#
-#   return(optimal_clusters_elbow)
-#
-# }
-#
-# Image_File_Path <- '/media/patang/T9/d_done/d_ang20190713t002123rfl/result/ang20190713t002123_rfl_v2v2_img_rectified/SPCA/PCA/OutputPCA_30_PCs_selection.tif'
-#
-# r <- terra::rast(Image_File_Path)
-#
-# # Downsample by a factor, preserving variability (standard deviation)
-# factor <- 2  # Adjust as needed
-# r_downsampled <- terra::aggregate(r, fact = factor, fun = sd, na.rm = TRUE)
-#
-# # Check new raster properties
-# print(res(r_downsampled))
-# print(dim(r_downsampled))
-#
-# r_values <- as.matrix(terra::values(r))
-# r_downsampled_values <- as.matrix(terra::values(r_downsampled))
-#
-# # Plot to verify
-# plot(r_downsampled, main = "Downsampled Raster (Preserving Variability)")
-#
-# clusters <- get_optimal_cluster_number_local(r_downsampled)
-#
-# output_folder_path <- dirname(Image_File_Path)
-# output_file_path <- file.path(output_folder_path,'optimal_number_of_clusters.txt')
-# write(clusters, file = output_file_path)
-#
-# print(clusters)
-
-
-
-
-
-# rm(list=ls(all=TRUE));gc()
-# graphics.off()
-#
-# library(stars)
-# library(terra)
-#
-# Image_File_Path <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/PCA_selected.tif'
-# Image_File_Path_rectified <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/PCA_selected_rectified'
-#
-#
-# raster_data <- terra::rast(Image_File_Path_rectified)
-#
-# plot(raster_data)
-
-
-
-
 rm(list = ls())
 graphics.off()
 
-devtools::load_all()
+library(terra)
+library(sf)
+library(ggplot2)
 
-# Load necessary libraries
-library(SpectralPatang)
+plotsite_name <- 'AN_TJ_Plot1_ang20220711t002111rfl'
+result_folder_name <- 'ang20220711t002111_rfl_v2aa2_img_rectified'
+csv_file_name <- 'AN_TJ_Plot1'
+csv_file <- paste0(csv_file_name,'.csv')
 
-rectified_image_file_path <- 'D:/MasterThesis/ang20190706t234547rfl/data/rectified/ang20190706t234547_rfl_v2v2_img_rectified'
-mask_image_file_path <- 'D:/MasterThesis/ang20190706t234547rfl/mask/ang20190706t234547_rfl_v2v2_img_rectified_savi_mask_02'
-num_cores <- parallel::detectCores() - 2
-#debug(analyse_biodiversity)
-pca_selection_file_path <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
-                                                                mask_image_file_path,
-                                                                NBbclusters = 20,
-                                                                nb_partitions = 1,
-                                                                Window_size = 10,
-                                                                NbCPU = num_cores,
-                                                                MaxRAM = 8,
-                                                                Perform_PCA = TRUE,
-                                                                Map_Species = TRUE,
-                                                                Map_Alpha = TRUE,
-                                                                MAP_Beta = TRUE,
-                                                                PCA_Threshold = 99)
+shannon_img_path <- paste0('D:/MasterThesis/final_hs_data_folder/',plotsite_name,'/result/',result_folder_name,'/SPCA/ALPHA/Shannon_20')
+pcoa_image_path <- paste0('D:/MasterThesis/final_hs_data_folder/',plotsite_name,'/result/',result_folder_name,'/SPCA/BETA/BetaDiversity_BCdiss_PCO_20')
+spectral_species_img_path <- paste0('D:/MasterThesis/final_hs_data_folder/',plotsite_name,'/result/',result_folder_name,'/SPCA/SpectralSpecies/SpectralSpecies')
+diversity_ground_data_path <- paste0('D:/MasterThesis/final_hs_data_folder/',plotsite_name,'/data/species_analysis')
+csv_file_path <- file.path(diversity_ground_data_path, csv_file)
+output_shapefile <- file.path(diversity_ground_data_path, paste0(csv_file_name,'_Shannon_Diversity_Ground.shp'))
+spectral_species_count_plot <- paste0('D:/MasterThesis/final_hs_data_folder/',plotsite_name,'/data/species_analysis/',csv_file_name,'_cluster_count.png')
 
-print("MAP SPECTRAL SPECIES")
-Kmeans_info <- biodivMapR::map_spectral_species(
-  Input_Image_File = Input_Image_File,
-  Input_Mask_File = PCA_Output$MaskPath,
-  Output_Dir = Output_Dir,
-  SpectralSpace_Output = PCA_Output,
-  nbclusters = NBbclusters,
-  nbCPU = NbCPU,
-  MaxRAM = MaxRAM,
-  progressbar = TRUE
+# Load the raster map
+raster_map <- rast(shannon_img_path)
+
+# Load the shapefile
+shapefile <- st_read(output_shapefile)
+
+# Extract pixel values at point locations
+extracted_data <- extract(raster_map, shapefile)
+
+# Extract pixel values correctly (assuming first column is ID)
+shapefile$pixel_diversity <- extracted_data[, 2]  # Adjust index if needed
+
+# Create a data frame for plotting
+plot_data <- data.frame(
+  pixel_diversity = shapefile$pixel_diversity,
+  shapefile_diversity = shapefile$ShnnnId  # Ensure column name is correct
 )
+
+# Check for NA values and remove them (optional)
+plot_data <- na.omit(plot_data)
+
+# Create the scatter plot using ggplot2
+ggplot(plot_data, aes(x = pixel_diversity, y = shapefile_diversity)) +
+  geom_point(aes(color = factor(shapefile_diversity)), size = 3) +
+  scale_color_brewer(palette = "Dark2") +
+  labs(
+    x = "Shannon Diversity (Pixel)",
+    y = "Shannon Diversity (Shapefile)",
+    title = "Scatter Plot of Shannon Diversity",
+    color = "Shannon Diversity\n(Shapefile)"
+  ) +
+  theme_bw()
+

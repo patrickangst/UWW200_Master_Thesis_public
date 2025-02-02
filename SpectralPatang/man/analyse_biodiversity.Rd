@@ -13,6 +13,7 @@ analyse_biodiversity(
   NbCPU = 4,
   MaxRAM = 8,
   Perform_PCA = TRUE,
+  External_PCA = FALSE,
   Map_Species = TRUE,
   Map_Alpha = TRUE,
   MAP_Beta = TRUE,
@@ -35,6 +36,8 @@ analyse_biodiversity(
 \item{MaxRAM}{numeric. MaxRAM maximum size of chunk in GB to limit RAM allocation when reading image file.}
 
 \item{Perform_PCA}{boolean. False if already PCA_Output.rds file available}
+
+\item{External_PCA}{boolean. True if PCA is performed seperately.}
 
 \item{Map_Species}{boolean. True if spectral species mapping has to be done}
 

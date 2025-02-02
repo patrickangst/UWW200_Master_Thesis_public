@@ -59,7 +59,7 @@ process_all_subfolders <- function(main_folder_path, num_cores = 2) {
 }
 
 # Example usage
-main_folder <- "/Volumes/AvirisNG/osx/subzone_e"
+main_folder <- "D:/MasterThesis/final_hs_data_folder"
 num_cores_to_use <- detectCores()  # Adjust the number of cores based on your system
 
 # Call the main function

@@ -50,7 +50,7 @@ process_subfolder <- function(subfolder_path) {
   # Construct the full raw file path
   mask_image_file_path <- file.path(mask_image_folder_path, mask_image_file_name)
 
-  Window_size <- 10
+  Window_size <- 20
 
   cat(paste0('Start PCA for: ', basename(subfolder_path), '\n'))
   pca_selection_file_path <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
@@ -97,11 +97,11 @@ process_subfolder <- function(subfolder_path) {
   if(perform_cluster_analysis){
     cat(paste0('Start cluster analysis for: ', basename(subfolder_path), '\n'))
     NBbclusters <- SpectralPatang::get_optimal_cluster_number(pca_selection_file_path,
-                                                              Downsample = TRUE,
+                                                              Downsample = FALSE,
                                                               Downsample_factor = 2,
                                                               Downsample_function = "sd",
                                                               Min_Cluster = 2,
-                                                              Max_Cluster = 30)
+                                                              Max_Cluster = 50)
     cat(paste0('Cluster analysis done for: ', basename(subfolder_path), " number of clusters: ", NBbclusters, '\n'))
   }
 
@@ -147,7 +147,7 @@ process_all_subfolders <- function(main_folder_path) {
 }
 
 # Example usage
-main_folder <- "~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data"
+main_folder <- "D:/MasterThesis/final_hs_data_folder"
 num_cores_to_use <- detectCores()  # Adjust the number of cores based on your system
 
 # Call the main function
