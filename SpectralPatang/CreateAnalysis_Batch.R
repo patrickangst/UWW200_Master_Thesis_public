@@ -50,7 +50,7 @@ process_subfolder <- function(subfolder_path) {
   # Construct the full raw file path
   mask_image_file_path <- file.path(mask_image_folder_path, mask_image_file_name)
 
-  Window_size <- 20
+  Window_size <- 5
 
   cat(paste0('Start PCA for: ', basename(subfolder_path), '\n'))
   pca_selection_file_path <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
@@ -59,7 +59,7 @@ process_subfolder <- function(subfolder_path) {
                                                           Window_size = Window_size,
                                                           NbCPU = num_cores_to_use,
                                                           MaxRAM = 8,
-                                                          Perform_PCA = TRUE,
+                                                          Perform_PCA = FALSE,
                                                           Map_Species = FALSE,
                                                           Map_Alpha = FALSE,
                                                           MAP_Beta = FALSE,
@@ -147,7 +147,7 @@ process_all_subfolders <- function(main_folder_path) {
 }
 
 # Example usage
-main_folder <- "D:/MasterThesis/final_hs_data_folder"
+main_folder <- "D:/MasterThesis/final_hs_data_folder_test"
 num_cores_to_use <- detectCores()  # Adjust the number of cores based on your system
 
 # Call the main function

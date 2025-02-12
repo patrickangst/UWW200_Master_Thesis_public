@@ -80,5 +80,5 @@ create_SAVI_mask <- function(Rectified_Image_Folder_Path,
   return(savi_image_file_path)
 }
 
-# debug(create_SAVI_mask)
-#create_SAVI_mask('~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data/ang20180729t212542rfl/data/rectified/ang20180729t212542_rfl_v2r2_img_rectified','~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/test_data/ang20180729t212542rfl/mask')
+#debug(create_SAVI_mask)
+create_SAVI_mask("D:/MasterThesis/final_hs_data_folder/AN_TJ_Plot2_ang20220711t003358rfl/data/rectified","D:/MasterThesis/final_hs_data_folder/AN_TJ_Plot2_ang20220711t003358rfl/data" )

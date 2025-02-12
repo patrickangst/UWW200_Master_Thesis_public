@@ -17,8 +17,8 @@ from scipy.stats import entropy
 
 #input_dir = "/Volumes/T9/new_pca_test/e_ang20180722t212222rfl/data/hs_raw_image" 
 #file = os.path.join(input_dir, "ang20180722t212222_rfl_v2r2_img")
-input_dir = "../aviris_data/d_ang20180729t212542rfl/data/hs_raw_image" 
-file = os.path.join(input_dir, "ang20180729t212542_rfl_v2r2_img")
+input_dir = "test_data" 
+file = os.path.join(input_dir, "ang20220711t002111_rfl_v2aa2_img_rectified")
 hdr_file = f"{file}.hdr"
 
 def save_array(output_path, array, num_bands, gdal_dataset, gdal_format = "GTiff", NoDataValue = -9999, data_type=gdal.GDT_Float32):

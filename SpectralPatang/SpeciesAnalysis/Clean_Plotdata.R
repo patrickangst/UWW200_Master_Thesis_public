@@ -13,8 +13,8 @@ library(readr)
 library(reshape2)
 library(leaflet)
 
-
-base_folder <- 'D:/MasterThesis/final_hs_data_folder'
+input_folder <- 'final_hs_data_folder_test'
+base_folder <- file.path('D:/MasterThesis',input_folder)
 plot_list <- list.dirs(base_folder, recursive = FALSE, full.names = FALSE)
 
 
@@ -48,29 +48,29 @@ create_species_analysis <- function(plt_site_name) {
   csv_file_name <- tools::file_path_sans_ext(csv_file)
 
   shannon_img_path <- paste0(
-    'D:/MasterThesis/final_hs_data_folder/',
-    plotsite_name,
+    'D:/MasterThesis/',input_folder,
+    '/',plotsite_name,
     '/result/',
     result_folder_name,
     '/SPCA/ALPHA/Shannon_20'
   )
   pcoa_image_path <- paste0(
-    'D:/MasterThesis/final_hs_data_folder/',
-    plotsite_name,
+    'D:/MasterThesis/',input_folder,
+    '/',plotsite_name,
     '/result/',
     result_folder_name,
     '/SPCA/BETA/BetaDiversity_BCdiss_PCO_20'
   )
   spectral_species_img_path <- paste0(
-    'D:/MasterThesis/final_hs_data_folder/',
-    plotsite_name,
+    'D:/MasterThesis/',input_folder,
+    '/',plotsite_name,
     '/result/',
     result_folder_name,
     '/SPCA/SpectralSpecies/SpectralSpecies'
   )
   diversity_ground_data_path <- paste0(
-    'D:/MasterThesis/final_hs_data_folder/',
-    plotsite_name,
+    'D:/MasterThesis/',input_folder,
+    '/',plotsite_name,
     '/data/species_analysis'
   )
   csv_file_path <- file.path(diversity_ground_data_path, csv_file)
@@ -79,11 +79,19 @@ create_species_analysis <- function(plt_site_name) {
     paste0(csv_file_name, '_Shannon_Diversity_Ground.shp')
   )
   spectral_species_count_plot <- paste0(
-    'D:/MasterThesis/final_hs_data_folder/',
-    plotsite_name,
+    'D:/MasterThesis/',input_folder,
+    '/',plotsite_name,
     '/data/species_analysis/',
     csv_file_name,
     '_cluster_count.png'
+  )
+
+  shannon_diversity_ground_plot <- paste0(
+    'D:/MasterThesis/',input_folder,
+    '/',plotsite_name,
+    '/data/species_analysis/',
+    csv_file_name,
+    '_shannon_diversity_ground_plot.png'
   )
 
   shannon_img <- terra::rast(shannon_img_path)
@@ -117,6 +125,9 @@ create_species_analysis <- function(plt_site_name) {
   # Calculate Shannon Diversity Index for each plot
   plot_data_filtered$Shannon_Index <- diversity(species_table_normalized, index = "shannon")
 
+  print(plot_data_filtered$Shannon_Index)
+
+  plot_prefix <- sub("(_ang.*)$", "", plot)
 
 
   # Create a map with ggplot2
@@ -127,9 +138,18 @@ create_species_analysis <- function(plt_site_name) {
     geom_point(size = 3) +  # Use points to represent plot locations
     scale_color_viridis_c(option = "plasma", name = "Shannon Index") +  # Use a color scale
     theme_minimal() +  # Minimal theme for clean visuals
-    labs(title = "Shannon Diversity Index Map", x = "Longitude", y = "Latitude")
+    labs(title = paste0("Shannon Diversity Index Map ", plot_prefix), x = "Longitude", y = "Latitude")
 
   print(shannon_plot)
+
+  # Save the Pareto chart
+  ggsave(
+    shannon_diversity_ground_plot,
+    shannon_plot,
+    dpi = 300,
+    width = 10,
+    height = 6
+  )
 
   # csv_file_path
   #
@@ -207,140 +227,140 @@ create_species_analysis <- function(plt_site_name) {
   #
   ##############################################################################
 
-  # Load required libraries
-  library(terra)     # For raster handling
-  library(ggplot2)   # For plotting
-  library(dplyr)     # For data manipulation
-
-  # Load ENVI images as raster stacks
-  pcoa_raster <- rast(pcoa_image_path)        # Raster with PCoA bands
-  shannon_raster <- rast(shannon_img_path)  # Raster with Shannon index
-
-  # Extract pixel values into a dataframe
-  pcoa_values <- as.data.frame(values(pcoa_raster))      # Convert PCoA bands to dataframe
-  shannon_values <- as.data.frame(values(shannon_raster)) # Convert Shannon index to dataframe
-
-  # Ensure column names are meaningful
-  colnames(pcoa_values) <- c("PCoA1", "PCoA2", "PCoA3")
-  colnames(shannon_values) <- c("Shannon_Index")
-
-  # Merge the dataframes
-  combined_data <- cbind(pcoa_values, shannon_values)
-
-  # Remove NA values (optional but recommended)
-  combined_data <- combined_data %>% na.omit()
-
-  # ==========================
-  # Classify Shannon Index into 4 categories
-  # ==========================
-  combined_data$Diversity_Category <- cut(
-    combined_data$Shannon_Index,
-    breaks = c(-Inf, 0.5, 1.5, 2.5, Inf),
-    # Define category boundaries
-    labels = c(
-      "Low Vegetation",
-      "Monospecific",
-      "Medium Diversity",
-      "High Diversity"
-    )
-  )
-
-  # Define matching sizes and colors for each category
-  diversity_styles <- data.frame(
-    Diversity_Category = factor(
-      c(
-        "Low Vegetation",
-        "Monospecific",
-        "Medium Diversity",
-        "High Diversity"
-      ),
-      levels = c(
-        "Low Vegetation",
-        "Monospecific",
-        "Medium Diversity",
-        "High Diversity"
-      )
-    ),
-    Size = c(0.5, 1, 1.5, 2),
-    # Smaller circle sizes
-    Color = c("red", "orange", "green", "blue")  # Matching colors
-  )
-
-  # Merge styles into main dataframe
-  combined_data <- left_join(combined_data, diversity_styles, by = "Diversity_Category")
-
-  # Scatter Plot Function
-  scatter_plot <- function(x_col, y_col) {
-    ggplot(
-      combined_data,
-      aes_string(
-        x = x_col,
-        y = y_col,
-        size = "Size",
-        color = "Diversity_Category"
-      )
-    ) +
-      geom_point(alpha = 0.6) +  # Increased transparency for better visibility
-      scale_size_identity() +  # Keep fixed sizes from dataframe
-      scale_color_manual(values = setNames(
-        diversity_styles$Color,
-        diversity_styles$Diversity_Category
-      )) +
-      theme_minimal() +
-      labs(
-        title = paste(x_col, "vs", y_col),
-        x = x_col,
-        y = y_col,
-        size = "Diversity Category",
-        # Legend for size
-        color = "Diversity Category"  # Legend for color
-      )
-  }
-
-  # Generate scatter plots
-  plot1 <- scatter_plot("PCoA1", "PCoA2")
-  plot2 <- scatter_plot("PCoA1", "PCoA3")
-  plot3 <- scatter_plot("PCoA2", "PCoA3")
-
-  # Display plots
-  print(plot1)
-  print(plot2)
-  print(plot3)
-
-  # Save plots
-  # Define file paths for saving
-  plot1_path <- file.path(diversity_ground_data_path,
-                          paste0(csv_file_name, '_PCoA1_vs_PCoA2.png'))
-  plot2_path <- file.path(diversity_ground_data_path,
-                          paste0(csv_file_name, '_PCoA1_vs_PCoA3.png'))
-  plot3_path <- file.path(diversity_ground_data_path,
-                          paste0(csv_file_name, '_PCoA2_vs_PCoA3.png'))
-
-  # Save the plots with high resolution
-  ggsave(
-    plot1_path,
-    plot = plot1,
-    dpi = 300,
-    width = 8,
-    height = 6
-  )
-  ggsave(
-    plot2_path,
-    plot = plot2,
-    dpi = 300,
-    width = 8,
-    height = 6
-  )
-  ggsave(
-    plot3_path,
-    plot = plot3,
-    dpi = 300,
-    width = 8,
-    height = 6
-  )
-
-  # Confirmation message
-  cat("Plots saved successfully!\n")
+  # # Load required libraries
+  # library(terra)     # For raster handling
+  # library(ggplot2)   # For plotting
+  # library(dplyr)     # For data manipulation
+  #
+  # # Load ENVI images as raster stacks
+  # pcoa_raster <- rast(pcoa_image_path)        # Raster with PCoA bands
+  # shannon_raster <- rast(shannon_img_path)  # Raster with Shannon index
+  #
+  # # Extract pixel values into a dataframe
+  # pcoa_values <- as.data.frame(values(pcoa_raster))      # Convert PCoA bands to dataframe
+  # shannon_values <- as.data.frame(values(shannon_raster)) # Convert Shannon index to dataframe
+  #
+  # # Ensure column names are meaningful
+  # colnames(pcoa_values) <- c("PCoA1", "PCoA2", "PCoA3")
+  # colnames(shannon_values) <- c("Shannon_Index")
+  #
+  # # Merge the dataframes
+  # combined_data <- cbind(pcoa_values, shannon_values)
+  #
+  # # Remove NA values (optional but recommended)
+  # combined_data <- combined_data %>% na.omit()
+  #
+  # # ==========================
+  # # Classify Shannon Index into 4 categories
+  # # ==========================
+  # combined_data$Diversity_Category <- cut(
+  #   combined_data$Shannon_Index,
+  #   breaks = c(-Inf, 0.5, 1.5, 2.5, Inf),
+  #   # Define category boundaries
+  #   labels = c(
+  #     "Low Vegetation",
+  #     "Monospecific",
+  #     "Medium Diversity",
+  #     "High Diversity"
+  #   )
+  # )
+  #
+  # # Define matching sizes and colors for each category
+  # diversity_styles <- data.frame(
+  #   Diversity_Category = factor(
+  #     c(
+  #       "Low Vegetation",
+  #       "Monospecific",
+  #       "Medium Diversity",
+  #       "High Diversity"
+  #     ),
+  #     levels = c(
+  #       "Low Vegetation",
+  #       "Monospecific",
+  #       "Medium Diversity",
+  #       "High Diversity"
+  #     )
+  #   ),
+  #   Size = c(0.5, 1, 1.5, 2),
+  #   # Smaller circle sizes
+  #   Color = c("red", "orange", "green", "blue")  # Matching colors
+  # )
+  #
+  # # Merge styles into main dataframe
+  # combined_data <- left_join(combined_data, diversity_styles, by = "Diversity_Category")
+  #
+  # # Scatter Plot Function
+  # scatter_plot <- function(x_col, y_col) {
+  #   ggplot(
+  #     combined_data,
+  #     aes_string(
+  #       x = x_col,
+  #       y = y_col,
+  #       size = "Size",
+  #       color = "Diversity_Category"
+  #     )
+  #   ) +
+  #     geom_point(alpha = 0.6) +  # Increased transparency for better visibility
+  #     scale_size_identity() +  # Keep fixed sizes from dataframe
+  #     scale_color_manual(values = setNames(
+  #       diversity_styles$Color,
+  #       diversity_styles$Diversity_Category
+  #     )) +
+  #     theme_minimal() +
+  #     labs(
+  #       title = paste(x_col, "vs", y_col),
+  #       x = x_col,
+  #       y = y_col,
+  #       size = "Diversity Category",
+  #       # Legend for size
+  #       color = "Diversity Category"  # Legend for color
+  #     )
+  # }
+  #
+  # # Generate scatter plots
+  # plot1 <- scatter_plot("PCoA1", "PCoA2")
+  # plot2 <- scatter_plot("PCoA1", "PCoA3")
+  # plot3 <- scatter_plot("PCoA2", "PCoA3")
+  #
+  # # Display plots
+  # print(plot1)
+  # print(plot2)
+  # print(plot3)
+  #
+  # # Save plots
+  # # Define file paths for saving
+  # plot1_path <- file.path(diversity_ground_data_path,
+  #                         paste0(csv_file_name, '_PCoA1_vs_PCoA2.png'))
+  # plot2_path <- file.path(diversity_ground_data_path,
+  #                         paste0(csv_file_name, '_PCoA1_vs_PCoA3.png'))
+  # plot3_path <- file.path(diversity_ground_data_path,
+  #                         paste0(csv_file_name, '_PCoA2_vs_PCoA3.png'))
+  #
+  # # Save the plots with high resolution
+  # ggsave(
+  #   plot1_path,
+  #   plot = plot1,
+  #   dpi = 300,
+  #   width = 8,
+  #   height = 6
+  # )
+  # ggsave(
+  #   plot2_path,
+  #   plot = plot2,
+  #   dpi = 300,
+  #   width = 8,
+  #   height = 6
+  # )
+  # ggsave(
+  #   plot3_path,
+  #   plot = plot3,
+  #   dpi = 300,
+  #   width = 8,
+  #   height = 6
+  # )
+  #
+  # # Confirmation message
+  # cat("Plots saved successfully!\n")
 
 
   ##############################################################################
@@ -432,12 +452,11 @@ create_species_analysis <- function(plt_site_name) {
 
   print(relative_abundance_plot)
 
+  rel_abundanca_plot_path <- paste0(diversity_ground_data_path,'/',csv_file_name,
+                                    "_relative_abundance_plot.png")
   # Save the relative abundance plot
   ggsave(
-    paste0(
-      diversity_ground_data_path,
-      "/relative_abundance_plot.png"
-    ),
+    rel_abundanca_plot_path,
     relative_abundance_plot,
     dpi = 300,
     width = 10,
@@ -513,7 +532,7 @@ create_species_analysis <- function(plt_site_name) {
 
     # Customize y-axis with dual axes
     scale_y_continuous(name = "Abundance",
-                       sec.axis = sec_axis( ~ . / max(species_df$Abundance) * 100, name = "Cumulative Percentage")) +
+                       sec.axis = sec_axis(~ . / max(species_df$Abundance) * 100, name = "Cumulative Percentage")) +
 
     # Titles and labels
     labs(
@@ -536,9 +555,12 @@ create_species_analysis <- function(plt_site_name) {
 
   print(pareto_plot)
 
+  pareto_plot_path <- paste0(diversity_ground_data_path,'/',csv_file_name,
+                                    "_pareto_chart.png")
+
   # Save the Pareto chart
   ggsave(
-    paste0(diversity_ground_data_path, "/pareto_chart.png"),
+    pareto_plot_path,
     pareto_plot,
     dpi = 300,
     width = 10,
@@ -609,4 +631,3 @@ for (plot in plot_list) {
   result <- create_species_analysis(plot)
   cat(sprintf("Done with %s!", plot))
 }
-

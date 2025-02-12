@@ -5,7 +5,7 @@ library(terra)
 library(sf)
 library(ggplot2)
 
-base_folder <- 'D:/MasterThesis/final_hs_data_folder'
+base_folder <- 'D:/MasterThesis/final_hs_data_folder_test'
 
 plot_list <- list.dirs(base_folder, recursive = FALSE, full.names = FALSE)
 
@@ -41,43 +41,43 @@ create_scatterplot <- function(plt_site_name) {
   csv_file_name <- tools::file_path_sans_ext(csv_file)
 
 
-  shannon_img_path <- paste0(
-    'D:/MasterThesis/final_hs_data_folder/',
+  shannon_img_path <- file.path(
+    base_folder,
     plotsite_name,
-    '/result/',
+    'result',
     result_folder_name,
-    '/SPCA/ALPHA/Shannon_20'
+    'SPCA/ALPHA/Shannon_20'
   )
-  pcoa_image_path <- paste0(
-    'D:/MasterThesis/final_hs_data_folder/',
+  pcoa_image_path <- file.path(
+    base_folder,
     plotsite_name,
-    '/result/',
+    'result',
     result_folder_name,
-    '/SPCA/BETA/BetaDiversity_BCdiss_PCO_20'
+    'SPCA/BETA/BetaDiversity_BCdiss_PCO_20'
   )
-  spectral_species_img_path <- paste0(
-    'D:/MasterThesis/final_hs_data_folder/',
+  spectral_species_img_path <- file.path(
+    base_folder,
     plotsite_name,
-    '/result/',
+    'result',
     result_folder_name,
-    '/SPCA/SpectralSpecies/SpectralSpecies'
+    'SPCA/SpectralSpecies/SpectralSpecies'
   )
-  diversity_ground_data_path <- paste0(
-    'D:/MasterThesis/final_hs_data_folder/',
+  diversity_ground_data_path <- file.path(
+    base_folder,
     plotsite_name,
-    '/data/species_analysis'
+    'data/species_analysis'
   )
   csv_file_path <- file.path(diversity_ground_data_path, csv_file)
   output_shapefile <- file.path(
     diversity_ground_data_path,
     paste0(csv_file_name, '_Shannon_Diversity_Ground.shp')
   )
-  shannon_scatter_plot <- paste0(
-    'D:/MasterThesis/final_hs_data_folder/',
+  shannon_scatter_plot <- file.path(
+    base_folder,
     plotsite_name,
-    '/data/species_analysis/',
+    'data/species_analysis',paste0(
     csv_file_name,
-    '_shannon_scatter_plot.png'
+    '_shannon_scatter_plot.png')
   )
 
   # Load the raster map
@@ -87,7 +87,7 @@ create_scatterplot <- function(plt_site_name) {
   shapefile <- st_read(output_shapefile)
 
   # Extract pixel values at point locations
-  extracted_data <- extract(raster_map, shapefile)
+  extracted_data <- extract(raster_map, shapefile, buffer = 15, fun = mean, na.rm = TRUE)
 
   # Extract pixel values correctly (assuming first column is ID)
   shapefile$pixel_diversity <- extracted_data[, 2]  # Adjust index if needed

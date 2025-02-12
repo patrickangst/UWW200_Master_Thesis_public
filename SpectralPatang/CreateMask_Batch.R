@@ -79,7 +79,7 @@ process_all_subfolders <- function(main_folder_path) {
 }
 
 # Example usage
-main_folder <- "D:/MasterThesis/final_hs_data_folder"
+main_folder <- "D:/MasterThesis/final_hs_data_folder_test"
 num_cores_to_use <- detectCores()  # Adjust the number of cores based on your system
 
 # Call the main function
