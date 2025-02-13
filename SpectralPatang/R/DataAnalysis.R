@@ -2,8 +2,9 @@
 #'
 #' This function is a wrapper for the biodiversity calculations using the
 #' package BiodivmapR.
-#' @param Hyperspectral_Image_File_Path character. Path of the image to be processed
-#' @param Mask_Image_File_Path character. Path of the mask file image
+#' @param Hyperspectral_Image_Folder_Path character. Path of the image folder
+#' @param Mask_Folder_Path character. Path of the mask folder
+#' @param Output_Folder_Path character. Path of the ouput folder
 #' @param NBbclusters numeric. number of clusters defined in k-Means
 #' @param nb_partitions numeric. Number of repetitions to estimate diversity from the raster (averaging repetitions).
 #' @param Window_size numeric. Size of spatial units (in pixels) to compute diversity.
@@ -20,8 +21,9 @@
 #' @export
 #'
 
-analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
-                                 Mask_Image_File_Path,
+analyse_biodiversity <- function(Hyperspectral_Image_Folder_Path,
+                                 Mask_Folder_Path,
+                                 Output_Folder_Path,
                                  NBbclusters = 20,
                                  nb_partitions = 1,
                                  Window_size = 10,
@@ -33,13 +35,47 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
                                  Map_Alpha = TRUE,
                                  MAP_Beta = TRUE,
                                  PCA_Threshold = 99) {
-  Input_Mask_File <- Mask_Image_File_Path
-  Input_Image_File <- Hyperspectral_Image_File_Path
-  Input_HDR_File <- biodivMapR::get_HDR_name(Hyperspectral_Image_File_Path, showWarnings = FALSE)
-  rectified_image_file_name <- basename(Hyperspectral_Image_File_Path)
+
+  #
+  # Get image file path
+  #
+
+  # List all files in the folder
+  hs_files <- list.files(Hyperspectral_Image_Folder_Path, full.names = TRUE)
+  # Filter files without an extension
+  hs_file_without_ext <- hs_files[!grepl("\\.[a-zA-Z0-9]+$", basename(hs_files))]
+  # Check if exactly one file without extension exists
+  if (length(hs_file_without_ext) != 1) {
+    stop("Either no or multiple files without extensions found in the hs image folder.")
+  }
+  # Extract the file name
+  hs_image_file_name <- basename(hs_file_without_ext)
+  # Construct the full raw file path
+  Input_Image_File <- file.path(Hyperspectral_Image_Folder_Path, hs_image_file_name)
+
+  #
+  # Get mask file path
+  #
+
+  # List all files in the folder
+  mask_files <- list.files(Mask_Folder_Path, full.names = TRUE)
+  # Filter files without an extension
+  mask_file_without_ext <- mask_files[!grepl("\\.[a-zA-Z0-9]+$", basename(mask_files))]
+  # Check if exactly one file without extension exists
+  if (length(mask_file_without_ext) != 1) {
+    stop("Either no or multiple files without extensions found in the mask folder.")
+  }
+  # Extract the file name
+  mask_image_file_name <- basename(mask_file_without_ext)
+  # Construct the full raw file path
+  Input_Mask_File <- file.path(Mask_Folder_Path, mask_image_file_name)
+
+
+  Input_HDR_File <- biodivMapR::get_HDR_name(Input_Image_File, showWarnings = FALSE)
+  rectified_image_file_name <- basename(Input_Image_File)
 
   output_folder_path <- dirname(Hyperspectral_Image_File_Path)
-  Output_Dir <- sub("data/rectified", "result", output_folder_path)
+  Output_Dir <- Output_Folder_Path
   dir.create(path = Output_Dir,
              recursive = TRUE,
              showWarnings = FALSE)
@@ -100,37 +136,13 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   # path for the updated mask
   Input_Mask_File <- PCA_Output$MaskPath
 
-  # # Auto-select components
-  # pca_model <- PCA_Output$PCA_model
-  # # Get the proportion of variance explained by each principal component
-  # prop_variance <- pca_model$sdev ^ 2 / sum(pca_model$sdev ^ 2)  # Variance explained by each component
-  #
-  # # Calculate the cumulative proportion of variance
-  # cumulative_variance <- cumsum(prop_variance)
-  # # Find the number of components that explain at least 98% of the variance
-  #
-  # variance_threshold <- PCA_Threshold / 100
-  #
-  # num_components <- which(cumulative_variance >= variance_threshold)[1]
-  #
-  # # Create a vector of component numbers
-  # selected_component_numbers <- 1:num_components
-  #
-  # print(paste0("PCs selected: ", selected_component_numbers))
-  #
+
   # # Write these numbers to a text file, one per line
   selected_components_file_path <- file.path(Output_Dir,
                                              rectified_image_file_name,
                                              TypePCA,
                                              'PCA',
                                              'Selected_Components.txt')
-  # writeLines(as.character(selected_component_numbers),
-  #            selected_components_file_path)
-  #
-  # # Save selected PCs as a separate file
-  # # Dynamically generate the band selection string
-  # bandselection_pca <- paste(sprintf("-b %d", 1:num_components), collapse = " ")
-
 
   # GDAL translate command to extract the specified bands
   pca_output_envi_file_path <- file.path(Output_Dir,
@@ -138,8 +150,8 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
                                          TypePCA,
                                          'PCA',
                                          'OutputPCA_30_PCs')
-  pca_selection_file_path <- paste0(pca_output_envi_file_path, '_selection.tif')
 
+   pca_selection_file_path <- paste0(pca_output_envi_file_path, '_selection.tif')
 
   # Read the numbers from the file
   selected_components <- scan(selected_components_file_path, what = integer(), quiet = TRUE)

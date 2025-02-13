@@ -5,14 +5,14 @@
 \title{Create Rectangular shapefile from plot locations}
 \usage{
 create_rectangular_shapefile(
-  Plotlocation_Shp_File_Path,
+  Plotlocation_Shp_Folder_Path,
   Output_Folder_Path,
   Buffer = 10,
   Square = FALSE
 )
 }
 \arguments{
-\item{Plotlocation_Shp_File_Path}{character. Path of the plot locations shp}
+\item{Plotlocation_Shp_Folder_Path}{character. Path of the plot locations folder shp}
 
 \item{Output_Folder_Path}{character. Folder path of the shp of the cut file image}
 

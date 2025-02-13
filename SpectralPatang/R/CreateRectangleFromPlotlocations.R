@@ -2,7 +2,7 @@
 #'
 #' This function is used to create a rectangular box around plot locations
 #'
-#' @param Plotlocation_Shp_File_Path character. Path of the plot locations shp
+#' @param Plotlocation_Shp_Folder_Path character. Path of the plot locations folder shp
 #' @param Output_Folder_Path character. Folder path of the shp of the cut file image
 #' @param Buffer character. How much buffer is to be set around the plot locations
 #'
@@ -54,12 +54,18 @@
 #   return(output_file_path)
 # }
 
-create_rectangular_shapefile <- function(Plotlocation_Shp_File_Path,
+create_rectangular_shapefile <- function(Plotlocation_Shp_Folder_Path,
                                          Output_Folder_Path,
                                          Buffer = 10,
                                          Square = FALSE) {
+
+  # Get the full path of the .shp file in the folder
+  Plotlocation_Shp_File_Path <- biodivMapR::list_shp(Plotlocation_Shp_Folder_Path)
+
   # Read the plot locations shapefile
   input_file_name <- basename(Plotlocation_Shp_File_Path)
+
+
   input_file_name_without_ext <- sub("\\.shp$", "", input_file_name)
   plot_locations <- sf::st_read(Plotlocation_Shp_File_Path, quiet = TRUE)
 

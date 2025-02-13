@@ -7,6 +7,7 @@
 create_RGB(
   Raw_Image_Folder_Path,
   RGB_Image_Folder_Path,
+  Site_Name = "Site",
   Band_Selection = "-b 59 -b 34 -b 20",
   Output_Image_Format = "GTiff"
 )
@@ -15,6 +16,8 @@ create_RGB(
 \item{Raw_Image_Folder_Path}{character. Path of the image to be processed}
 
 \item{RGB_Image_Folder_Path}{character. Path of the RGB image}
+
+\item{Site_Name}{character. Name of the test site}
 
 \item{Band_Selection}{character. Bandselection in the format "-b 59 -b 34 -b 20"}
 

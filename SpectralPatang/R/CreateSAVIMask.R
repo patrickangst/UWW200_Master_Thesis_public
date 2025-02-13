@@ -81,4 +81,4 @@ create_SAVI_mask <- function(Rectified_Image_Folder_Path,
 }
 
 #debug(create_SAVI_mask)
-create_SAVI_mask("D:/MasterThesis/final_hs_data_folder/AN_TJ_Plot2_ang20220711t003358rfl/data/rectified","D:/MasterThesis/final_hs_data_folder/AN_TJ_Plot2_ang20220711t003358rfl/data" )
+#create_SAVI_mask("D:/MasterThesis/final_hs_data_folder/AN_TJ_Plot2_ang20220711t003358rfl/data/rectified","D:/MasterThesis/final_hs_data_folder/AN_TJ_Plot2_ang20220711t003358rfl/data" )

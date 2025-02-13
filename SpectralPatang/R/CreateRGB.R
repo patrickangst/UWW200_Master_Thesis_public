@@ -4,6 +4,7 @@
 #'
 #' @param Raw_Image_Folder_Path character. Path of the image to be processed
 #' @param RGB_Image_Folder_Path character. Path of the RGB image
+#' @param Site_Name character. Name of the test site
 #' @param Band_Selection character. Bandselection in the format "-b 59 -b 34 -b 20"
 #' @param Output_Image_Format Format ot the RGB image (default: GTiff)
 #'
@@ -12,6 +13,7 @@
 
 create_RGB  <- function(Raw_Image_Folder_Path,
                         RGB_Image_Folder_Path,
+                        Site_Name = "Site",
                         Band_Selection = "-b 59 -b 34 -b 20",
                         Output_Image_Format = 'GTiff') {
   # List all files in the folder
@@ -36,7 +38,7 @@ create_RGB  <- function(Raw_Image_Folder_Path,
 
   # Construct the full output file path
   output_image_file_path <- file.path(RGB_Image_Folder_Path,
-                                      paste0(raw_image_file_name, "_rgb", file_extension))
+                                      paste0(Site_Name,"_",raw_image_file_name, "_rgb", file_extension))
 
 
   # Define the bands you want to select

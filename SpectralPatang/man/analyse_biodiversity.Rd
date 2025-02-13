@@ -5,8 +5,9 @@
 \title{Perform diversity calculations}
 \usage{
 analyse_biodiversity(
-  Hyperspectral_Image_File_Path,
-  Mask_Image_File_Path,
+  Hyperspectral_Image_Folder_Path,
+  Mask_Folder_Path,
+  Output_Folder_Path,
   NBbclusters = 20,
   nb_partitions = 1,
   Window_size = 10,
@@ -21,9 +22,11 @@ analyse_biodiversity(
 )
 }
 \arguments{
-\item{Hyperspectral_Image_File_Path}{character. Path of the image to be processed}
+\item{Hyperspectral_Image_Folder_Path}{character. Path of the image folder}
 
-\item{Mask_Image_File_Path}{character. Path of the mask file image}
+\item{Mask_Folder_Path}{character. Path of the mask folder}
+
+\item{Output_Folder_Path}{character. Path of the ouput folder}
 
 \item{NBbclusters}{numeric. number of clusters defined in k-Means}
 
