@@ -70,3 +70,18 @@ PCA_Output <- biodivMapR::perform_PCA(
   nbCPU = 8,
   MaxRAM = 8
 )
+
+dire <- "D:/MasterThesis/final_hs_data_folder/AN_TJ_1/result_biodivMapR"
+
+
+# List all files in the folder
+dire_files <- list.files(dire, full.names = TRUE)
+
+# Filter files without an extension
+dire_folder_without_ext <- dire_files[!grepl("\\.[a-zA-Z0-9]+$", basename(dire_files))]
+
+# Check if exactly one file without extension exists
+if (length(hs_file_without_ext) != 1) {
+  stop("Either no or multiple files without extensions found in the hs image folder.")
+}
+print(list.files())
