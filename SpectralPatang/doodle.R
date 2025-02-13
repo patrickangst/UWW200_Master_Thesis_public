@@ -53,3 +53,20 @@ for (site in test_sites) {
   }
 
 }
+
+
+image_rectified_file_path <- 'D:/MasterThesis/final_hs_data_folder_test/AN_TJ_1/image_rectified/ang20220711t002111_rfl_v2aa2_img_rectified/PCout'
+mask_file_path <- 'D:/MasterThesis/final_hs_data_folder_test/AN_TJ_1/mask/ang20220711t002111_rfl_v2aa2_img_rectified_savi_mask_02'
+result_biodivMapR_folder_path <- 'D:/MasterThesis/final_hs_data_folder_test/AN_TJ_1/result_biodivMapR'
+
+PCA_Output <- biodivMapR::perform_PCA(
+  Input_Image_File = image_rectified_file_path,
+  Input_Mask_File = mask_file_path,
+  Output_Dir = result_biodivMapR_folder_path,
+  Continuum_Removal = FALSE,
+  TypePCA = 'SPCA',
+  NbPCs_To_Keep = 30,
+  FilterPCA = FALSE,
+  nbCPU = 8,
+  MaxRAM = 8
+)
