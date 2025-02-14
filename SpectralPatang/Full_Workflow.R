@@ -26,6 +26,9 @@ test_sites_folder_path <- file.path(main_folder_path, 'final_hs_data_folder')
 # Set the directory containing the GeoTIFFs
 pca_superfolder_path <- file.path(main_folder_path, '01_principle_components')
 
+# Set the directory containing the GeoTIFFs
+pc_selection_path <- file.path(main_folder_path, '08_principle_components_selection')
+
 # Set the directory containing the PNGs
 png_folder <- file.path(main_folder_path, '02_principle_components_png')
 
@@ -63,7 +66,7 @@ gdal_translate_tif <- function(pca_envi_input_file_path,
 }
 
 #
-# Function definition part 2 - cluster definition
+# Function definition part 1 - rectification
 #
 
 part_one <- function(test_site_folder_path) {
@@ -222,6 +225,9 @@ part_two <- function() {
   }
 }
 
+#
+# Function definition part 3 - pca selection processing
+#
 
 part_three <- function(test_site_folder_path) {
   result_biodivMapR_folder_path <- file.path(test_site_folder_path, 'result_biodivMapR')
@@ -244,10 +250,6 @@ part_three <- function(test_site_folder_path) {
   # set pc selection txt
   pca_selection_txt_file_path <- file.path(pca_folder_path, 'Selected_Components.txt')
   file.create(pca_selection_txt_file_path)
-
-  # set optimal clusternumber txt
-  optimal_cluster_number_file_path <- file.path(pca_folder_path, 'Optimal_cluster_number.txt')
-  file.create(optimal_cluster_number_file_path)
 
   #read excel with pca info
   metrics_data <- read_excel(metrics_file_path, sheet = "Sheet1")
@@ -281,6 +283,47 @@ part_three <- function(test_site_folder_path) {
 
   # Execute the GDAL translate command
   system(gdal_translate_command)
+
+}
+
+
+#
+# Function definition part 4 - cluster analysis
+#
+
+part_four <- function(test_site_folder_path) {
+  result_biodivMapR_folder_path <- file.path(test_site_folder_path, 'result_biodivMapR')
+  test_site_name <- basename(test_site_folder_path)
+
+  # List all files in the folder
+  result_files_path <- list.files(result_biodivMapR_folder_path, full.names = TRUE)
+
+  # Filter files without an extension
+  result_folder_path <- result_files_path[!grepl("\\.[a-zA-Z0-9]+$", basename(result_files_path))]
+
+  # Check if exactly one file without extension exists
+  if (length(result_folder_path) != 1) {
+    stop("No result folder found")
+  }
+
+  # get pca folder path
+  pca_folder_path <- file.path(result_folder_path, TypePCA, 'PCA')
+
+  # set optimal clusternumber txt
+  optimal_cluster_number_file_path <- file.path(pca_folder_path, 'Optimal_cluster_number.txt')
+  file.create(optimal_cluster_number_file_path)
+
+  #read excel with pca info
+  metrics_data <- read_excel(metrics_file_path, sheet = "Sheet1")
+
+  # Read the selected PC values, e.g. 1,2,3,4
+  pc_selection <- metrics_data %>%
+    filter(Plot_Location_Shp_Subset_Name == test_site_name) %>%
+    select(PCs)
+
+  # GeoTiff with only the selected principle components
+  pc_selection_geotiff_file_path <- file.path(pca_folder_path,
+                                              paste0(test_site_name, '_pc_selection.tif'))
 
   # get the optimal cluster number
   cat(paste0('Start getting optimal cluster number: ', test_site_name, '\n'))
@@ -340,7 +383,25 @@ part_two()
 # Analyse principle components and fill seletion into Metrics.xlsx
 
 ################################################################################
-# perform part 3: Cluster analysis
+# perform part 3: PC selection processing
+################################################################################
+
+sites_done_part3 <- c("hugo")
+
+for (site in test_sites) {
+  if (!(site %in% sites_done_part3)) {
+    test_site_folder_path_loop <- file.path(test_sites_folder_path, site)
+    cat(paste0('Start process part 3: ', site, '\n'))
+    part_three(test_site_folder_path_loop)
+    cat(paste0('End process part 3: ', site, '\n'))
+    sites_done_part3 <- c(sites_done_part3, site)
+  } else {
+    print(paste(site, " is already done."))
+  }
+}
+
+################################################################################
+# perform part 4: Cluster analysis
 ################################################################################
 
 sites_done_part3 <- c("hugo")
