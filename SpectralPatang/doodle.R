@@ -133,5 +133,5 @@ optimal_clusters <- nb$Best.nc[1]
 
 save.image(file = "D:/MasterThesis/08_nbclust_results/AN_TJ_1.RData")
 
-
-
+filename <- 'D:/MasterThesis/final_hs_data_folder/AN_TJ_1/result_biodivMapR/ang20220711t002111_rfl_v2aa2_img_rectified/SPCA/PCA/PCA_Info.RData'
+pca_shizzle <- load(filename)

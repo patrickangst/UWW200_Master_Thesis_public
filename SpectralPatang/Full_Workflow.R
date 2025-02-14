@@ -40,6 +40,7 @@ metrics_file_path <- file.path(main_folder_path, '07_Testsite_Metrics', 'Metrics
 
 # various variables
 num_cores_to_use <- detectCores() - 2
+MaxRAM <- 8
 Window_size <- 5
 TypePCA <- 'SPCA'
 
@@ -114,6 +115,12 @@ part_one <- function(test_site_folder_path) {
   #create MASK
   mask_file_path <- SpectralPatang::create_SAVI_mask(image_rectified_folder_path, mask_folder_path)
 
+  pca_output_rds_file_path <- file.path(result_biodivMapR_folder_path,
+                                        basename(image_rectified_file_path),
+                                        TypePCA,
+                                        'PCA',
+                                        'PCA_Output.rds')
+
   # peform PCA
   cat(paste0('Start PCA for: ', test_site_name, '\n'))
 
@@ -127,8 +134,11 @@ part_one <- function(test_site_folder_path) {
     NbPCs_To_Keep = 30,
     FilterPCA = FALSE,
     nbCPU = num_cores_to_use,
-    MaxRAM = 8
+    MaxRAM = MaxRAM
   )
+
+  # Save the list as an RDS file
+  saveRDS(PCA_Output, file = pca_output_rds_file_path)
 
   # Save PCs as Geotiff
   pca_file_path <- PCA_Output[["PCA_Files"]]
@@ -284,6 +294,20 @@ part_three <- function(test_site_folder_path) {
   # Execute the GDAL translate command
   system(gdal_translate_command)
 
+  pc_selection_superfolder_geotiff_file_path <- file.path(pc_selection_path,
+                                                          paste0(test_site_name, '_pc_selection.tif'))
+
+  # GDAL translate command
+  gdal_translate_command <- sprintf(
+    "gdal_translate %s -of GTiff %s %s",
+    b_string,
+    pc_envi_file_path,
+    pc_selection_superfolder_geotiff_file_path
+  )
+
+  # Execute the GDAL translate command
+  system(gdal_translate_command)
+
 }
 
 
@@ -335,16 +359,90 @@ part_four <- function(test_site_folder_path) {
     Min_Cluster = 2,
     Max_Cluster = 50
   )
-  cat(paste0('Getting optimal cluster number finished. Optimal number: ', optimal_cluster_number, '\n'))
+  cat(
+    paste0(
+      'Getting optimal cluster number finished. Optimal number: ',
+      optimal_cluster_number,
+      '\n'
+    )
+  )
 
   # Write numbers to .txt file
-  writeLines(as.character(optimal_cluster_number), optimal_cluster_number_file_path)
+  writeLines(as.character(optimal_cluster_number),
+             optimal_cluster_number_file_path)
 
   # Update the 'SpectralSpecies' column
   metrics_data$SpectralSpecies[metrics_data$Plot_Location_Shp_Subset_Name == test_site_name] <- optimal_cluster_number
   write_xlsx(metrics_data, path = metrics_file_path)
 
   gc()
+}
+
+
+#
+# Function definition part 5 - Calculate diversity
+#
+
+part_five <- function(test_site_folder_path) {
+  result_biodivMapR_folder_path <- file.path(test_site_folder_path, 'result_biodivMapR')
+  image_rectified_folder_path <- file.path(test_site_folder_path, 'image_rectified')
+
+  # List all files in the folder
+  hs_files <- list.files(image_rectified_folder_path, full.names = TRUE)
+  # Filter files without an extension
+  Input_Image_File <- hs_files[!grepl("\\.[a-zA-Z0-9]+$", basename(hs_files))]
+  # Check if exactly one file without extension exists
+  if (length(Input_Image_File) != 1) {
+    stop("Either no or multiple files without extensions found in the hs image folder.")
+  }
+
+  test_site_name <- basename(test_site_folder_path)
+
+  # List all files in the folder
+  result_files_path <- list.files(result_biodivMapR_folder_path, full.names = TRUE)
+
+  # Filter files without an extension
+  result_folder_path <- result_files_path[!grepl("\\.[a-zA-Z0-9]+$", basename(result_files_path))]
+
+  # Check if exactly one file without extension exists
+  if (length(result_folder_path) != 1) {
+    stop("No result folder found")
+  }
+
+  # get pca result
+  pca_folder_path <- file.path(result_folder_path, TypePCA, 'PCA')
+  pca_output_file_path <- file.path(pca_folder_path, 'PCA_Output.rds')
+  PCA_Output <- readRDS(pca_output_file_path)
+
+  #read excel with pca info
+  metrics_data <- read_excel(metrics_file_path, sheet = "Sheet1")
+
+  # Read the selected PC values, e.g. 1,2,3,4
+  cluster_number <- metrics_data %>%
+    filter(Plot_Location_Shp_Subset_Name == test_site_name) %>%
+    select(SpectralSpecies)
+
+  cluster_number <- as.numeric(cluster_number)
+
+
+  ################################################################################
+  ##                  Perform Spectral species mapping                          ##
+  ## https://jbferet.github.io/biodivMapR/articles/biodivMapR_5.html            ##
+  ################################################################################
+  cat(paste0('MAP SPECTRAL SPECIES for ', test_site_name, '\n'))
+  Kmeans_info <- biodivMapR::map_spectral_species(
+    Input_Image_File = Input_Image_File,
+    Input_Mask_File = PCA_Output$MaskPath,
+    Output_Dir = result_biodivMapR_folder_path,
+    SpectralSpace_Output = PCA_Output,
+    nbclusters = cluster_number,
+    nbCPU = num_cores_to_use,
+    MaxRAM = MaxRAM,
+    progressbar = TRUE
+  )
+
+
+
 }
 
 
@@ -404,15 +502,34 @@ for (site in test_sites) {
 # perform part 4: Cluster analysis
 ################################################################################
 
-sites_done_part3 <- c("hugo")
+sites_done_part4 <- c("hugo")
 
 for (site in test_sites) {
-  if (!(site %in% sites_done_part3)) {
+  if (!(site %in% sites_done_part4)) {
     test_site_folder_path_loop <- file.path(test_sites_folder_path, site)
     cat(paste0('Start process part 3: ', site, '\n'))
-    part_three(test_site_folder_path_loop)
+    part_four(test_site_folder_path_loop)
     cat(paste0('End process part 3: ', site, '\n'))
-    sites_done_part3 <- c(sites_done_part3, site)
+    sites_done_part4 <- c(sites_done_part4, site)
+  } else {
+    print(paste(site, " is already done."))
+  }
+}
+
+################################################################################
+# perform part 5: Calculate diversity
+################################################################################
+
+sites_done_part5 <- c("hugo")
+
+for (site in test_sites) {
+  if (!(site %in% sites_done_part5)) {
+    test_site_folder_path_loop <- file.path(test_sites_folder_path, site)
+    cat(paste0('Start process part 3: ', site, '\n'))
+    #debug(part_five)
+    part_five(test_site_folder_path_loop)
+    cat(paste0('End process part 3: ', site, '\n'))
+    sites_done_part5 <- c(sites_done_part5, site)
   } else {
     print(paste(site, " is already done."))
   }
