@@ -7,7 +7,8 @@
 create_rectangular_shapefile(
   Plotlocation_Shp_File_Path,
   Output_Folder_Path,
-  Buffer = 10
+  Buffer = 10,
+  Square = FALSE
 )
 }
 \arguments{

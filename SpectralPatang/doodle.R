@@ -1,196 +1,105 @@
-# directory_path <- "/path/to/your/tewe.txt"
-#
-# # Replace the last directory with "mine"
-# new_directory_path <- file.path(dirname(directory_path), "mine")
-#
-# print(new_directory_path)
-#
-#
-# rm(list = ls())
-# graphics.off()
-#
-# devtools::load_all()
-#
-# # Load necessary libraries
-# library(doParallel)
-# library(foreach)
-# library(SpectralPatang)
-# library(terra)
-#
-# raw_image_file_path <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/data/hs_raw_image/ang20190706t235120_rfl_v2v2_img'
-# rectified_image_file_path <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/data/rectified/ang20190706t235120_rfl_v2v2_img_rectified_cut'
-# cut_shp <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/data/plotlocations/06_Utqiaqvik_IBP_boundingbox_buffered.shp'
-# savi_file_path <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/mask'
-# savi_file_path <- paste0(savi_file_path,'/ang20190706t235120_rfl_v2v2_img_rectified_savi_mask_02_cut')
-#
-# gdal_command_rectify <- sprintf(
-#   "gdalwarp -cutline %s -crop_to_cutline -of ENVI -co INTERLEAVE=BIL -dstnodata -9999 %s %s",
-#   cut_shp,
-#   raw_image_file_path,
-#   rectified_image_file_path
-# )
-#
-# # # Execute the command in R
-# system(gdal_command_rectify)
-#
-#
-#
-# SpectralPatang::create_SAVI_mask(rectified_image_file_path,savi_file_path)
-#
-#
-# num_cores <- parallel::detectCores()
-#
-# SpectralPatang::analyse_biodiversity(rectified_image_file_path,
-#                                      savi_file_path,
-#                                      NBbclusters = 5,
-#                                      Window_size = 10,
-#                                      NbCPU = num_cores,
-#                                      MaxRAM = 8,
-#                                      Perform_PCA = TRUE,
-#                                      PCA_Threshold = 99)
-#
-#
-#
-# uesche <- read.csv("~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/data/species_analysis/tvexport.csv")
-#
-# dirpath <- "~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/ang20190706t235120rfl/data/species_analysis/tvexport.csv"
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-# rm(list = ls())
-# graphics.off()
-#
-# devtools::load_all()
-#
-# # Load necessary libraries
-# library(doParallel)
-# library(foreach)
-# library(SpectralPatang)
-# library(terra)
-#
-#
-#
-# get_optimal_cluster_number_local <- function(SpatRaster,
-#                                        Min_Cluster = 2,
-#                                        Max_Cluster = 30) {
-#   # Load the raster image
-#   pca_data <- as.matrix(terra::values(SpatRaster))
-#
-#   # Define cores for parallel processing
-#   num_cores <- parallel::detectCores() - 2
-#
-#   # Prepare the data
-#   pca_data_na_omitted <- na.omit(pca_data)  # Clean the data (remove NAs)
-#   pca_data_na_omitted_scaled <- scale(pca_data_na_omitted)  # Standardize data for clustering
-#   kmeans_clustering_data <- pca_data_na_omitted_scaled
-#
-#   # Define Range of Clusters
-#   k.values <- Min_Cluster:Max_Cluster
-#
-#   # Define Clustering Metrics Function
-#   compute_wss <- function(data, k, seed = 123) {
-#     set.seed(seed)
-#     kmeans(data, centers = k, nstart = 10)$tot.withinss
-#   }
-#
-#   # Setup Parallel Cluster
-#   cl <- parallel::makeCluster(num_cores)
-#
-#   # Export required objects and functions to the worker nodes
-#   parallel::clusterExport(
-#     cl,
-#     varlist = c("kmeans_clustering_data", "compute_wss"),
-#     envir = environment()
-#   )
-#
-#   # Compute Metrics in Parallel
-#   wss_values <- parallel::parSapply(cl, k.values, function(k) {
-#     compute_wss(kmeans_clustering_data, k)
-#   })
-#
-#   # Stop Cluster
-#   parallel::stopCluster(cl)
-#
-#   # Create Data Frame with Metrics
-#   cluster_metrics <- data.frame(k = k.values, WSS = wss_values)
-#
-#   # Determine Optimal Clusters
-#   # Elbow Method: Find the point where the second derivative is minimized
-#   diff_wss <- diff(cluster_metrics$WSS)
-#   diff2_wss <- diff(diff_wss)
-#   optimal_clusters_elbow <- which.min(diff2_wss) + Min_Cluster  # Adjust by Min_Cluster
-#
-#   return(optimal_clusters_elbow)
-#
-# }
-#
-# Image_File_Path <- '/media/patang/T9/d_done/d_ang20190713t002123rfl/result/ang20190713t002123_rfl_v2v2_img_rectified/SPCA/PCA/OutputPCA_30_PCs_selection.tif'
-#
-# r <- terra::rast(Image_File_Path)
-#
-# # Downsample by a factor, preserving variability (standard deviation)
-# factor <- 2  # Adjust as needed
-# r_downsampled <- terra::aggregate(r, fact = factor, fun = sd, na.rm = TRUE)
-#
-# # Check new raster properties
-# print(res(r_downsampled))
-# print(dim(r_downsampled))
-#
-# r_values <- as.matrix(terra::values(r))
-# r_downsampled_values <- as.matrix(terra::values(r_downsampled))
-#
-# # Plot to verify
-# plot(r_downsampled, main = "Downsampled Raster (Preserving Variability)")
-#
-# clusters <- get_optimal_cluster_number_local(r_downsampled)
-#
-# output_folder_path <- dirname(Image_File_Path)
-# output_file_path <- file.path(output_folder_path,'optimal_number_of_clusters.txt')
-# write(clusters, file = output_file_path)
-#
-# print(clusters)
+# Clear workspace
+rm(list = ls())
+graphics.off()
+
+# Load necessary libraries
+library(terra)
+
+# Set base path
+base_path <- "D:/MasterThesis/final_hs_data_folder_test"
+
+# List all subfolders in the base directory
+subfolders <- list.dirs(base_path, recursive = FALSE)
+
+# Iterate over each subfolder
+for (subfolder in subfolders) {
+  # Define the rectified data folder path
+  rectified_folder <- file.path(subfolder, "data", "rectified")
+
+  # Check if the rectified folder exists
+  if (!dir.exists(rectified_folder)) {
+    next  # Skip if the folder does not exist
+  }
+
+  # List files inside the rectified folder
+  files <- list.files(rectified_folder, full.names = TRUE)
+
+  # Filter files without an extension (ENVI file)
+  envi_files <- files[!grepl("\\.[a-zA-Z0-9]+$", basename(files))]
+
+  # Check if exactly one ENVI file exists
+  if (length(envi_files) != 1) {
+    warning(paste("Skipping folder:", subfolder, "- No unique ENVI file found."))
+    next
+  }
+
+  # Extract folder name
+  folder_name <- basename(subfolder)
+
+  # Extract part before "_ang"
+  extracted_name <- sub("(_ang.*)$", "", folder_name)
+
+  # Print results
+  print(paste("Processing:", extracted_name))
+  print(paste("ENVI File:", envi_files))
+
+  # TODO: Add further processing (e.g., reading the raster)
+  # raster_data <- rast(envi_files)
+
+  cut_shapefile_path <- file.path(
+    subfolder,
+    'data',
+    'cut_shapefile',
+    paste0(extracted_name, '_cutshape_rotated.shp')
+  )
+
+  # Define the bands you want to select
+  bandselection <- '-b 59 -b 34 -b 20'
+
+  # GDAL translate command to extract the specified bands and create a new image
+  gdal_translate_command <- sprintf(
+    "gdal_translate %s -of GTiff %s %s",
+    bandselection,
+    raw_image_file_path,
+    output_image_file_path
+  )
+
+  # Execute the GDAL translate command
+  system(gdal_translate_command)
+
+  # Check if the output file was created successfully
+  if (file.exists(output_image_file_path)) {
+    cat("Output file created successfully:",
+        output_image_file_path,
+        "\n")
+
+    # GDAL edit command to set color interpretation for each band
+    gdal_edit_command <- sprintf(
+      "gdal_edit.py -colorinterp_1 Red -colorinterp_2 Green -colorinterp_3 Blue %s",
+      output_image_file_path
+    )
+
+    # Execute the GDAL edit command
+    system(gdal_edit_command)
+
+    # Confirm that color interpretation was set successfully
+    cat("Color interpretation set to RGB for each band in",
+        output_image_file_path,
+        "\n")
+
+  } else {
+    cat("Failed to create output file.\n")
+  }
+
+}
 
 
 
 
 
-# rm(list=ls(all=TRUE));gc()
-# graphics.off()
-#
-# library(stars)
-# library(terra)
-#
-# Image_File_Path <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/PCA_selected.tif'
-# Image_File_Path_rectified <- '~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/PCA_selected_rectified'
-#
-#
-# raster_data <- terra::rast(Image_File_Path_rectified)
-#
-# plot(raster_data)
+
+
+
 
 
 
@@ -202,32 +111,258 @@ devtools::load_all()
 
 # Load necessary libraries
 library(SpectralPatang)
+library(biodivMapR)
 
-rectified_image_file_path <- 'D:/MasterThesis/ang20190706t234547rfl/data/rectified/ang20190706t234547_rfl_v2v2_img_rectified'
-mask_image_file_path <- 'D:/MasterThesis/ang20190706t234547rfl/mask/ang20190706t234547_rfl_v2v2_img_rectified_savi_mask_02'
-num_cores <- parallel::detectCores() - 2
-#debug(analyse_biodiversity)
-pca_selection_file_path <- SpectralPatang::analyse_biodiversity(rectified_image_file_path,
-                                                                mask_image_file_path,
-                                                                NBbclusters = 20,
-                                                                nb_partitions = 1,
-                                                                Window_size = 10,
-                                                                NbCPU = num_cores,
-                                                                MaxRAM = 8,
-                                                                Perform_PCA = TRUE,
-                                                                Map_Species = TRUE,
-                                                                Map_Alpha = TRUE,
-                                                                MAP_Beta = TRUE,
-                                                                PCA_Threshold = 99)
+Input_Image_File <- "D:/MasterThesis/final_hs_data_folder_test/FRST_AK_Plot3_ang20190713t024201rfl/data/rectified/ang20190713t024201_rfl_v2v2_img_rectified"
+Output_Dir <- "D:/MasterThesis/final_hs_data_folder_test/FRST_AK_Plot3_ang20190713t024201rfl/result"
 
-print("MAP SPECTRAL SPECIES")
-Kmeans_info <- biodivMapR::map_spectral_species(
+test <- biodivMapR::map_beta_div(
   Input_Image_File = Input_Image_File,
-  Input_Mask_File = PCA_Output$MaskPath,
   Output_Dir = Output_Dir,
-  SpectralSpace_Output = PCA_Output,
-  nbclusters = NBbclusters,
-  nbCPU = NbCPU,
-  MaxRAM = MaxRAM,
-  progressbar = TRUE
+  window_size = 3,
+  TypePCA = "SPCA",
+  nbclusters = 38,
+  Nb_Units_Ordin = 2000,
+  MinSun = 0.25,
+  pcelim = 0.02,
+  scaling = "PCO",
+  dimMDS = 3,
+  FullRes = FALSE,
+  LowRes = TRUE,
+  nbCPU = 1,
+  MaxRAM = 0.25,
+  ClassifMap = FALSE
 )
+
+
+mask_path <- "D:/MasterThesis/final_hs_data_folder_test/BRW_PW_Plot1_ang20190712t212208rfl/mask"
+hs_path <- "D:/MasterThesis/final_hs_data_folder_test/BRW_PW_Plot1_ang20190712t212208rfl/data/rectified"
+
+tet <- SpectralPatang::create_SAVI_mask(hs_path, mask_path, 0.3, 0.5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Load necessary libraries
+library(sp)
+library(gstat)
+library(sf)
+library(raster)
+library(ggplot2)
+
+# Set random seed for reproducibility
+set.seed(42)
+
+# Step 1: Create Sample Data (Unevenly Spaced Plots)
+n_plots <- 30  # Number of sample plots
+longitude <- runif(n_plots, min = -150, max = -140)  # Random longitudes
+latitude <- runif(n_plots, min = 65, max = 70)  # Random latitudes
+shannon_index <- runif(n_plots, min = 0.5, max = 3.5)  # Random Shannon values
+
+# Create dataframe
+data <- data.frame(longitude, latitude, shannon_index)
+
+# Convert to spatial object
+coordinates(data) <- ~longitude+latitude
+proj4string(data) <- CRS("+proj=longlat +datum=WGS84")  # Set CRS
+
+# Step 2: Create a Grid for Interpolation
+x_range <- seq(min(longitude), max(longitude), length.out = 100)
+y_range <- seq(min(latitude), max(latitude), length.out = 100)
+grid <- expand.grid(longitude = x_range, latitude = y_range)
+coordinates(grid) <- ~longitude+latitude
+gridded(grid) <- TRUE
+proj4string(grid) <- CRS("+proj=longlat +datum=WGS84")
+
+# Step 3: Fit Variogram Model
+variogram_model <- variogram(shannon_index ~ 1, data)  # Compute experimental variogram
+fitted_model <- fit.variogram(variogram_model, vgm("Sph"))  # Fit a spherical model
+
+# Step 4: Perform Kriging
+kriging_result <- krige(shannon_index ~ 1, data, grid, model = fitted_model)
+
+# Step 5: Convert Kriging Result to Data Frame for ggplot
+kriging_df <- as.data.frame(kriging_result)  # Extract data from kriging result
+colnames(kriging_df)[3] <- "shannon_pred"  # Rename prediction column
+
+# Step 6: Plot Results with ggplot2
+ggplot() +
+  geom_tile(data = kriging_df, aes(x = longitude, y = latitude, fill = shannon_pred)) +
+  scale_fill_viridis_c(option = "plasma", name = "Shannon Index") +
+  geom_point(data = as.data.frame(data), aes(x = longitude, y = latitude), color = "black", size = 2) +
+  labs(title = "Kriging Interpolation of Shannon Diversity",
+       x = "Longitude",
+       y = "Latitude") +
+  theme_minimal()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Clear workspace
+rm(list = ls())
+graphics.off()
+
+
+
+# Load necessary libraries
+library(sp)
+library(gstat)
+library(sf)
+library(ggplot2)
+
+# Step 1: Load Data from CSV
+data <- read.csv("data/Book1.csv")  # Change to your file path
+
+data$shannon_index <- (data$shannon_index - min(data$shannon_index)) /
+  (max(data$shannon_index) - min(data$shannon_index))
+
+# Convert to spatial object
+coordinates(data) <- ~longitude+latitude
+proj4string(data) <- CRS("+proj=longlat +datum=WGS84")  # Set CRS
+
+# Step 2: Define Grid for Interpolation
+x_range <- seq(min(data$longitude), max(data$longitude), length.out = 100)
+y_range <- seq(min(data$latitude), max(data$latitude), length.out = 100)
+grid <- expand.grid(longitude = x_range, latitude = y_range)
+coordinates(grid) <- ~longitude+latitude
+gridded(grid) <- TRUE
+proj4string(grid) <- CRS("+proj=longlat +datum=WGS84")
+
+# Step 3: Fit Variogram Model
+variogram_model <- variogram(shannon_index ~ 1, data)  # Compute experimental variogram
+fitted_model <- fit.variogram(variogram_model, vgm("Sph"))  # Fit a spherical model
+
+# Step 4: Perform Kriging
+kriging_result <- krige(shannon_index ~ 1, data, grid, model = fitted_model)
+
+# Step 5: Convert Kriging Result to Data Frame for ggplot
+kriging_df <- as.data.frame(kriging_result)  # Extract kriging result
+colnames(kriging_df)[3] <- "shannon_pred"  # Rename prediction column
+
+# Step 6: Plot Results with ggplot2
+ggplot() +
+  geom_tile(data = kriging_df, aes(x = longitude, y = latitude, fill = shannon_pred)) +
+  scale_fill_viridis_c(option = "plasma", name = "Shannon Index") +
+  geom_point(data = as.data.frame(data), aes(x = longitude, y = latitude), color = "black", size = 2) +
+  labs(title = "Kriging Interpolation of Shannon Diversity",
+       x = "Longitude",
+       y = "Latitude") +
+  theme_minimal()
+
+
+
+# Clear workspace
+rm(list = ls())
+graphics.off()
+
+devtools::load_all()
+
+# Load necessary libraries
+library(SpectralPatang)
+
+SpectralPatang::create_rectangular_shapefile('~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/AN_TJ_Plot1_ang20220711t002111rfl/data/plotlocation_shapefile/AN_TJ_Plot1/AN_TJ_Plot1.shp','~/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/AN_TJ_Plot1_ang20220711t002111rfl/data/cut_shapefile',Buffer = 100, Square = TRUE)
+
+
+
+
+
+# Clear workspace
+rm(list = ls())
+graphics.off()
+
+library("readxl")
+
+# Specify sheet by its name
+my_data <- read_excel("D:/MasterThesis/gound_data/datasets/All_plots.xlsx", sheet = "input")
+
+number_species_pos <- which(names(my_data) == 'Number of species')
+
+plot_data_filtered <- my_data %>%
+  dplyr::select('Dataset','Testsite','Releve number','Year','Month','Day','Elevation (m)','Number of species', all_of(names(plot_data_filtered)[(number_species_pos + 1):ncol(plot_data_filtered)]))
+
+
+df_list <- split(my_data, my_data$Testsite)
+
+
+
+
+
+
+
+# Clear workspace
+rm(list = ls())
+graphics.off()
+
+library("readxl")
+library("dplyr")
+library(vegan)
+
+# Specify sheet by its name
+my_data <- read_excel("D:/MasterThesis/gound_data/datasets/hugo.xlsx", sheet = "input")
+
+# get the position of the 'Number of species' column
+number_species_pos <- which(names(my_data) == 'Number of species')
+
+# Select relevant columns
+plot_data_filtered <- my_data %>%
+  dplyr::select('Dataset','Testsite','Releve number','Number of species', all_of(names(my_data)[(number_species_pos + 1):ncol(my_data)]))
+
+# replace -9 with NA
+plot_data_filtered <- plot_data_filtered %>% mutate(across(everything(), ~ replace(.x, .x == -9, NA)))
+
+# Replace NA with 0
+plot_data_filtered[is.na(plot_data_filtered)] <- 0
+
+# Keep columns that have at least one non-zero value
+beta_df_cleaned <- plot_data_filtered %>%
+  select(where(~ any(. != 0)))
+
+
+
+
+
+
+
+
+
+

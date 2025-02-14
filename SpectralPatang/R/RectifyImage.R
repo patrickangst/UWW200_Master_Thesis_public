@@ -8,8 +8,31 @@
 #' @return Returns the full rectified image file path
 #' @export
 
+get_shapefile_path <- function(base_folder) {
+  # Construct the path to the cutfiles directory
+
+  cutfiles_dir <- sub("hs_raw_image", "cut_shapefile", base_folder)
+
+  # Ensure the directory exists
+  if (!dir.exists(cutfiles_dir)) {
+    stop("Error: 'cutfiles' directory does not exist.")
+  }
+
+  # List all .shp files in the directory
+  shapefiles <- list.files(cutfiles_dir, pattern = "\\.shp$", full.names = TRUE)
+
+  # Ensure only one .shp file is found
+  if (length(shapefiles) == 0) {
+    stop("Error: No .shp file found in 'cutfiles' directory.")
+  } else if (length(shapefiles) > 1) {
+    stop("Error: Multiple .shp files found in 'cutfiles' directory.")
+  }
+
+  return(shapefiles)
+}
+
 rectify_Image  <- function(Hyperspectral_Raw_Image_Folder_Path,
-                           Rectified_Image_Folder_Path) {
+                           Rectified_Image_Folder_Path, Cutfile=FALSE) {
 
 
   # List all files in the folder
@@ -33,11 +56,24 @@ rectify_Image  <- function(Hyperspectral_Raw_Image_Folder_Path,
   rectified_image_file_path <- file.path(Rectified_Image_Folder_Path, paste0(raw_image_file_name,'_rectified'))
   rectified_hdr_file_path <- paste0(rectified_image_file_path, '.hdr')
 
-  gdal_command_rectify <- sprintf(
-    "gdalwarp -of ENVI -co INTERLEAVE=BIL -dstnodata -9999 %s %s",
-    raw_image_file_path,
-    rectified_image_file_path
-  )
+
+  if(Cutfile){
+    cutline_shapefile_path <- get_shapefile_path(Hyperspectral_Raw_Image_Folder_Path)
+    gdal_command_rectify <- sprintf(
+      "gdalwarp -cutline %s -crop_to_cutline -of ENVI -co INTERLEAVE=BIL -dstnodata -9999 %s %s",
+      cutline_shapefile_path,
+      raw_image_file_path,
+      rectified_image_file_path
+    )
+
+  } else {
+    gdal_command_rectify <- sprintf(
+      "gdalwarp -of ENVI -co INTERLEAVE=BIL -dstnodata -9999 %s %s",
+      raw_image_file_path,
+      rectified_image_file_path
+    )
+  }
+
 
   # # Execute the command in R
   system(gdal_command_rectify)

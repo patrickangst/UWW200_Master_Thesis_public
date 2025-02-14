@@ -88,10 +88,6 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
     )
 
 
-
-
-
-
     # Save the list as an RDS file
     saveRDS(PCA_Output, file = pca_output_rds_file_path)
   } else {
@@ -104,36 +100,38 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
   # path for the updated mask
   Input_Mask_File <- PCA_Output$MaskPath
 
-  # Auto-select components
-  pca_model <- PCA_Output$PCA_model
-  # Get the proportion of variance explained by each principal component
-  prop_variance <- pca_model$sdev ^ 2 / sum(pca_model$sdev ^ 2)  # Variance explained by each component
-
-  # Calculate the cumulative proportion of variance
-  cumulative_variance <- cumsum(prop_variance)
-  # Find the number of components that explain at least 98% of the variance
-
-  variance_threshold <- PCA_Threshold / 100
-
-  num_components <- which(cumulative_variance >= variance_threshold)[1]
-
-  # Create a vector of component numbers
-  selected_component_numbers <- 1:num_components
-
-  print(paste0("PCs selected: ", selected_component_numbers))
-
-  # Write these numbers to a text file, one per line
+  # # Auto-select components
+  # pca_model <- PCA_Output$PCA_model
+  # # Get the proportion of variance explained by each principal component
+  # prop_variance <- pca_model$sdev ^ 2 / sum(pca_model$sdev ^ 2)  # Variance explained by each component
+  #
+  # # Calculate the cumulative proportion of variance
+  # cumulative_variance <- cumsum(prop_variance)
+  # # Find the number of components that explain at least 98% of the variance
+  #
+  # variance_threshold <- PCA_Threshold / 100
+  #
+  # num_components <- which(cumulative_variance >= variance_threshold)[1]
+  #
+  # # Create a vector of component numbers
+  # selected_component_numbers <- 1:num_components
+  #
+  # print(paste0("PCs selected: ", selected_component_numbers))
+  #
+  # # Write these numbers to a text file, one per line
   selected_components_file_path <- file.path(Output_Dir,
                                              rectified_image_file_name,
                                              TypePCA,
                                              'PCA',
                                              'Selected_Components.txt')
-  writeLines(as.character(selected_component_numbers),
-             selected_components_file_path)
+  # writeLines(as.character(selected_component_numbers),
+  #            selected_components_file_path)
+  #
+  # # Save selected PCs as a separate file
+  # # Dynamically generate the band selection string
+  # bandselection_pca <- paste(sprintf("-b %d", 1:num_components), collapse = " ")
 
-  # Save selected PCs as a separate file
-  # Dynamically generate the band selection string
-  bandselection_pca <- paste(sprintf("-b %d", 1:num_components), collapse = " ")
+
   # GDAL translate command to extract the specified bands
   pca_output_envi_file_path <- file.path(Output_Dir,
                                          rectified_image_file_name,
@@ -141,6 +139,16 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
                                          'PCA',
                                          'OutputPCA_30_PCs')
   pca_selection_file_path <- paste0(pca_output_envi_file_path, '_selection.tif')
+
+
+  # Read the numbers from the file
+  selected_components <- scan(selected_components_file_path, what = integer(), quiet = TRUE)
+
+  # Convert the numbers into the required format
+  bandselection_pca <- paste(sprintf("-b %d", selected_components), collapse = " ")
+
+  # Print the result
+  print(bandselection_pca)
 
   gdal_translate_command <- sprintf(
     "gdal_translate %s -of GTiff %s %s",
@@ -213,6 +221,9 @@ analyse_biodiversity <- function(Hyperspectral_Image_File_Path,
       nbCPU = NbCPU,
       MaxRAM = MaxRAM,
       nbclusters = NBbclusters,
+      Nb_Units_Ordin = 4000,
+      scaling = 'PCO',
+      dimMDS = 1,
       FullRes = TRUE
     )
   }
