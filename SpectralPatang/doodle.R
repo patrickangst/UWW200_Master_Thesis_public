@@ -85,3 +85,53 @@ if (length(hs_file_without_ext) != 1) {
   stop("Either no or multiple files without extensions found in the hs image folder.")
 }
 print(list.files())
+
+
+
+
+
+
+
+
+
+
+library(terra)
+library(NbClust)
+library(cluster)
+
+
+img <- rast('D:/MasterThesis/final_hs_data_folder/AN_TJ_1/result_biodivMapR/ang20220711t002111_rfl_v2aa2_img_rectified/SPCA/PCA/AN_TJ_1_pc_selection.tif')
+
+minmax(img)
+
+data_matrix <- as.matrix(img)
+
+sum(is.na(values(img)))  # Number of NA pixels
+sum(values(img) != -9999, na.rm = TRUE)  # Number of valid pixels
+
+img[img == -9999] <- NA
+
+
+sum(is.na(values(img)))  # Number of NA pixels
+sum(values(img) != -9999, na.rm = TRUE)  # Number of valid pixels
+
+data_matrix <- as.matrix(img)
+
+# Check if the matrix contains valid values
+dim(data_matrix)  # Should not be (0, X)
+summary(data_matrix)  # Ensure no Inf/-Inf
+
+# Remove NA rows
+data_matrix <- na.omit(data_matrix)
+
+# Check the dimensions again
+dim(data_matrix)  # Should still have data
+
+# Determine optimal clusters
+nb <- NbClust(data_matrix, min.nc=2, max.nc=10, method="kmeans")
+optimal_clusters <- nb$Best.nc[1]
+
+save.image(file = "D:/MasterThesis/08_nbclust_results/AN_TJ_1.RData")
+
+
+
