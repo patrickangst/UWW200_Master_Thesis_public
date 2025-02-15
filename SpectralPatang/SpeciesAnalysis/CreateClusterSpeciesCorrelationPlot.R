@@ -53,6 +53,29 @@ ggsave(
 
 
 
+
+
+
+# Load necessary library
+library(readxl)
+
+# Load your data (replace with your actual file path)
+base_folder <- 'D:/MasterThesis/07_Testsite_Metrics'
+file_path <- file.path(base_folder, 'Shannon_Diversity_Plotlevel.xlsx')
+
+# Read the data
+diversity_data <- read_excel(file_path)
+
+# Perform Pearson correlation test
+cor_test_result <- cor.test(diversity_data$Shannon_Diversity_Ground,
+                            diversity_data$Shannon_Diversity_Spectral,
+                            method = "pearson")
+
+# Print correlation test result
+print(cor_test_result)
+
+
+
 # model <- lm(GroundSpeciesCount ~ ClusterNr, data = df)
 # summary(model)
 #

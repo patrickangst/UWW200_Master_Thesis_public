@@ -135,3 +135,15 @@ save.image(file = "D:/MasterThesis/08_nbclust_results/AN_TJ_1.RData")
 
 filename <- 'D:/MasterThesis/final_hs_data_folder/AN_TJ_1/result_biodivMapR/ang20220711t002111_rfl_v2aa2_img_rectified/SPCA/PCA/PCA_Info.RData'
 pca_shizzle <- load(filename)
+
+library(terra)
+
+spectral_species_tiff_file_path <- 'D:/MasterThesis/03_Spectral_Species/AN_TJ_1_SpectralSpecies.tiff'
+
+gdal_warp_command <- sprintf("gdalwarp -of GTiff -dstnodata %s %s %s",
+                             0,
+                             spectral_species_tiff_file_path,
+                             spectral_species_tiff_file_path)
+
+# Execute the GDAL edit command
+system(gdal_warp_command)

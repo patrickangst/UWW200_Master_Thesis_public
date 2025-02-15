@@ -15,9 +15,9 @@ library(readxl)
 library(writexl)
 library(dplyr)
 
-main_folder <- 'C:/Users/Patrick/Documents/GitHub/UWW200_Master_Thesis_public/MasterThesisRCode/data'
-spectral_species_files_path <- file.path(main_folder,'03_Spectral_Species')
-metrics_file_path <- file.path(main_folder,'07_Testsite_Metrics','Shannon_Diversity_Plotlevel.xlsx')
+base_folder <- 'D:/MasterThesis'
+spectral_species_files_path <- file.path(base_folder,'03_Spectral_Species')
+metrics_file_path <- file.path(base_folder,'07_Testsite_Metrics','Shannon_Diversity_Plotlevel.xlsx')
 spectral_species_images <- list.files(spectral_species_files_path, full.names = TRUE)
 
 #read excel with pca info
