@@ -16,18 +16,17 @@ library(RColorBrewer)
 library(readxl)
 library(writexl)
 library(dplyr)
-library(gdalUtils)
 
 # define, which parts have to be executed
-perform_part_1 <- FALSE # perform part 1: Masking, rectification, PCA
-perform_part_2 <- FALSE # perform part 2: Create PC plot for analysis
-perform_part_3 <- FALSE # perform part 3: PC selection processing
+perform_part_1 <- TRUE # perform part 1: Masking, rectification, PCA
+perform_part_2 <- TRUE # perform part 2: Create PC plot for analysis
+perform_part_3 <- TRUE # perform part 3: PC selection processing
 perform_part_4 <- FALSE # perform part 4: Cluster analysis
 perform_part_5 <- TRUE # perform part 5: Calculate diversity
 
 # Set main folder
-# main_folder_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/new'
-main_folder_path <- 'D:/MasterThesis'
+main_folder_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/MasterThesis'
+# main_folder_path <- 'D:/MasterThesis'
 # Set the directory containing the test site folders
 test_sites_folder_path <- file.path(main_folder_path, 'final_hs_data_folder')
 
@@ -59,10 +58,10 @@ metrics_file_path <- file.path(main_folder_path, '07_Testsite_Metrics', 'Metrics
 # various variables
 num_cores_to_use <- detectCores() - 2
 MaxRAM <- 8
-Window_size <- 20
+Window_size <- 5
 TypePCA <- 'SPCA'
 scaling <- 'PCO'
-nb_partitions <- 1
+nb_partitions <- 20
 
 
 test_sites <- list.files(test_sites_folder_path)

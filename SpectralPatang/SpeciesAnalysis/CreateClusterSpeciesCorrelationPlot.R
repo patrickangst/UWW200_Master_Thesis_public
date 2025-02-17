@@ -9,7 +9,8 @@ library(readxl)
 library(tidyr)
 library(dplyr)
 
-gound_data_path <- 'D:/MasterThesis/gound_data'
+# gound_data_path <- 'D:/MasterThesis/gound_data'
+gound_data_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/MasterThesis/gound_data'
 excel_file_path <- file.path(gound_data_path, 'Flightstrip_Plot_Mapping.xlsx')
 plot_file_path <- file.path(gound_data_path, 'Cluster_Species_Correlation.png')
 

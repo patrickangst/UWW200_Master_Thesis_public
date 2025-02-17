@@ -9,10 +9,13 @@ library("readxl")
 library("dplyr")
 library("vegan")
 library("writexl")
+library("tidyr")
+library("ggplot2")
 
 # Specify file paths
-base_folder <- 'D:/MasterThesis'
-output_folder_path <- file.path(base_folder,'07_Testsite_Metrics','plots')
+# base_folder <- 'D:/MasterThesis'
+base_folder <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/MasterThesis'
+output_folder_path <- file.path(base_folder, '07_Testsite_Metrics', 'plots')
 
 metrics_file_path <- file.path(base_folder, '07_Testsite_Metrics', 'Metrics.xlsx')
 
@@ -34,48 +37,52 @@ my_data_filterd$Species_Ground_AVG <- as.numeric(my_data_filterd$Species_Ground_
 my_data_filterd$Species_Ground_MIN <- as.numeric(my_data_filterd$Species_Ground_MIN)
 my_data_filterd$Species_Ground_MAX <- as.numeric(my_data_filterd$Species_Ground_MAX)
 
-# Reshape data to long format
+# # Reshape data to long format
 df_long <- my_data_filterd %>%
-  pivot_longer(cols = c(Species_Ground_AVG, Species_Ground_MIN, Species_Ground_MAX, SpectralSpecies),
-               names_to = "Value_Type",
-               values_to = "Value")
+  pivot_longer(
+    cols = c(
+      SpectralSpecies,
+      Species_Ground_MIN,
+      Species_Ground_AVG,
+      Species_Ground_MAX
+    ),
+    names_to = "Species_Count_Type",
+    values_to = "Value"
+  )
 
-# # Create the plot
-# ggplot(df_long, aes(x = Testsite, y = Value, color = Value_Type, shape = Value_Type)) +
-#   # Plot the points
-#   geom_point(size = 4) +
-#   # Add labels
-#   labs(title = "Comparison of Ground and Spectral Species",
-#        x = "Testsite",
-#        y = "Species Value") +
-#   # Theme adjustments
-#   theme_minimal() +
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-#   scale_color_manual(values = c("Species_Ground_AVG" = "blue",
-#                                 "Species_Ground_MIN" = "green",
-#                                 "Species_Ground_MAX" = "orange",
-#                                 "SpectralSpecies" = "red")) +
-#   scale_shape_manual(values = c(16, 17, 18, 19))
-
+# Set factor levels in correct order
+df_long$Species_Count_Type <- factor(df_long$Species_Count_Type,
+                                     levels = c("Species_Ground_MIN", "Species_Ground_AVG", "Species_Ground_MAX", "SpectralSpecies"))
 
 # Create the bar plot
-barplot <- ggplot(df_long, aes(x = Testsite, y = Value, fill = Value_Type)) +
+barplot <- ggplot(df_long, aes(x = Testsite, y = Value, fill = Species_Count_Type)) +
   # Plot the bars
-  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
+  geom_bar(stat = "identity",
+           position = position_dodge(width = 0.8),
+           width = 0.7) +
   # Add labels
   labs(title = "Comparison of Ground and Spectral Species",
        x = "Testsite",
-       y = "Species Value") +
+       y = "Species Count",
+       fill = "Species Count") +
   # Theme adjustments
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_fill_manual(values = c("Species_Ground_AVG" = "blue",
-                               "Species_Ground_MIN" = "green",
-                               "Species_Ground_MAX" = "orange",
-                               "SpectralSpecies" = "red"))
+  # Ensure correct colors and labels
+  scale_fill_manual(
+    values = c(
+      "Species_Ground_MIN" = "green",
+      "Species_Ground_AVG" = "blue",
+      "Species_Ground_MAX" = "orange",
+      "SpectralSpecies" = "red"
+    ),
+    labels = c("Minimum species count ground",
+               "Average species count ground",
+               "Maximum species count ground",
+               "Spectral species count")
+  )
 
-
-# Print the plot
+plot
 print(barplot)
 
 # Save the plot as a PNG

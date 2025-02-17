@@ -9,7 +9,8 @@ library(tidyr)
 
 
 # Load your data
-base_folder <- 'D:/MasterThesis'
+# base_folder <- 'D:/MasterThesis'
+base_folder <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/MasterThesis'
 file_path <- file.path(base_folder,'07_Testsite_Metrics', 'Shannon_Diversity_Plotlevel.xlsx')
 output_folder_path <- file.path(base_folder,'07_Testsite_Metrics','plots')
 

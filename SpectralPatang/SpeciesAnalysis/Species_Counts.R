@@ -11,9 +11,11 @@ library("vegan")
 library("writexl")
 
 # Specify file paths
-base_folder <- 'D:/MasterThesis'
+# base_folder <- 'D:/MasterThesis'
+base_folder <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/MasterThesis'
 input_excel_file <- file.path(base_folder, 'gound_data/datasets/All_plots.xlsx')
 metrics_file_path <- file.path(base_folder, '07_Testsite_Metrics', 'Metrics.xlsx')
+shannon_diversity_plotlevel_file_path <- file.path(base_folder, '07_Testsite_Metrics', 'Shannon_Diversity_Plotlevel.xlsx')
 
 # Read the input data (specify the sheet name)
 my_data <- read_excel(input_excel_file, sheet = "input")
@@ -81,6 +83,7 @@ print(df)
 
 #read excel with pca info
 metrics_data <- read_excel(metrics_file_path, sheet = "Sheet1")
+shannon_diversity_plotlevel <- read_excel(shannon_diversity_plotlevel_file_path, sheet = "Sheet1")
 
 for( i in rownames(df) ){
   test_site_name <- df[i, "Testsite"]
@@ -95,6 +98,11 @@ for( i in rownames(df) ){
   metrics_data$Species_Ground_MIN[metrics_data$Plot_Location_Shp_Subset_Name == test_site_name] <- Species_Ground_MIN
   metrics_data$Species_Ground_MAX[metrics_data$Plot_Location_Shp_Subset_Name == test_site_name] <- Species_Ground_MAX
 
+  shannon_diversity_plotlevel$Species_Ground_AVG[shannon_diversity_plotlevel$Testsite == test_site_name] <- Species_Ground_AVG
+  shannon_diversity_plotlevel$Species_Ground_MIN[shannon_diversity_plotlevel$Testsite == test_site_name] <- Species_Ground_MIN
+  shannon_diversity_plotlevel$Species_Ground_MAX[shannon_diversity_plotlevel$Testsite == test_site_name] <- Species_Ground_MAX
+
 }
 
 write_xlsx(metrics_data, path = metrics_file_path)
+write_xlsx(shannon_diversity_plotlevel, path = shannon_diversity_plotlevel)
