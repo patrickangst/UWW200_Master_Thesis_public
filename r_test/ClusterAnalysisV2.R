@@ -4,6 +4,7 @@ library(NbClust)
 library(parallel)
 library(doParallel)
 library(foreach)
+library(statip)
 
 # Step 1: Load the GeoTIFF
 geo_data <- rast("hs/AN_TJ_1_pc_selection.tif") # Replace with the path to your GeoTIFF file
