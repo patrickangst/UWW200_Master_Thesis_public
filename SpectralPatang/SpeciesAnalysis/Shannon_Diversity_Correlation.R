@@ -6,6 +6,7 @@ graphics.off()
 library(readxl)
 library(ggplot2)
 library(tidyr)
+library(ggrepel)
 
 
 # Load your data
@@ -14,7 +15,7 @@ base_folder <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/da
 file_path <- file.path(base_folder,'07_Testsite_Metrics', 'Shannon_Diversity_Plotlevel.xlsx')
 output_folder_path <- file.path(base_folder,'07_Testsite_Metrics','plots')
 
-diversity_data <- read_excel(file_path)
+diversity_data <- read_excel(file_path, sheet = "Sheet1")
 
 #
 # Pearson Correlation
@@ -62,6 +63,39 @@ ggsave(
   filename = plot_pearson_file_path,
   plot = plot_pearson,
   width = 6,
+  height = 6,
+  dpi = 400
+)
+
+# Scatter plot with colors for each location
+plot_pearson2 <- ggplot(diversity_data, aes(x = Shannon_Diversity_Ground,
+                                           y = Shannon_Diversity_Spectral,
+                                           color = Testsite)) +  # Color points by location
+  geom_point(size = 4, alpha = 0.8) +  # Scatter points
+  geom_smooth(method = "lm", color = "black", se = FALSE) +  # Linear regression line
+  geom_text_repel(aes(label = Testsite), size = 4) +  # Label points with location names
+  labs(title = "Pearson Correlation between Shannon Indices",
+       x = "Shannon Diversity (Ground)",
+       y = "Shannon Diversity (Spectral)",
+       color = "Testsite",
+       caption = paste("R² =", r_squared_pearson, "| p =", p_value_pearson)) +  # Add R² and p-value below legend
+  theme_minimal() +
+  theme(
+    legend.position = "right",
+    legend.box = "vertical",  # Stack legend elements
+    legend.margin = margin(t = 5, b = 5),  # Add margin around legend
+    plot.caption = element_text(hjust = 0.5, face = "bold", size = 12)  # Style caption
+  )
+
+# Display the plot
+print(plot_pearson2)
+
+# Save the plot
+plot2_pearson_file_path <- file.path(output_folder_path, 'pearson_correlation_shannon_diversity_plotlevel_2.png')
+ggsave(
+  filename = plot2_pearson_file_path,
+  plot = plot_pearson2,
+  width = 7,
   height = 6,
   dpi = 400
 )
@@ -136,7 +170,7 @@ barplot_diversity_grouped <- ggplot(diversity_data_long, aes(x = Testsite, y = D
     fill = "Diversity"
   ) +
   scale_fill_manual(
-    values = c("Shannon_Diversity_Ground" = "blue", "Shannon_Diversity_Spectral" = "green"),  # Optional: set specific colors
+    values = c("Shannon_Diversity_Ground" = "#66a182", "Shannon_Diversity_Spectral" = "#b85042"),  # Optional: set specific colors
     labels = c("Ground Diversity", "Spectral Diversity")  # Rename the legend labels
   ) +
   theme_minimal() +

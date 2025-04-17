@@ -1,0 +1,1262 @@
+x
+Equisetum arvense	numeric
+Tofieldia coccinea	numeric
+Juncus biglumis	numeric
+Juncus triglumis	numeric
+Juncus castaneus	numeric
+Eriophorum angustifolium	numeric
+Eriophorum triste	numeric
+Eriophorum vaginatum	numeric
+Carex capillaris	numeric
+Bistorta vivipara	numeric
+Saxifraga oppositifolia s. oppositifolia	numeric
+Salix arctica	numeric
+Dryas integrifolia s. integrifolia	numeric
+Packera heterophylla	numeric
+Aulacomnium turgidum	numeric
+Bryum wrightii	numeric
+Campylium stellatum	numeric
+Catoscopium nigritum	numeric
+Cirriphyllum cirrosum	numeric
+Dicranum fragilifolium	numeric
+Distichium capillaceum	numeric
+Distichium inclinatum	numeric
+Encalypta alpina	numeric
+Hypnum bambergeri	numeric
+Myurella julacea	numeric
+Tortella fragilis	numeric
+Tortula mucronifolia	numeric
+Bryum species	numeric
+Didymodon species	numeric
+Polyblastia sendtneri	numeric
+Thamnolia vermicularis s. subuliformis	numeric
+Unknown Cyanobacteria	numeric
+Equisetum variegatum	numeric
+Arctagrostis latifolia	numeric
+Cardamine digitata	numeric
+Tephroseris frigida	numeric
+Ditrichum flexicaule	numeric
+Pohlia beringiensis	numeric
+Aneura pinguis	numeric
+Solorina bispora	numeric
+Carex membranacea	numeric
+Silene acaulis	numeric
+Salix reticulata	numeric
+Hulteniella integrifolia	numeric
+Bryum pseudotriquetrum	numeric
+Orthothecium chryseum	numeric
+Tomentypnum nitens	numeric
+Dicranum species	numeric
+Cladonia pocillum	numeric
+Flavocetraria cucullata	numeric
+Flavocetraria nivalis	numeric
+Lecanora epibryon	numeric
+Ochrolechia frigida	numeric
+Rinodina roscida	numeric
+Kobresia simpliciuscula	numeric
+Carex atrofusca	numeric
+Salix richardsonii	numeric
+Arctous rubra	numeric
+Pedicularis lanata	numeric
+Antennaria friesiana	numeric
+Campylium longicuspis	numeric
+Pseudocalliergon turgescens	numeric
+Carex rupestris	numeric
+Carex scirpoidea	numeric
+Thalictrum alpinum	numeric
+Minuartia rossii	numeric
+Minuartia arctica	numeric
+Parrya nudicaulis	numeric
+Rhododendron lapponicum	numeric
+Cassiope tetragona [s. tetragona]	numeric
+Blepharostoma trichophyllum v. brevirete	numeric
+Cephalozia bicuspidata	numeric
+Pellia endiviifolia	numeric
+Preissia quadrata	numeric
+Dactylina beringica	numeric
+Ochrolechia androgyna	numeric
+Vulpicida tilesii	numeric
+Astragalus umbellatus	numeric
+Encalypta longicolla	numeric
+Leiocolea badensis	numeric
+Bilimbia lobulata	numeric
+Caloplaca cerina	numeric
+Cetraria aculeata	numeric
+Cetraria islandica	numeric
+Papaver macounii	numeric
+Pedicularis capitata	numeric
+Antennaria species	numeric
+Dactylina arctica	numeric
+Dactylina ramulosa	numeric
+Peltigera rufescens	numeric
+Pertusaria panyrga	numeric
+Tritomaria quinquedentata	numeric
+Cladonia amaurocraea	numeric
+Cladonia macroceras	numeric
+Drepanocladus sendtneri	numeric
+Hymenostylium recurvirostre	numeric
+Hypnum cupressiforme	numeric
+Orthothecium strictum	numeric
+Stereocaulon alpinum	numeric
+Braya glabella s. purpurascens	numeric
+Androsace chamaejasme s. andersonii	numeric
+Calliergon species	numeric
+Encalypta species	numeric
+Peltigera species	numeric
+Kobresia myosuroides	numeric
+Carex bigelowii	numeric
+Saussurea angustifolia	numeric
+Stellaria species	numeric
+Drepanocladus species	numeric
+Hypnum species	numeric
+Draba alpina	numeric
+Ctenidium molluscum	numeric
+Rhytidium rugosum	numeric
+Cladonia gracilis s. lat.	numeric
+Lupinus arcticus [s. arcticus]	numeric
+Lophozia species	numeric
+Peltigera scabrosa	numeric
+Carex saxatilis	numeric
+Carex aquatilis	numeric
+Pedicularis albolabiata	numeric
+Limprichtia cossonii	numeric
+Scorpidium scorpioides	numeric
+Carex rariflora	numeric
+Pedicularis parviflora	numeric
+Calliergon giganteum	numeric
+Equisetum scirpoides	numeric
+Carex rotundata	numeric
+Carex vaginata	numeric
+Pedicularis langsdorffii	numeric
+Arnellia fennica	numeric
+Radula prolifera	numeric
+Cetraria laevigata	numeric
+Barbilophozia barbata	numeric
+Cladonia pyxidata	numeric
+Puccinellia angustata	numeric
+Festuca baffinensis	numeric
+Stellaria longipes	numeric
+Cerastium beeringianum v. beeringianum	numeric
+Silene uralensis s. uralensis	numeric
+Salix ovalifolia v. ovalifolia	numeric
+Draba cinerea	numeric
+Cochlearia arctica	numeric
+Artemisia borealis	numeric
+Draba species	numeric
+Abietinella abietina	numeric
+Aloina brevirostris	numeric
+Didymodon asperifolius	numeric
+Hypnum procerrimum	numeric
+Syntrichia ruralis	numeric
+Hennediella heimii v. arctica	numeric
+Fulgensia bracteata	numeric
+Polyblastia bryophila	numeric
+Potentilla uniflora	numeric
+Amblystegium serpens	numeric
+Amblystegium varium	numeric
+Cephaloziella varians	numeric
+Leiocolea collaris	numeric
+Pertusaria dactylina	numeric
+Collema species	numeric
+Encalypta rhaptocarpa	numeric
+Megaspora verrucosa	numeric
+Hylocomium splendens	numeric
+Timmia megapolitana v. bavarica	numeric
+Bistorta plumosa	numeric
+Micranthes nelsoniana	numeric
+Micranthes hieraciifolia	numeric
+Salix glauca	numeric
+Rhododendron tomentosum s. decumbens	numeric
+Empetrum nigrum	numeric
+Pyrola grandiflora	numeric
+Pyrola asarifolia [s. asarifolia]	numeric
+Lagotis glauca	numeric
+Aulacomnium acuminatum	numeric
+Aulacomnium palustre	numeric
+Dicranum bonjeanii	numeric
+Dicranum elongatum	numeric
+Dicranum spadiceum	numeric
+Pleurozium schreberi	numeric
+Ptilidium ciliare	numeric
+Sphenolobus minutus	numeric
+Tritomaria quinquedentata2	numeric
+Nephroma expallidum	numeric
+Peltigera leucophlebia	numeric
+Thamnolia vermicularis s. vermicularis	numeric
+Bryum caespiticium	numeric
+Allocetraria madreporiformis	numeric
+Polyblastia terrestris	numeric
+Rinodina turfacea	numeric
+Rumex arcticus	numeric
+Vaccinium uliginosum	numeric
+Didymodon rigidulus v. icmadophilus	numeric
+Oxytropis maydelliana	numeric
+Entodon concinnus	numeric
+Peltigera aphthosa	numeric
+Solorina species	numeric
+Tortella tortuosa	numeric
+Carex species	numeric
+Meesia uliginosa	numeric
+Papaver species	numeric
+Callialaria curvicaulis	numeric
+Cinclidium arcticum	numeric
+Drepanocladus brevifolius	numeric
+Limprichtia revolvens	numeric
+Carex fuliginosa s. misandra	numeric
+Carex microchaeta	numeric
+Braya humilis	numeric
+Bryoerythrophyllum recurvirostre	numeric
+Bryum subneodamense	numeric
+Calliergon trifarium	numeric
+Drepanocladus aduncus	numeric
+Meesia longiseta	numeric
+Meesia triquetra	numeric
+Carex heleonastes	numeric
+Brachythecium turgidum	numeric
+Pohlia species	numeric
+Leptobryum pyriforme	numeric
+Tetraplodon mnioides	numeric
+Timmia austriaca	numeric
+Fissidens bryoides	numeric
+Agonimia gelatinosa	numeric
+Arctous alpina	numeric
+Oxytropis species	numeric
+Didymodon rigidulus	numeric
+Isopterygiopsis pulchella	numeric
+Tetraplodon urceolatus	numeric
+Splachnum species	numeric
+Tofieldia pusilla	numeric
+Caloplaca tiroliensis	numeric
+Luzula nivalis	numeric
+Salix pulchra	numeric
+Betula nana	numeric
+Vaccinium vitis-idaea	numeric
+Pedicularis lapponica	numeric
+Dicranella subulata	numeric
+Anthelia juratzkana	numeric
+Bryonora castanea	numeric
+Cladonia chlorophaea	numeric
+Cladonia coccifera s. lat.	numeric
+Cladonia mitis	numeric
+Cladonia rangiferina	numeric
+Cladonia stygia	numeric
+Arthrorhaphis species	numeric
+Pohlia cruda	numeric
+Polytrichum hyperboreum	numeric
+Nardia japonica	numeric
+Scapania scandica	numeric
+Solenostoma confertissimum	numeric
+Diplophyllum species	numeric
+Jungermannia species	numeric
+Cladonia uncialis	numeric
+Lophozia ventricosa	numeric
+Pseudolophozia sudetica	numeric
+Cladonia fimbriata	numeric
+Poa arctica	numeric
+Poa arctica s. lanata	numeric
+Orthilia secunda	numeric
+Odontoschisma macounii	numeric
+Masonhalea richardsonii	numeric
+Ochrolechia upsaliensis	numeric
+Pertusaria bryontha	numeric
+Cryptocolea imbricata	numeric
+Cetrariella delisei	numeric
+Lophoziopsis excisa	numeric
+Sphenolobus minutus3	numeric
+Baeomyces rufus	numeric
+Lloydia serotina	numeric
+Campylium chrysophyllum	numeric
+Peltigera didactyla s.lat.	numeric
+Sanionia uncinata	numeric
+Dicranum acutifolium	numeric
+Caloplaca tetraspora	numeric
+Ochrolechia inaequatula	numeric
+Peltigera canina	numeric
+Cladonia squamosa s. lat.	numeric
+Salix phlebophylla	numeric
+Petasites frigidus	numeric
+Polytrichastrum alpinum	numeric
+Sphagnum balticum	numeric
+Sphagnum girgensohnii	numeric
+Sphagnum lenense	numeric
+Sphagnum warnstorfii	numeric
+Alectoria ochroleuca	numeric
+Bryocaulon divergens	numeric
+Cladonia arbuscula s. lat.	numeric
+Cladonia cornuta	numeric
+Cladonia deformis	numeric
+Gowardia nigricans	numeric
+Nephroma arcticum	numeric
+Peltigera malacea	numeric
+Sphaerophorus globosus	numeric
+Barbula unguiculata	numeric
+Bucegia romanica	numeric
+Bartramia ithyphylla	numeric
+Dicranum spadiceum4	numeric
+Sphagnum angustifolium	numeric
+Sphagnum rubellum	numeric
+Sphagnum squarrosum	numeric
+Ptilidium pulcherrimum	numeric
+Minuartia rubella	numeric
+Hedysarum americanum	numeric
+Cyrtomnium hymenophylloides	numeric
+Peltigera polydactylon	numeric
+Epilobium species	numeric
+Solorina saccata	numeric
+Biatorella species	numeric
+Rinodina species	numeric
+Racomitrium lanuginosum	numeric
+Lophozia savicziae	numeric
+Arthrorhaphis vacillans	numeric
+Cladonia pleurota	numeric
+Cephaloziella arctogena	numeric
+Asahinea chrysantha	numeric
+Hypogymnia subobscura	numeric
+Polytrichum species	numeric
+Calypogeia muelleriana	numeric
+Cephalozia pleniceps	numeric
+Orthocaulis binsteadii	numeric
+Schljakovia kunzeana	numeric
+Peltigera neopolydactyla	numeric
+Pohlia nutans	numeric
+Cladonia cenotea	numeric
+Pedicularis oederi	numeric
+Calypogeia sphagnicola	numeric
+Lophozia silvicola	numeric
+Lophoziopsis propagulifera	numeric
+Psoroma hypnorum	numeric
+Lophozia ventricosa v. longiflora	numeric
+Cladonia cyanipes	numeric
+Luzula confusa	numeric
+Pedicularis labradorica	numeric
+Biatora vernalis	numeric
+Cladonia alaskana	numeric
+Japewia tornoÙnsis	numeric
+Lopadium pezizoideum	numeric
+Calamagrostis species	numeric
+Polytrichum strictum	numeric
+Dicranum groenlandicum	numeric
+Dicranum undulatum	numeric
+Calamagrostis canadensis	numeric
+Cladonia species	numeric
+Andromeda polifolia	numeric
+Baeomyces carneus	numeric
+Tuckermanopsis inermis	numeric
+Rubus chamaemorus	numeric
+Cladonia sulphurina	numeric
+Lophozia wenzelii	numeric
+Cladonia subfurcata	numeric
+Jungermannia polaris	numeric
+HierochloÙ pauciflora	numeric
+Festuca rubra	numeric
+Dupontia fisheri	numeric
+Saxifraga hirculus	numeric
+Saxifraga cernua	numeric
+Salix rotundifolia v. rotundifolia	numeric
+Campylium stellatum v. arcticum	numeric
+Cinclidium latifolium	numeric
+Dicranum majus	numeric
+Myurella tenerrima	numeric
+Oncophorus wahlenbergii	numeric
+Cladonia ecmocyna	numeric
+Cladonia phyllophora	numeric
+Lecidea ramulosa	numeric
+Plagiomnium ellipticum	numeric
+Brachythecium species	numeric
+Cladonia furcata	numeric
+Polytrichastrum alpinum v. fragile	numeric
+Rhizomnium andrewsianum	numeric
+Warnstorfia sarmentosa	numeric
+Mesoptychia sahlbergii	numeric
+HierochloÙ odorata	numeric
+Silene involucrata s. involucrata	numeric
+Bistorta species	numeric
+Aplodon wormskjoldii	numeric
+Parmelia omphalodes s. lat.	numeric
+Bryum rutilans	numeric
+Campylium polygamum	numeric
+Tortella tortuosa5	numeric
+Collema undulatum s. lat.	numeric
+Leptogium gelatinosum	numeric
+Poa species	numeric
+Bryum argenteum	numeric
+Collema tenax	numeric
+Braya glabella s. glabella	numeric
+Schistochilopsis hyperarctica	numeric
+Collema ceraniscum	numeric
+Solorina spongiosa	numeric
+Encalypta procera	numeric
+Aconitum delphinifolium [s. delphinifolium]	numeric
+Bistorta vivipara6	numeric
+Stellaria longipes taxon edwardsii	numeric
+Salix richardsonii7	numeric
+Salix pulchra8	numeric
+Alnus viridis s. crispa	numeric
+Betula nana s. exilis	numeric
+Polemonium acutiflorum	numeric
+Rhododendron groenlandicum	numeric
+Rhododendron tomentosum s. decumbens9	numeric
+Vaccinium vitis-idaea s. minus	numeric
+Artemisia arctica s. arctica	numeric
+Valeriana capitata	numeric
+Hylocomium splendens10	numeric
+Trisetum spicatum	numeric
+Anemone richardsonii	numeric
+Viola epipsila s. repens	numeric
+Salix hastata	numeric
+Dasiphora fruticosa s. floribunda	numeric
+Eurybia sibirica	numeric
+Senecio lugens	numeric
+Climacium dendroides	numeric
+Kiaeria starkei	numeric
+Sphagnum teres	numeric
+Deschampsia brevifolia	numeric
+Parnassia palustris s. neogaea	numeric
+Astragalus alpinus s. alpinus	numeric
+Hypnum hamulosum	numeric
+Equisetum variegatum s. variegatum	numeric
+Bistorta plumosa11	numeric
+Dryas integrifolia	numeric
+Arctous rubra12	numeric
+Festuca altaica	numeric
+Anemone parviflora	numeric
+Micranthes nelsoniana13	numeric
+Tephroseris frigida14	numeric
+Stereocaulon tomentosum	numeric
+Luzula kjellmaniana	numeric
+Carex riishirensis	numeric
+Dodecatheon frigidum	numeric
+Blepharostoma trichophyllum	numeric
+Thuidium recognitum	numeric
+Polytrichum juniperinum	numeric
+Racomitrium ericoides	numeric
+HierochloÙ alpina	numeric
+Festuca brachyphylla	numeric
+Micranthes hieraciifolia15	numeric
+Dryas octopetala	numeric
+Potentilla hyparctica	numeric
+Oncophorus virens	numeric
+Eriophorum scheuchzeri	numeric
+Gentianella propinqua s. arctophila	numeric
+Pedicularis albolabiata16	numeric
+Bryum lisae v. cuspidatum	numeric
+Philonotis fontana	numeric
+Boykinia richardsonii	numeric
+Chamerion latifolium	numeric
+Parnassia kotzebuei	numeric
+Lagotis glauca s. minor	numeric
+Pedicularis lanata17	numeric
+Calamagrostis lapponica	numeric
+Arnica frigida	numeric
+Astragalus sealei	numeric
+Orthilia obtusata	numeric
+Taraxacum phymatocarpu aggregate; Subsection Phymatocarp	numeric
+Ceratodon purpureus	numeric
+Anticlea elegans	numeric
+Bromopsis pumpelliana	numeric
+Poa glauca	numeric
+Cladonia scabriuscula	numeric
+Cynodontium strumiferum	numeric
+Carex concinna	numeric
+Leymus innovatus s. velutinus	numeric
+Salix alaxensis	numeric
+Oxytropis jordalii	numeric
+Shepherdia canadensis	numeric
+Pedicularis verticillata	numeric
+Lysiella obtusata	numeric
+Salix arbusculoides	numeric
+Hedysarum mackenziei	numeric
+Carex glacialis	numeric
+Lomatogonium rotatum	numeric
+Castilleja caudata	numeric
+Poa pratensis s. alpigena	numeric
+Oxyria digyna	numeric
+Salix ovalifolia	numeric
+Poa alpina	numeric
+Salix chamissonis	numeric
+Solidago multiradiata s. multiradiata	numeric
+Plagiothecium denticulatum	numeric
+Luzula rufescens	numeric
+Draba juvenilis	numeric
+Sphagnum russowii	numeric
+Galium boreale	numeric
+Artemisia tilesii	numeric
+Saccobasis polita	numeric
+Comarum palustre	numeric
+Chamaedaphne calyculata	numeric
+Schistochilopsis incisa	numeric
+Paludella squarrosa	numeric
+Bryum weigelii	numeric
+Calamagrostis inexpansa	numeric
+Wilhelmsia physodes	numeric
+Pohlia wahlenbergii	numeric
+Sphagnum fuscum	numeric
+Physcia aipolia	numeric
+Elymus alaskanus	numeric
+Astragalus nutzotinensis	numeric
+Helodium blandowii	numeric
+Chamerion angustifolium	numeric
+Luzula nivalis18	numeric
+Platydictya jungermannioides	numeric
+Poa pseudoabbreviata	numeric
+Cerastium beeringianum	numeric
+Juncus arcticus s. alaskanus	numeric
+Saxifraga funstonii	numeric
+Saxifraga tricuspidata	numeric
+Carex krausei	numeric
+Leymus innovatus	numeric
+Calamagrostis purpurascens	numeric
+Parnassia palustris	numeric
+Populus balsamifera	numeric
+Salix glauca s. stipulifera	numeric
+Salix niphoclada	numeric
+Salix alaxensis v. alaxensis	numeric
+Dasiphora fruticosa	numeric
+Rhododendron lapponicum s. alpinum	numeric
+Vaccinium uliginosum s. microphyllum	numeric
+Pedicularis interior	numeric
+Solidago multiradiata	numeric
+Arnica angustifolia s. angustifolia	numeric
+Astragalus eucosmus	numeric
+Castilleja elegans	numeric
+Arnica frigida19	numeric
+Carex scirpoidea s. scirpoidea	numeric
+Bromopsis pumpelliana s. arctica	numeric
+Delphinium chamissonis	numeric
+Stellaria longipes taxon laeta	numeric
+Chamerion angustifolium s. angustifolium	numeric
+Salix glauca s. acutifolia	numeric
+Peltigera elisabethae	numeric
+Phlox alaskensis	numeric
+Gentianella propinqua s. propinqua	numeric
+Linnaea borealis s. americana	numeric
+Leptogium saturninum	numeric
+Pyrola asarifolia [s. asarifolia]20	numeric
+Oxytropis koyukukensis	numeric
+Achillea millefolium s. borealis	numeric
+Corallorhiza trifida	numeric
+Astragalus alpinus s. alaskanus	numeric
+Picea glauca	numeric
+Juniperus communis s. nana	numeric
+Cypripedium passerinum	numeric
+Calamagrostis neglecta	numeric
+Festuca rubra s. richardsonii	numeric
+Rubus arcticus	numeric
+Viburnum edule	numeric
+Ribes triste	numeric
+Cystopteris fragilis	numeric
+Carex obtusata	numeric
+Anemone lithophila	numeric
+Micranthes reflexa	numeric
+Chrysosplenium tetrandrum	numeric
+Potentilla litoralis	numeric
+Potentilla nivea	numeric
+Potentilla arenosa	numeric
+Cardamine polemonioides	numeric
+Androsace chamaejasme s. andersonii21	numeric
+Artemisia kruhsiana s. alaskana	numeric
+Petasites frigidus s. frigidus	numeric
+Oxytropis borealis	numeric
+Dryas ajanensis	numeric
+Arctous alpina22	numeric
+Cnidium cnidiifolium	numeric
+Peltigera extenuata	numeric
+Flavocetraria species	numeric
+Botrychium lunaria	numeric
+Carex albonigra	numeric
+Stellaria calycantha	numeric
+Oxytropis varians	numeric
+Bupleurum arcticum	numeric
+Cladonia symphycarpia	numeric
+Hedysarum mackenziei23	numeric
+Potentilla arenosa s. arenosa	numeric
+Mertensia paniculata v. paniculata]	numeric
+Peltigera praetextata	numeric
+Selaginella sibirica	numeric
+Potentilla species	numeric
+Anemone patens multifida	numeric
+Cystopteris montana	numeric
+Luzula parviflora s. parviflora	numeric
+Carex riishirensis24	numeric
+Carex atrosquama	numeric
+Micranthes nelsoniana s. nelsoniana	numeric
+Epilobium hornemannii s. hornemannii	numeric
+Myosotis alpestris s. asiatica	numeric
+Petasites frigidus s. nivalis	numeric
+Unknown moss	numeric
+Limnorchis aquilonis	numeric
+Carex media	numeric
+Geocaulon lividum	numeric
+Salix bebbiana	numeric
+Alnus incana s. tenuifolia	numeric
+Oxytropis deflexa s. dezhnevii	numeric
+Rosa acicularis	numeric
+Fragaria virginiana	numeric
+Vaccinium caespitosum	numeric
+Moneses uniflora	numeric
+Taraxacum croceum aggregate; Subsection Crocea	numeric
+Silene species	numeric
+Equisetum fluviatile	numeric
+Actaea rubra [s. rubra]	numeric
+Alnus viridis s. fruticosa	numeric
+Rubus idaeus	numeric
+Swida sericea	numeric
+Tanacetum bipinnatum	numeric
+Peltigera collina	numeric
+Elymus alaskanus s. alaskanus	numeric
+Moehringia lateriflora	numeric
+Populus tremuloides	numeric
+Betula neoalaskana	numeric
+Rhododendron groenlandicum25	numeric
+Unknown shrub deciduous low	numeric
+Listera borealis	numeric
+Salix alaxensis v. longistylis	numeric
+Sanguisorba officinalis	numeric
+Boschniakia rossica	numeric
+Delphinium glaucum	numeric
+Epilobium palustre	numeric
+Chamaepericlymenum canadense	numeric
+Iris setosa v. setosa	numeric
+Thalictrum sparsiflorum	numeric
+Aconogonon alaskanum v. alaskanum	numeric
+Trientalis europaea s. europaea	numeric
+Allium schoenoprasum	numeric
+Stellaria crassifolia	numeric
+Polemonium pulcherrimum s. lindleyi	numeric
+Peltigera neckeri	numeric
+Arctostaphylos uva-ursi	numeric
+Polytrichum piliferum	numeric
+Stereocaulon rivulorum	numeric
+Eriophorum russeolum	numeric
+Dupontia fisheri octoploid morph ("fisheri")	numeric
+Ranunculus nivalis	numeric
+Stellaria longipes taxon edwardsii26	numeric
+Cardamine polemonioides27	numeric
+Cetraria species	numeric
+Unknown bryophyte	numeric
+Unknown lichen	numeric
+Unknown lichen crustose	numeric
+Alopecurus borealis	numeric
+Micranthes foliolosa	numeric
+Micranthes punctata	numeric
+Calamagrostis holmii	numeric
+Coptidium pallasii	numeric
+Cerastium regelii taxon jenisejense	numeric
+Saxifraga cespitosa	numeric
+Eutrema edwardsii	numeric
+Tephroseris atropurpurea	numeric
+Papaver hultenii	numeric
+Sagina nivalis	numeric
+Lobaria linita	numeric
+Sticta arctica	numeric
+Eriophorum scheuchzeri s. scheuchzeri	numeric
+Arctophila fulva	numeric
+Phippsia algida	numeric
+Ranunculus pygmaeus	numeric
+Stellaria humifusa	numeric
+Saxifraga rivularis	numeric
+Unknown lichen fruticose	numeric
+Diapensia lapponica	numeric
+Unknown Fungus	numeric
+Draba pauciflora	numeric
+Draba lactea	numeric
+Sphagnum species	numeric
+Ranunculus gmelinii	numeric
+Solorina crocea	numeric
+Saxifraga hirculus s. propinqua	numeric
+Caltha palustris	numeric
+Caltha palustris s. radicans	numeric
+Saxifraga setigera	numeric
+Luzula multiflora	numeric
+Astragalus alpinus	numeric
+Artemisia species	numeric
+Timmia norvegica	numeric
+Orthothecium species	numeric
+Thamnolia species	numeric
+Leymus arenarius	numeric
+Bromopsis pumpelliana28	numeric
+Koeleria asiatica	numeric
+Poa arctica s. lanata29	numeric
+Bistorta plumosa30	numeric
+Rumex acetosella s. arenicola	numeric
+Potentilla arenosa s. arenosa31	numeric
+Androsace septentrionalis	numeric
+Erigeron eriocephalus	numeric
+Achillea millefolium s. lanulosa	numeric
+Taraxacum ceratophorum aggregate	numeric
+Bupleurum triradiatum	numeric
+Mnium species	numeric
+Alectoria species	numeric
+Pertusaria species	numeric
+Rhododendron tomentosum s. tomentosum	numeric
+Sarmenthypnum sarmentosum	numeric
+Arctocetraria andrejevii	numeric
+Unknown liverworts leafy	numeric
+Juncus arcticus	numeric
+Kobresia sibirica	numeric
+Carex maritima	numeric
+Packera hyperborealis	numeric
+Huperzia selago	numeric
+Luzula wahlenbergii	numeric
+Carex chordorrhiza	numeric
+Cinclidium species	numeric
+Bryoria nitidula	numeric
+Comarum palustre32	numeric
+Arnica lessingii	numeric
+Warnstorfia exannulata	numeric
+Conostomum tetragonum	numeric
+Cetraria nigricans	numeric
+Scapania species	numeric
+Anastrophyllum species	numeric
+Armeria scabra	numeric
+Bryum imbricatum	numeric
+Coptidium pallasii33	numeric
+Elymus macrourus	numeric
+Deschampsia cespitosa [s. cespitosa]	numeric
+Eurybia sibirica34	numeric
+Salix barclayi	numeric
+Plagiomnium species	numeric
+Rhododendron tomentosum s. decumbens35	numeric
+Sphagnum imbricatum	numeric
+Sphagnum subsecundum	numeric
+Salix fuscescens	numeric
+Oxycoccus microcarpus	numeric
+Brachythecium mildeanum	numeric
+Caltha natans	numeric
+Ranunculus hyperboreus	numeric
+Myriophyllum sibiricum	numeric
+Hippuris vulgaris	numeric
+Menyanthes trifoliata	numeric
+Spiraea stevenii	numeric
+Cladonia macilenta v. bacillaris	numeric
+Hypogymnia physodes	numeric
+Sphagnum compactum	numeric
+Sphagnum lindbergii	numeric
+Polytrichum jensenii	numeric
+Icmadophila ericetorum	numeric
+Stereocaulon paschale	numeric
+Utricularia vulgaris s. macrorhiza	numeric
+Woodsia alpina	numeric
+Carex glareosa [s. glareosa]	numeric
+Saxifraga bronchialis	numeric
+Dasiphora fruticosa36	numeric
+Kalmia procumbens	numeric
+Cladonia stellaris	numeric
+Ophioparma lapponica	numeric
+Pseudephebe pubescens	numeric
+Rhizocarpon geographicum s. lat.	numeric
+Umbilicaria hyperborea	numeric
+Arctoparmelia species	numeric
+Xanthoria species	numeric
+Sphaerophorus fragilis	numeric
+Alnus viridis s. crispa37	numeric
+Lycopodium annotinum	numeric
+Brachythecium reflexum	numeric
+Parmeliopsis hyperopta	numeric
+Vulpicida species	numeric
+Brachythecium erythrorrhizon	numeric
+Veratrum oxysepalum	numeric
+Rhodiola integrifolia [s. integrifolia]	numeric
+Rhytidiadelphus species	numeric
+Claytonia eschscholtzii	numeric
+Oxytropis mertensiana	numeric
+Dicranum fuscescens	numeric
+Hypnum plicatulum	numeric
+Sphagnum fimbriatum	numeric
+Cetrariella fastigiata	numeric
+Parmeliopsis ambigua	numeric
+Hedysarum americanum38	numeric
+Linnaea borealis	numeric
+Angelica gmelinii	numeric
+Vulpicida pinastri	numeric
+Carex nardina	numeric
+Oxytropis bryophila	numeric
+Bupleurum arcticum39	numeric
+Evernia perfragilis	numeric
+Minuartia macrocarpa	numeric
+Arnica angustifolia s. angustifolia40	numeric
+Stereocaulon species	numeric
+Umbilicaria species	numeric
+Artemisia glomerata	numeric
+Campanula lasiocarpa [s. lasiocarpa]	numeric
+Rubus stellatus	numeric
+Galium trifidum s. trifidum	numeric
+Arctoparmelia separata	numeric
+Stereocaulon apocalypticum	numeric
+Umbilicaria caroliniana	numeric
+Umbilicaria proboscidea	numeric
+Anemone sibirica	numeric
+Therorhodion glandulosum	numeric
+Cetraria kamczatica	numeric
+Luzula parviflora	numeric
+Carex macrogyna	numeric
+Oxytropis arctica	numeric
+Campanula uniflora	numeric
+Gentiana glauca	numeric
+Lagotis glauca s. glauca	numeric
+Cladonia nipponica	numeric
+Physaria arctica	numeric
+Phlox sibirica	numeric
+Artemisia furcata	numeric
+Potentilla biflora	numeric
+Castilleja hyperborea	numeric
+Hulteniella integrifolia41	numeric
+Ramalina almquistii	numeric
+Anticlea elegans42	numeric
+Chamerion angustifolium43	numeric
+Mnium blyttii	numeric
+Artemisia senjavinensis	numeric
+Pinguicula vulgaris [s. vulgaris]	numeric
+Ochrolechia species	numeric
+Cardamine digitata44	numeric
+Chamerion latifolium45	numeric
+Bromopsis pumpelliana s. arctica46	numeric
+Epilobium ciliatum	numeric
+Linum boreale	numeric
+Racomitrium species	numeric
+Hypnum pratense	numeric
+Pedicularis langsdorffii s. arctica	numeric
+Pedicularis pennellii	numeric
+Eriophorum brachyantherum	numeric
+Lecanora hagenii s. lat.	numeric
+Pertusaria subobducens	numeric
+Parmelia species	numeric
+Eritrichium aretioides	numeric
+Triglochin palustris	numeric
+Philonotis fontana47	numeric
+Syntrichia norvegica	numeric
+Gentianella propinqua	numeric
+Brachythecium groenlandicum	numeric
+Brachythecium salebrosum	numeric
+Mnium thomsonii	numeric
+Unknown liverwort	numeric
+Nephroma species	numeric
+Diphasiastrum alpinum	numeric
+Geum glaciale	numeric
+Melanelia commixta	numeric
+Umbilicaria torrefacta	numeric
+Eurhynchium pulchellum	numeric
+Plagiomnium medium	numeric
+Aulacomnium species	numeric
+Buellia insignis	numeric
+Plagiothecium berggrenianum	numeric
+Plagiothecium cavifolium	numeric
+Cladonia bellidiflora	numeric
+Pinguicula villosa	numeric
+Elymus alaskanus s. borealis	numeric
+Sphagnum obtusum	numeric
+Rhytidiadelphus squarrosus	numeric
+Splachnum sphaericum	numeric
+Hypnum lindbergii	numeric
+Campylium species	numeric
+Rhizomnium species	numeric
+Carex subspathacea	numeric
+Potentilla anserina s. groenlandica	numeric
+Arctanthemum arcticum	numeric
+Carex ramenskii	numeric
+Calamagrostis deschampsioides	numeric
+Puccinellia phryganodes	numeric
+Saussurea nuda	numeric
+Honckenya peploides	numeric
+Lathyrus japonicus	numeric
+Arctopoa eminens	numeric
+Ligusticum scothicum	numeric
+Agrostis scabra	numeric
+Arenaria longipedunculata	numeric
+Geum rossii	numeric
+Calliergon stramineum	numeric
+Sphagnum orientale	numeric
+Carex marina s. marina	numeric
+Silene wahlbergella	numeric
+Saxifraga radiata	numeric
+Bryum pallescens	numeric
+Juncus albescens	numeric
+Carex canescens [s. canescens]	numeric
+Primula borealis	numeric
+Tanacetum bipinnatum48	numeric
+Puccinellia borealis	numeric
+Anemone multiceps	numeric
+Gymnocarpium dryopteris	numeric
+Juniperus communis	numeric
+Packera heterophylla49	numeric
+Packera ogotorukensis	numeric
+Taraxacum phymatocarpu aggregate; Subsection Phymatocarp50	numeric
+Rhizocarpon species	numeric
+Carex bigelowii s. ensifolia	numeric
+Papaver lapponicum s. occidentale	numeric
+Lecanora species	numeric
+Iris setosa	numeric
+Heracleum lanatum	numeric
+Anemone lithophila51	numeric
+Erigeron hyperboreus	numeric
+Oxytropis bryophila52	numeric
+Rhizocarpon umbilicatum	numeric
+Dryas punctata s. alaskensis	numeric
+Carex williamsii	numeric
+Triglochin maritima	numeric
+Mertensia maritima	numeric
+Senecio pseudoarnica	numeric
+Conioselinum pacificum	numeric
+Astragalus sealei53	numeric
+Potentilla villosa	numeric
+Cinclidium subrotundum	numeric
+Warnstorfia fluitans	numeric
+Carex lachenalii	numeric
+Pyrola minor	numeric
+Brachythecium rivulare	numeric
+Coeloglossum viride s. viride	numeric
+Carex petricosa v. petricosa	numeric
+Schistidium species	numeric
+Primula anvilensis	numeric
+Poa pratensis s. alpigena54	numeric
+Aongstroemia longipes	numeric
+Carex capitata	numeric
+Erigeron purpuratus	numeric
+Potentilla rubricaulis	numeric
+Draba fladnizensis	numeric
+Draba nivalis	numeric
+Draba glabella	numeric
+Erigeron humilis	numeric
+Luzula arcuata	numeric
+Askellia nana	numeric
+Elymus violaceus	numeric
+Selaginella selaginoides	numeric
+Dryopteris fragrans	numeric
+Claytonia sarmentosa	numeric
+Sphagnum jensenii	numeric
+Sphagnum capillifolium	numeric
+Hippuris tetraphylla	numeric
+Dianthus repens	numeric
+Salix polaris	numeric
+Oxytropis jordalii55	numeric
+Potentilla vahliana	numeric
+Artemisia frigida	numeric
+Artemisia kruhsiana s. alaskana56	numeric
+Oxytropis scammaniana	numeric
+Lobaria species	numeric
+Betula glandulosa	numeric
+Cardamine bellidifolia [s. bellidifolia]	numeric
+Micranthes nelsoniana57	numeric
+Antennaria monocephala	numeric
+Corydalis arctica	numeric
+Equisetum pratense	numeric
+Dryopteris expansa	numeric
+Viola renifolia	numeric
+Trientalis europaea	numeric
+Ptilium crista-castrensis	numeric
+Orthilia secunda58	numeric
+Ditrichum species	numeric
+Stellaria longipes taxon monantha	numeric
+Micranthes reflexa59	numeric
+Racomitrium canescens	numeric
+Bryocaulon species	numeric
+Bryoria species	numeric
+Chrysosplenium wrightii	numeric
+Loeskypnum badium	numeric
+Scapania paludicola	numeric
+Hypogymnia species	numeric
+Carex limosa	numeric
+Erigeron elatus	numeric
+Lysiella obtusata60	numeric
+Elymus trachycaulus	numeric
+Oxytropis deflexa	numeric
+Oxytropis viscida	numeric
+Festuca rubra s. richardsonii61	numeric
+Erigeron acris	numeric
+Juncus alpinoarticulatus	numeric
+Coptidium lapponicum	numeric
+Rhytidiadelphus triquetrus	numeric
+Usnea species	numeric
+Polemonium boreale	numeric
+Betula papyrifera	numeric
+Homalothecium species	numeric
+Saussurea angustifolia s. yukonensis	numeric
+Asahinea species	numeric
+Saxifraga eschscholtzii	numeric
+Carex rostrata	numeric
+Hordeum jubatum [s. jubatum]	numeric
+Alnus incana s. tenuifolia62	numeric
+Calla palustris	numeric
+Myrica gale	numeric
+Cicuta virosa	numeric
+Hypnum dieckii	numeric
+Picea mariana	numeric
+Sphagnum magellanicum	numeric
+Trichophorum cespitosum [s. cespitosum]	numeric
+Drosera rotundifolia	numeric
+Nuphar polysepala	numeric
+Potamogeton epihydrus	numeric
+Potamogeton berchtoldii	numeric
+Utricularia minor	numeric
+Sphagnum riparium	numeric
+Salix species	numeric
+Equisetum sylvaticum	numeric
+Petasites frigidus s. nivalis63	numeric
+Betula species	numeric
+Lemna trisulca	numeric
+Potamogeton gramineus	numeric
+Potamogeton perfoliatus s. richardsonii	numeric
+Potamogeton friesii	numeric
+Stuckenia filiformis	numeric
+Sparganium angustifolium	numeric
+Eleocharis acicularis [s. acicularis]	numeric
+Callitriche anceps	numeric
+Potentilla norvegica	numeric
+Tephroseris palustris s. congesta	numeric
+Askellia elegans	numeric
+Limnorchis hyperborea	numeric
+Braya glabella s. purpurascens64	numeric
+Erigeron lonchophyllus	numeric
+Carex lapponica	numeric
+Thuidium species	numeric
+Carex diandra	numeric
+Equisetum palustre	numeric
+Carex tenuiflora	numeric
+Lycopodium clavatum	numeric
+Lycopodium dendroideum	numeric
+Diphasiastrum complanatum	numeric
+Carex deflexa v. deflexa]	numeric
+Carex brunnescens	numeric
+Galearis rotundifolia	numeric
+Viola selkirkii	numeric
+Chamaepericlymenum canadense65	numeric
+Adoxa moschatellina	numeric
+Viola biflora	numeric
+Pyrola chlorantha	numeric
+Phegopteris connectilis	numeric
+Cerastium beeringianum v. grandiflorum	numeric
+Silene repens	numeric
+Stereocaulon subcoralloides	numeric
+Botrychium minganense	numeric
+Cryptogramma sitchensis	numeric
+Woodsia ilvensis	numeric
+Carex praticola	numeric
+Elymus trachycaulus s. trachycaulus	numeric
+Schizachne purpurascens	numeric
+Rumex lapponicus	numeric
+Sorbus scopulina	numeric
+Arabidopsis kamchatica	numeric
+Boechera stricta	numeric
+Minuartia elegans	numeric
+Antennaria rosea	numeric
+Carex micropoda	numeric
+Racomitrium sudeticum	numeric
+Tetralophozia setiformis	numeric
+Cladonia verticillata s. lat.	numeric
+Viola langsdorffii	numeric
+Veronica wormskjoldii	numeric
+Micranthes spicata	numeric
+Potamogeton alpinus s. tenuifolius	numeric
+Spiranthes romanzoffiana	numeric
+Trichophorum alpinum	numeric
+Carex livida	numeric
+Carex paupercula	numeric
+Carex leptalea [s. leptalea]	numeric
+Drosera anglica	numeric
+Utricularia intermedia	numeric
+Eriophorum viridicarinatum	numeric
+Unknown forb	numeric
+Dryas drummondii	numeric
+Symphyotrichum yukonense	numeric
+Artemisia borealis66	numeric
+Antennaria pulcherrima [s. pulcherrima]	numeric
+Gentiana prostrata	numeric
+Campylium stellatum v. arcticum67	numeric
+Carex gynocrates	numeric
+Carex microglochin [s. microglochin]	numeric
+Minuartia biflora	numeric
+Woodsia glabella	numeric
+Dicranum polysetum	numeric
+Hamatocaulis vernicosus	numeric
+Campanula aurita	numeric
+Schistidium apocarpum	numeric
+Carex aurea	numeric
+Stellaria borealis s. sitchana	numeric
+Trientalis europaea s. arctica	numeric
+Poa pratensis	numeric
+Beckmannia eruciformis	numeric
+Alopecurus aequalis	numeric
+Ranunculus reptans	numeric
+Rorippa palustris s. palustris	numeric
+Marchantia polymorpha s. ruderalis	numeric
+Glyceria species	numeric
+Mylia anomala	numeric
+Carex rostrata68	numeric
+Carex loliacea	numeric
+Potamogeton subsibiricus	numeric
+Sparganium hyperboreum	numeric
+Potamogeton compressus	numeric
+Polygonum aviculare	numeric
+Salix interior	numeric
+Descurainia sophioides	numeric
+Limosella aquatica	numeric
+Callitriche hermaphroditica	numeric
+Polygonum species	numeric
+Silene involucrata s. involucrata69	numeric
+Goodyera repens	numeric
+Carex arcta	numeric
+Sparganium natans	numeric
+Myriophyllum verticillatum	numeric
+Astragalus aboriginorum	numeric
+Parrya nudicaulis s. nudicaulis	numeric
+Squamarina lentigera	numeric
+Stereocaulon glareosum	numeric
+Plantago canescens	numeric
+Eritrichium splendens	numeric
+Lupinus species	numeric
+Carex supina s. spaniocarpa	numeric
+Salix pseudomonticola	numeric
+Carex filifolia v. filifolia]	numeric
+Tortella inclinata	numeric
+Syntrichia ruralis70	numeric
+Festuca saximontana [s. saximontana]	numeric
+Rumex acetosa s. acetosa	numeric
+Eleocharis palustris	numeric
+Carex aurea71	numeric
+Carex viridula	numeric
+Polytrichum commune	numeric
+Aconogonon alaskanum	numeric
+Calliergon cordifolium	numeric
+Sphaerophorus species	numeric
+Marchantia species	numeric
+Juncus filiformis	numeric
+Brachythecium nelsonii	numeric
+Micranthes nivalis	numeric
+Cherleria dicranoides	numeric
+Oxytropis kokrinensis	numeric
+Physconia muscigena	numeric
+Dodecatheon species	numeric
+Cirriphyllum piliferum	numeric
+Hylocomiastrum pyrenaicum	numeric
+Carex microchaeta s. nesophila	numeric
+Asahinea scholanderi	numeric
+Minuartia obtusiloba	numeric
+Rhytidium species	numeric
+Listera cordata	numeric
+Poa abbreviata	numeric
+Astragalus polaris	numeric
+Varicellaria rhodocarpa	numeric
+Cardamine microphylla	numeric
+Trapeliopsis granulosa	numeric
+Nephroma resupinatum	numeric
+Leymus innovatus72	numeric
+Festuca lenensis	numeric
+Minuartia yukonensis	numeric
+Smelowskia porsildii	numeric
+Erysimum pallasii	numeric
+Draba cana	numeric
+Erigeron porsildii	numeric
+Erigeron caespitosus	numeric
+Cryptogramma stelleri	numeric
+Eremogone capillaris [s. capillaris]	numeric
+Cardamine purpurea	numeric
+Draba palanderiana	numeric
+Noccaea arctica	numeric
+Tortella species	numeric
+Oxytropis deflexa s. dezhnevii73	numeric
+Andreaea rupestris	numeric
+Claytonia tuberosa	numeric
+Amandinea punctata	numeric
+Ramalina dilacerata	numeric
+Barbarea orthoceras	numeric
+Polytrichum formosum	numeric
+Callitriche palustris	numeric
+Psilopilum laevigatum	numeric
+Douglasia ochotensis	numeric
+Pseudephebe minuscula	numeric
+Papaver walpolei	numeric
+Salix rotundifolia v. dodgeana	numeric
+Oxytropis gorodkovii	numeric
+Hypnum revolutum	numeric
+Schistidium andreaeopsis	numeric
+Dactylina species	numeric
+Smelowskia borealis	numeric
+Hedysarum hedysaroides	numeric
+Silene involucrata s. tenella	numeric
+Primula mistassinica	numeric
+Eriophorum callitrix	numeric
+Carex stylosa	numeric
+Cardamine umbellata	numeric
+Sphagnum aongstroemii	numeric
+Taraxacum alaskanum aggregate; Subsectio "Arctica" p. p.	numeric
+Ceratodon species	numeric
+Lobaria hallii	numeric
+Leptogium species	numeric
+Stuckenia pectinata	numeric
+Ranunculus trichophyllus	numeric
+Nephroma parile	numeric
+Stuckenia vaginata	numeric
+Drepanocladus capillifolius	numeric
+Bryobrittonia longipes	numeric
+Dicranella species	numeric
+Minuartia dawsonensis	numeric
+Delphinium chamissonis74	numeric
+Pedicularis langsdorffii s. langsdorffii	numeric
+Racomitrium elongatum	numeric
+Papaver lapponicum s. occidentale75	numeric
+Minuartia stricta	numeric
+Cladonia cariosa	numeric
+Melanelia stygia	numeric
+Tephroseris lindstroemii	numeric
+Claytonia scammaniana	numeric
+Stereocaulon groenlandicum	numeric
+Agonimia tristicula	numeric
+Antennaria alpina	numeric
+Papaver gorodkovii	numeric
+Sagina nivalis76	numeric
+Primula stricta	numeric
+Cyrtomnium hymenophyllum	numeric
+Carex holostoma	numeric
+Sanionia species	numeric
+Stellaria borealis s. borealis	numeric
+Potentilla elegans	numeric
+Juncus bufonius	numeric
+Epilobium davuricum	numeric
+Pedicularis interior77	numeric
+Symphyotrichum boreale	numeric
+Artemisia globularia	numeric
+Silene soczavana	numeric
+Carex kelloggii	numeric
+Eritrichium aretioides v. chamissonis	numeric
+Puccinellia vahliana	numeric
+Ranunculus sulphureus v. sulphureus]	numeric
+Ranunculus arcticus	numeric
+Aphragmus eschscholtzianus	numeric
+Bryum cyclophyllum	numeric
+Lasallia pensylvanica	numeric
+Ranunculus eschscholtzii v. eschscholtzii]	numeric
+Saxifraga serpyllifolia	numeric
+Cladonia stricta s. lat.	numeric
+Warnstorfia pseudostraminea	numeric
+Primula egaliksensis	numeric
+Pedicularis pacifica	numeric
+Carex bicolor	numeric
+Poa palustris	numeric
+Potamogeton praelongus	numeric
+Carex pluriflora	numeric
+Puccinellia wrightii	numeric
+Draba corymbosa	numeric
+Cetraria ericetorum	numeric
+Antennaria rosea s. pulvinata	numeric
+Tephroseris kjellmanii	numeric
+Eriophorum species	numeric
+Sarmenthypnum sarmentosum78	numeric
+Pogonatum species	numeric
+Unknown liverworts thalloid	numeric
+Limprichtia revolvens79	numeric
+Braya glabella s. glabella80	numeric
+Bryoerythrophyllum recurvirostre81	numeric
+Hypnum bambergeri82	numeric
+Unknown Algae	numeric
+Blepharostoma trichophyllum83	numeric
+Drepanocladus brevifolius84	numeric
+Sanionia uncinata85	numeric
+Bryocaulon divergens86	numeric
+Distichium species	numeric
+Puccinellia andersonii	numeric
+Carex fuliginosa s. misandra87	numeric
+Calliergon megalophyllum	numeric
+Oxytropis deflexa s. dezhnevii88	numeric
+Bryum cyclophyllum89	numeric
+Carex saxatilis s. laxa	numeric
+Eriophorum russeolum s. leiocarpum	numeric

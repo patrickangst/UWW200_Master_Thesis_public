@@ -25,7 +25,7 @@ perform_part_4 <- FALSE # perform part 4: Cluster analysis
 perform_part_5 <- TRUE # perform part 5: Calculate diversity
 
 # Set main folder
-main_folder_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/MasterThesis'
+main_folder_path <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/test'
 # main_folder_path <- 'D:/MasterThesis'
 # Set the directory containing the test site folders
 test_sites_folder_path <- file.path(main_folder_path, 'final_hs_data_folder')

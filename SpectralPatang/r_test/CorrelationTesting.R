@@ -1,0 +1,192 @@
+rm(list = ls(all = TRUE))
+gc()
+graphics.off()
+
+# Load necessary packages
+library(dplyr)
+library(tibble)
+library(ggplot2)
+library(ggpubr)
+library(cowplot)
+library(readxl)
+library(lme4)
+library(lmerTest)
+
+# Load species abundance data
+plot_metrics_path <- 'plot_metrics'
+metrics_data <- read_excel(file.path(plot_metrics_path, "Plot_Metrics_Combined.xlsx"),
+                           sheet = 'Sheet1')
+output_folder_path <- 'correlation_plots'
+
+# Convert to data frame
+metrics_data_df <- metrics_data %>% as.data.frame()
+
+# Define function to rate correlation strength
+interpret_r <- function(r) {
+  dplyr::case_when(
+    r >= 0.9  ~ "Very strong positive",
+    r >= 0.7  ~ "Strong positive",
+    r >= 0.5  ~ "Moderate positive",
+    r >= 0.3  ~ "Weak positive",
+    r >= 0.0  ~ "Very weak / no correlation",
+    r >= -0.3 ~ "Very weak negative",
+    r >= -0.5 ~ "Weak negative",
+    r >= -0.7 ~ "Moderate negative",
+    r >= -0.9 ~ "Strong negative",
+    r >= -1.0 ~ "Very strong negative",
+    TRUE ~ "Undefined"
+  )
+}
+
+# Create a dataframe for plotting instructions
+cor_metrics <- data.frame(
+  Metric = c("Plant Communities", "Habitat Types", "Plant Species"),
+  x = c(
+    "Unique_Plant_Cummunities",
+    "Unique_Habitat_Types",
+    "Unique_Plant_Types"
+  ),
+  filename = c(
+    "correlation_plant_communities.png",
+    "correlation_habitat_types.png",
+    "correlation_plant_types.png"
+  )
+)
+
+# Create an empty dataframe to collect correlation stats
+correlation_results <- data.frame(
+  Metric = character(),
+  Variable = character(),
+  R = numeric(),
+  P_value = numeric(),
+  Abs_R = numeric(),
+  Interpretation = character(),
+  stringsAsFactors = FALSE
+)
+
+# Loop over each metric and generate/save plot
+for (i in 1:nrow(cor_metrics)) {
+  xvar <- cor_metrics$x[i]
+  metric_label <- cor_metrics$Metric[i]
+  file_name <- cor_metrics$filename[i]
+  
+  # Tidy evaluation for the x-axis variable
+  xvar_sym <- sym(xvar)
+  
+  # Calculate correlation
+  cor_test <- cor.test(metrics_data_df[[xvar]], metrics_data_df$Unique_Spectral_Species)
+  r <- cor_test$estimate
+  p <- cor_test$p.value
+  r_abs <- abs(r)
+  interpretation <- interpret_r(r)
+  
+  # Store results
+  correlation_results <- rbind(
+    correlation_results,
+    data.frame(
+      Metric = metric_label,
+      Variable = xvar,
+      R = round(r, 3),
+      P_value = signif(p, 3),
+      Abs_R = round(r_abs, 3),
+      Interpretation = interpretation,
+      stringsAsFactors = FALSE
+    )
+  )
+  
+  # Determine text position dynamically (bottom right corner)
+  x_max <- max(metrics_data_df[[xvar]], na.rm = TRUE)
+  y_min <- min(metrics_data_df$Unique_Spectral_Species, na.rm = TRUE)
+  
+  # Text label with R and p
+  # stat_label <- paste0("R = ", round(r, 2), "\n",
+  #                      "p = ", signif(p, 2), "\n",
+  #                      "Corr. = ", interpret_r(r))
+  
+  # Plot with annotation
+  base_plot <- ggplot(metrics_data_df, aes(x = !!xvar_sym, y = Unique_Spectral_Species, color = Testsite)) +
+    geom_point(size = 3) +
+    geom_smooth(method = "lm", se = TRUE, color = "black", linewidth = 1) +
+    labs(
+      title = paste("Spectral Species count vs", metric_label),
+      x = metric_label,
+      y = "Unique Spectral Species",
+      color = "Testsite",
+      caption = paste0("R = ", round(r, 2), "\n",
+                       "p = ", signif(p, 2), "\n",
+                       "Corr. = ", interpret_r(r))
+    ) +
+    theme_minimal(base_size = 14) +
+    theme(
+      plot.margin = margin(10, 10, 10, 10),
+      legend.position = "right"
+    )
+  
+  # Save plot
+  file_path <- file.path(output_folder_path, file_name)
+  ggsave(file_path, base_plot, width = 8, height = 5)
+  message(paste("Saved plot:", file_name))
+}
+
+# Save the correlation results to CSV
+write.csv(correlation_results, file.path(output_folder_path, "correlation_summary.csv"), row.names = FALSE)
+message("Saved correlation summary CSV.")
+
+######
+# Statistical testing
+######
+anova_input <- metrics_data_df %>%
+  select(Testsite,Unique_Plant_Cummunities,Unique_Spectral_Species,Unique_Habitat_Types,Unique_Plant_Types) %>%
+  mutate(Testsite = as.factor(Testsite))
+
+str(anova_input)
+
+# Model Plant Communities
+model_plant_communities_lm <- lm(Unique_Plant_Cummunities ~ Unique_Spectral_Species,
+               data = anova_input)
+# anova(model_plant_communities_lm)
+par(mfrow = c(2, 2))
+plot(model_plant_communities_lm)
+
+summary(model_plant_communities_lm)
+ggplot(anova_input, aes(x = Unique_Spectral_Species, y = Unique_Plant_Cummunities)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE)
+
+
+# Model Habitat Type
+model_habitat_types_lm <- lm(Unique_Habitat_Types ~ Unique_Spectral_Species,
+                                 data = anova_input)
+# anova(model_habitat_types_lm)
+par(mfrow = c(2, 2))
+plot(model_habitat_types_lm)
+
+summary(model_habitat_types_lm)
+ggplot(anova_input, aes(x = Unique_Spectral_Species, y = Unique_Habitat_Types)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE)
+
+# Model Plant Species
+model_plant_species_lm <- lm(Unique_Plant_Types ~ Unique_Spectral_Species,
+                             data = anova_input)
+# anova(model_plant_species_lm)
+par(mfrow = c(2, 2))
+plot(model_plant_species_lm)
+
+summary(model_plant_species_lm)
+
+ggplot(anova_input, aes(x = Unique_Spectral_Species, y = Unique_Plant_Types)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE)
+
+# Model Plant Communities vs. Habitat type
+model_ht_pc_lm <- lm(Unique_Habitat_Types ~ Unique_Plant_Cummunities,
+                             data = anova_input)
+# anova(model_plant_species_lm)
+par(mfrow = c(2, 2))
+plot(model_ht_pc_lm)
+
+summary(model_ht_pc_lm)
+ggplot(anova_input, aes(x = Unique_Habitat_Types, y = Unique_Plant_Cummunities)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE)
