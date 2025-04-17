@@ -11,7 +11,7 @@ library(cluster)
 library(ggplot2)
 
 # Define the directory containing .tiff files
-pca_hs_image_dir <- '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/MasterThesis/08_principle_components_selection/'
+pca_hs_image_dir <- 'C:/Users/patri/Documents/MasterThesis/08_principle_components_selection/'
 
 # Get all .tiff files in the directory
 tiff_files <- list.files(pca_hs_image_dir, pattern = "\\.tif$", full.names = TRUE)
@@ -46,11 +46,11 @@ for (file in tiff_files) {
 
   threshold <- 40000
 
-  print(paste0('nrow: ', nrow(pca_data_na_omitted)))
-  if (nrow(pca_data_na_omitted) > threshold) {
-    set.seed(123)  # Ensure reproducibility
-    pca_data_na_omitted <- pca_data_na_omitted[sample(1:nrow(pca_data_na_omitted), threshold), ]
-  }
+  # print(paste0('nrow: ', nrow(pca_data_na_omitted)))
+  # if (nrow(pca_data_na_omitted) > threshold) {
+  #   set.seed(123)  # Ensure reproducibility
+  #   pca_data_na_omitted <- pca_data_na_omitted[sample(1:nrow(pca_data_na_omitted), threshold), ]
+  # }
 
   pca_data_na_omitted_scaled <- scale(pca_data_na_omitted)  # Standardize
   kmeans_clustering_data <- pca_data_na_omitted_scaled
