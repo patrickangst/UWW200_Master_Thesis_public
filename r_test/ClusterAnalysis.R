@@ -10,7 +10,7 @@ library(dplyr)
 library(ggplot2)
 
 # --- Parameters ---
-hyperspectral_path <- "hs/AN_TJ_1_pc_selection.tif"  # ← Change as needed
+hyperspectral_path <- "hs/AN_TJ_2_pc_selection.tif"  # ← Change as needed
 sample_size_max <- 1000
 min_clusters <- 2
 max_clusters <- 10
