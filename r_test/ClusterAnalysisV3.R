@@ -3,9 +3,15 @@ library(terra)
 library(NbClust)
 library(tools)
 library(modeest) # For calculating the mode (Most Frequent Value)
+library(statip)
+
+min_clusters <- 2
+max_clusters <- 50
+set.seed(123)
 
 # Step 1: Load the GeoTIFF
-hyperspectral_path <- "hs/AN_TJ_1_pc_selection.tif" # Replace with your file path
+hyperspectral_path <-
+  "hs/AN_TJ_1_pc_selection.tif" # Replace with your file path
 geo_data <- rast(hyperspectral_path)
 
 # Step 2: Convert the GeoTIFF to a 2D matrix
@@ -14,39 +20,91 @@ data_matrix <- as.matrix(terra::values(geo_data))
 data_matrix <- na.omit(data_matrix)
 
 # Step 3: Define indices excluding GAP, Gamma, Gplus, and Tau
-indices <- c("kl", "ch", "hartigan", "ccc", "scott", "marriot",
-             "trcovw", "tracew", "friedman", "rubin", "cindex", "db",
-             "silhouette", "duda", "pseudot2", "beale", "ratkowsky",
-             "ball", "ptbiserial", "frey", "mcclain", "dunn", "hubert",
-             "sdindex", "dindex", "sdbw")
+indices <- c(
+  "kl",
+  "ch",
+  "hartigan",
+  "ccc",
+  "scott",
+  "marriot",
+  "trcovw",
+  "tracew",
+  "friedman",
+  "rubin",
+  "cindex",
+  "db",
+  "silhouette",
+  "duda",
+  "pseudot2",
+  "beale",
+  "ratkowsky",
+  "ball",
+  "ptbiserial",
+  "frey",
+  "mcclain",
+  "dunn",
+  "hubert",
+  "sdindex",
+  "dindex",
+  "sdbw"
+)
 
 # Step 4: Initialize a vector to store the best number of clusters for each index
 best_cluster_numbers <- numeric()
 
 # Step 5: Loop through each index and calculate the optimal number of clusters
 for (index in indices) {
-  cat("Processing index:", index, "\n")
+  cat("\nProcessing index:", index, "\n")
   
-  # Try to compute NbClust for the given index
+  # Try NbClust for this index
   nb_result <- tryCatch({
-    NbClust(data_matrix, distance = "euclidean", min.nc = 2, max.nc = 10, method = "kmeans", index = index)
+    NbClust(
+      data = data_matrix,
+      distance = "euclidean",
+      min.nc = min_clusters,
+      max.nc = max_clusters,
+      method = "kmeans",
+      index = index
+    )
   }, error = function(e) {
-    cat("Error encountered for index:", index, " - ", e$message, "\n")
-    return(NULL) # Return NULL in case of an error
+    cat("  ❌ Error for index:", index, "-", e$message, "\n")
+    return(NULL)
   })
   
-  # Check if nb_result is valid
-  if (!is.null(nb_result) && !is.null(nb_result$Best.nc) && length(dim(nb_result$Best.nc)) == 2) {
-    # Extract the best number of clusters
-    best_k <- as.numeric(nb_result$Best.nc[1, ])
-    best_cluster_numbers <- c(best_cluster_numbers, best_k)
+  # Check validity of result
+  if (!is.null(nb_result) && !is.null(nb_result$Best.nc)) {
+    # Try extracting cluster number, robust to different structures
+    best_k_try <- tryCatch({
+      if (is.matrix(nb_result$Best.nc)) {
+        # Matrix format (most common)
+        best_k <- as.numeric(nb_result$Best.nc[1,])
+      } else if (is.vector(nb_result$Best.nc)) {
+        # Vector format (e.g., for 'kl', 'ch', etc.)
+        best_k <- as.numeric(nb_result$Best.nc["Number_clusters"])
+      } else {
+        stop("Unknown Best.nc format")
+      }
+      cat("  ✅ Best number of clusters for", index, ":", best_k, "\n")
+      best_k
+    }, error = function(e) {
+      cat("  ⚠️ Failed to extract Best.nc for",
+          index,
+          "-",
+          e$message,
+          "\n")
+      NA
+    })
+    
+    if (!is.na(best_k_try)) {
+      best_cluster_numbers <- c(best_cluster_numbers, best_k_try)
+    }
   } else {
-    cat("Skipping index:", index, "due to invalid Best.nc dimensions or NULL result.\n")
+    cat("  ⚠️ Skipping index:", index, "- Invalid or missing Best.nc\n")
   }
   
-  cat("best_cluster_numbers: ", best_cluster_numbers, "\n")
+  # Print current summary
+  cat("  ➕ Accumulated cluster numbers:", best_cluster_numbers, "\n")
   
-  # Free unused memory
   rm(nb_result)
   gc()
 }
@@ -63,10 +121,14 @@ if (is.na(majority_vote_number)) {
 
 # Step 8: Save the workspace and most frequent number to files
 base_name <- file_path_sans_ext(basename(hyperspectral_path))
-workspace_filename <- file.path('nbclust_analysis', paste0(base_name, "_clusteranalysis.RData"))
+workspace_filename <-
+  file.path('nbclust_analysis',
+            paste0(base_name, "_clusteranalysis.RData"))
 save.image(file = workspace_filename)
 
-txt_filename <- file.path('nbclust_analysis', paste0(base_name, "_most_frequent_number.txt"))
+txt_filename <-
+  file.path('nbclust_analysis',
+            paste0(base_name, "_most_frequent_number.txt"))
 write(majority_vote_number, file = txt_filename)
 
 cat("Analysis completed and results saved.")
