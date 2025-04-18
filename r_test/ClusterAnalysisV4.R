@@ -18,8 +18,24 @@ max_clusters <- 50
 set.seed(123)
 
 # Define the indices to use
-indices <- c("silhouette", "dunn", "db", "ch", "ratkowsky", 
-             "ptbiserial", "hubert", "cindex", "tracew", "sdindex")
+indices <- c(
+  "silhouette",   # Compactness and separation
+  "dunn",         # Separation vs. compactness
+  "db",           # Davies-Bouldin
+  "ch",           # Calinski-Harabasz
+  "ratkowsky",    # Cluster separation
+  "ptbiserial",   # Point-biserial correlation
+  "cindex",       # Clustering index
+  "tracew",       # Within-group sum of squares
+  "sdindex",      # Standard deviation-based
+  "sdbw",         # SD-BW (between-within SD ratio)
+  "scott",        # Scott's index (parametric)
+  "marriot",      # Marriott's index (compactness)
+  "trcovw",       # Trace of within-cluster covariance
+  "duda",         # Duda-Hart
+  "pseudot2"      # Related to Duda-Hart
+)
+
 
 # Create output folder if it doesn't exist
 if (!dir.exists("nbclust_analysis")) {
