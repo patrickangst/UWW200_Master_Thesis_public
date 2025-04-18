@@ -4,6 +4,15 @@ gc()
 graphics.off()
 
 
+packages <- c("terra", "NbClust", "tools", "modeest", "statip", "openxlsx")
+
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg, dependencies = TRUE)
+    library(pkg, character.only = TRUE)
+  }
+}
+
 # Load required libraries
 library(terra)
 library(NbClust)
