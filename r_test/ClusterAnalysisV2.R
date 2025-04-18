@@ -7,7 +7,7 @@ library(foreach)
 library(statip)
 
 # Step 1: Load the GeoTIFF
-geo_data <- rast("hs/AN_TJ_1_pc_selection.tif") # Replace with the path to your GeoTIFF file
+geo_data <- rast("hs/BRW_PW_1_pc_selection.tif") # Replace with the path to your GeoTIFF file
 
 # Step 2: Convert the GeoTIFF to a 2D matrix
 # Rows: Pixels; Columns: Bands
