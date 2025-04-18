@@ -1,3 +1,9 @@
+# Clean environment
+rm(list = ls(all = TRUE))
+gc()
+graphics.off()
+
+
 # Load required libraries
 library(terra)
 library(NbClust)
@@ -82,6 +88,12 @@ for (hyperspectral_path in tif_files) {
       if (!is.na(best_k_try)) {
         best_cluster_numbers <- c(best_cluster_numbers, best_k_try)
         results_df <- rbind(results_df, data.frame(index = index, best_k = best_k_try))
+        
+        # 🔄 Save/update Excel after each index
+        base_name <- file_path_sans_ext(basename(hyperspectral_path))
+        excel_filename <- file.path('nbclust_analysis', paste0(base_name, "_most_frequent_number.xlsx"))
+        write.xlsx(results_df, excel_filename, rowNames = FALSE)
+        cat("    💾 Intermediate results written to", excel_filename, "\n")
       }
     } else {
       cat("    ⚠️ Skipping index:", index, "- Invalid or missing Best.nc\n")

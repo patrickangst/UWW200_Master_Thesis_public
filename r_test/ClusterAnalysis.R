@@ -117,36 +117,36 @@ txt_filename <- file.path('nbclust_analysis', paste0(base_name, "_most_frequent_
 write(majority_vote_number, file = txt_filename)
 
 
-# --- KMeans clustering (on full sample, not just NbClust subset) ---
-kmeans_model <- kmeans(sampled_matrix, centers = majority_vote_number)
-clustered_data <-
-  cbind(sampled_matrix, cluster = kmeans_model$cluster)
-
-# --- Visualization (optional) ---
-clustered_df <- as.data.frame(clustered_data)
-
-if (ncol(sampled_matrix) >= 2) {
-  # Get the column names
-  column_names <- colnames(clustered_df)
-  
-  # Select the first two columns (excluding "cluster") as x and y
-  x_col <- column_names[1]
-  y_col <- column_names[2]
-  
-  ggplot(clustered_df, aes_string(
-    x = column_names[1],  # Use first column name
-    y = column_names[2],  # Use second column name
-    color = factor(cluster)
-  )) +
-    geom_point(alpha = 0.6) +
-    labs(
-      title = paste("KMeans Clustering (k =", majority_vote_number, ")"),
-      x = column_names[1],  # Use first column name
-      y = column_names[2],  # Use second column name
-      color = "Cluster"
-    ) +
-    theme_minimal()
-} else {
-  message("Not enough bands for 2D visualization.")
-}
+# # --- KMeans clustering (on full sample, not just NbClust subset) ---
+# kmeans_model <- kmeans(sampled_matrix, centers = majority_vote_number)
+# clustered_data <-
+#   cbind(sampled_matrix, cluster = kmeans_model$cluster)
+# 
+# # --- Visualization (optional) ---
+# clustered_df <- as.data.frame(clustered_data)
+# 
+# if (ncol(sampled_matrix) >= 2) {
+#   # Get the column names
+#   column_names <- colnames(clustered_df)
+#   
+#   # Select the first two columns (excluding "cluster") as x and y
+#   x_col <- column_names[1]
+#   y_col <- column_names[2]
+#   
+#   ggplot(clustered_df, aes_string(
+#     x = column_names[1],  # Use first column name
+#     y = column_names[2],  # Use second column name
+#     color = factor(cluster)
+#   )) +
+#     geom_point(alpha = 0.6) +
+#     labs(
+#       title = paste("KMeans Clustering (k =", majority_vote_number, ")"),
+#       x = column_names[1],  # Use first column name
+#       y = column_names[2],  # Use second column name
+#       color = "Cluster"
+#     ) +
+#     theme_minimal()
+# } else {
+#   message("Not enough bands for 2D visualization.")
+# }
 
