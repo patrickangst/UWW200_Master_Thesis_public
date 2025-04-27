@@ -16,7 +16,7 @@ hyperspectral_path <-
 memory_limit_gb <- 64
 bytes_per_value <- 4  # Assuming float32
 nbclust_sample_size <- 10000  # Further limit for NbClust
-min_clusters <- 2
+  min_clusters <- 2
 max_clusters <- 50
 set.seed(123)
 
