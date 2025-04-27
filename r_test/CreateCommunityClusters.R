@@ -22,6 +22,8 @@ output_dir_graphs <- "cluster_plots"
 output_dir_xlsx <- "plot_metrics"
 output_dir_shp <- "cluster_info_shp"
 clusterinfo_file_path <- 'All_plots_Desktop.xlsx'
+cluster_file_path <- file.path(output_dir_xlsx, "Cluster_Assignement.xlsx")
+
 
 # Create folder for plots if not exists
 if (!dir.exists(output_dir_graphs)) {
@@ -38,11 +40,8 @@ if (!dir.exists(output_dir_shp)) {
 testsite_clusterinfo_df <- read_excel(clusterinfo_file_path, sheet = 'ClusterInfo')
 testsite_clusterinfo_df <- testsite_clusterinfo_df %>%
   as.data.frame() %>%
-  mutate(Testsite = paste0(`Table number`,'_',Testsite))%>%
-  select(Testsite,Subzone,Longitude,Latitude)
-
-write_xlsx(testsite_clusterinfo_df, path = file.path(output_dir_xlsx, "Cluster_Assignement.xlsx"))
-
+  mutate(Testsite = paste0(`Table number`, '_', Testsite)) %>%
+  select(Testsite, Subzone, Longitude, Latitude)
 
 # Initialize an empty data frame to store results
 results_df <- data.frame(
@@ -57,14 +56,8 @@ create_plots <- function(file_path, clusterinfo_df) {
   
   species_data <- read_excel(file_path, sheet = 'Sheet 1')
   
-  
   colnames(species_data) <- trimws(colnames(species_data))
-  # colnames(species_data)
-  
-  # df <- species_data %>%
-  #   as.data.frame() %>%
-  #   filter(Testsite == "PRUARC_DW_1")
-  
+
   df <- species_data %>%
     as.data.frame()
   
@@ -76,7 +69,6 @@ create_plots <- function(file_path, clusterinfo_df) {
   df_species_list <- df %>%
     select(-PlotIdentifier, -Shannon, -Simpson, -Evenness, -Richness)
   
-  
   # Assuming your data frame is called `df_species_list`
   # (rows = plots, columns = species, values = percent cover)
   bray_dist <- vegdist(df_species_list, method = "bray")
@@ -85,13 +77,7 @@ create_plots <- function(file_path, clusterinfo_df) {
   bray_pcoa <- cmdscale(bray_dist, eig = TRUE, k = 2)
   bray_coords <- as.data.frame(bray_pcoa$points)
   colnames(bray_coords) <- c("PCoA1", "PCoA2")
-  
-  
-  # Determine epsilon programmatically (optional, but here's a rule of thumb)
-  # k <- floor(sqrt(nrow(df_species_list)))
-  # kNNdistplot(bray_dist, k = k)
-  # abline(h = 0.1, col = "red", lty = 2)  # adjust this value based on plot
-  
+
   # Once you choose eps (based on elbow of above plot):
   db <- dbscan(as.matrix(bray_dist), eps = 0.805, minPts = 2)
   
@@ -150,7 +136,12 @@ create_plots <- function(file_path, clusterinfo_df) {
     )
   
   ggsave(
-    filename = paste0(output_dir_graphs, "/", file_name_no_ext, "_DBSCAN_clusters.png"),
+    filename = paste0(
+      output_dir_graphs,
+      "/",
+      file_name_no_ext,
+      "_DBSCAN_clusters.png"
+    ),
     plot = p_dbscan,
     width = 8,
     height = 6
@@ -181,7 +172,12 @@ create_plots <- function(file_path, clusterinfo_df) {
     )
   
   ggsave(
-    filename = paste0(output_dir_graphs, "/", file_name_no_ext, "_HDBSCAN_clusters.png"),
+    filename = paste0(
+      output_dir_graphs,
+      "/",
+      file_name_no_ext,
+      "_HDBSCAN_clusters.png"
+    ),
     plot = p_hdbscan,
     width = 8,
     height = 6
@@ -205,11 +201,36 @@ create_plots <- function(file_path, clusterinfo_df) {
                              coords = c("Longitude", "Latitude"),
                              crs = 4326)  # WGS84
   
-  shp_name <- paste0(file_name_no_ext,'_clusterinfo.shp')
+  shp_name <- paste0(file_name_no_ext, '_clusterinfo.shp')
   
-  st_write(df_combined_sf, file.path(output_dir_shp, shp_name), delete_layer = TRUE)
+  st_write(df_combined_sf,
+           file.path(output_dir_shp, shp_name),
+           delete_layer = TRUE)
+  
+  
+  # Create xlsx with the cluster info for all the plots in one file
+  df_testsite_combined <- testsite_clusterinfo_df %>%
+    inner_join(df_clusters, by = "Testsite") %>%
+    rename(Cluster = ClusterHDBSCAN) %>%
+    arrange(Testsite)
+  
+  
+  if (file.exists(cluster_file_path)) {
+    # Read existing
+    existing_data <- read_xlsx(cluster_file_path)
+    
+    # Append new
+    combined_data <- bind_rows(existing_data, df_testsite_combined)
+    
+    # Save
+    write_xlsx(combined_data, path = cluster_file_path)
+    
+  } else {
+    # If file does not exist, just write the new one
+    write_xlsx(df_testsite_combined, path = cluster_file_path)
+  }
+  
 
-  
   bray_coords_transfomed <- bray_coords %>%
     select(ClusterHDBSCAN) %>%
     tibble::rownames_to_column("PlotIdentifier")
@@ -229,31 +250,27 @@ create_plots <- function(file_path, clusterinfo_df) {
   print(unique_clusters)
   
   # Append results to the data frame (inside the function)
-  assign("results_df", rbind(results_df, data.frame(
-    Testsite = file_name_no_ext,
-    simpson_index_PC = simpson_index,
-    Unique_Plant_Cummunities = unique_clusters,
-    stringsAsFactors = FALSE
-  )), envir = .GlobalEnv) # Use assign to modify the global variable
+  assign("results_df", rbind(
+    results_df,
+    data.frame(
+      Testsite = file_name_no_ext,
+      simpson_index_PC = simpson_index,
+      Unique_Plant_Cummunities = unique_clusters,
+      stringsAsFactors = FALSE
+    )
+  ), envir = .GlobalEnv) # Use assign to modify the global variable
   
 }
 
-
-files <- list.files(path = input_dir, pattern = "\\.xlsx$", full.names = TRUE)
+files <- list.files(path = input_dir,
+                    pattern = "\\.xlsx$",
+                    full.names = TRUE)
 
 for (file in files) {
   file_path <- file
   
-  # debug(create_plots)
-  create_plots(file_path,testsite_clusterinfo_df)
+  #debug(create_plots)
+  create_plots(file_path, testsite_clusterinfo_df)
 }
 
-# Print the final results data frame (outside the loop)
-# print(results_df)
-
 write_xlsx(results_df, path = file.path(output_dir_xlsx, "Cluster_Summary.xlsx"))
-
-
-
-
-
