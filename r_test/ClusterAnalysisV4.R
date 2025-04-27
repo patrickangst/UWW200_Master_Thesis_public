@@ -28,21 +28,21 @@ set.seed(123)
 
 # Define the indices to use
 indices <- c(
-  "silhouette",   # Compactness and separation
-  "dunn",         # Separation vs. compactness
-  "db",           # Davies-Bouldin
-  "ch",           # Calinski-Harabasz
-  "ratkowsky",    # Cluster separation
-  "ptbiserial",   # Point-biserial correlation
-  "cindex",       # Clustering index
-  "tracew",       # Within-group sum of squares
-  "sdindex",      # Standard deviation-based
-  "sdbw",         # SD-BW (between-within SD ratio)
-  "scott",        # Scott's index (parametric)
-  "marriot",      # Marriott's index (compactness)
-  "trcovw",       # Trace of within-cluster covariance
-  "duda",         # Duda-Hart
-  "pseudot2"      # Related to Duda-Hart
+  "ratkowsky",      # ✅ Works well in high-dimensional space
+  "ptbiserial",     # ✅ Good for continuous & spectral data
+  "sdbw",           # ✅ Handles overlapping, non-convex clusters
+  "ch",             # ✅ Fast, performs well on PCA-transformed data
+  "db",             # ✅ Simple, scalable to large rasters
+  "sdindex",        # ✅ Balances compactness and separation
+  "dunn",           # ✅ Good for well-separated clusters
+  "ball",           # ✅ Based on intra-cluster variance
+  "tracew",         # ✅ Evaluates compactness (use with others)
+  "friedman",       # ✅ Designed for multivariate data
+  "rubin",          # ✅ Similar to Friedman but less sensitive to noise
+  "pseudot2",       # ✅ Useful for hierarchical partition validation
+  "beale",          # ✅ Checks significant improvement between cluster steps
+  "trcovw",         # ✅ Similar to traceW, based on trace of within-covariance
+  "silhouette"      # ✅ Balanced metric: cohesion + separation
 )
 
 
@@ -59,6 +59,9 @@ for (hyperspectral_path in tif_files) {
   cat("\n============================\n")
   cat("Processing file:", hyperspectral_path, "\n")
   cat("============================\n")
+  
+  # Step 6: Save results
+  base_name <- file_path_sans_ext(basename(hyperspectral_path))
   
   # Step 1: Load the GeoTIFF
   geo_data <- rast(hyperspectral_path)
@@ -125,6 +128,10 @@ for (hyperspectral_path in tif_files) {
     }
     
     cat("    ➕ Accumulated cluster numbers so far:", best_cluster_numbers, "\n")
+    
+    workspace_filename <- file.path('nbclust_analysis', paste0(base_name, "_clusteranalysis.RData"))
+    save.image(file = workspace_filename)
+    
     rm(nb_result)
     gc()
   }
@@ -141,12 +148,6 @@ for (hyperspectral_path in tif_files) {
     cat("  ⚠️ No valid result for this file. Skipping save.\n")
     next
   }
-  
-  # Step 6: Save results
-  base_name <- file_path_sans_ext(basename(hyperspectral_path))
-  
-  workspace_filename <- file.path('nbclust_analysis', paste0(base_name, "_clusteranalysis.RData"))
-  save.image(file = workspace_filename)
   
   txt_filename <- file.path('nbclust_analysis', paste0(base_name, "_most_frequent_number.txt"))
   write(majority_vote_number, file = txt_filename)
