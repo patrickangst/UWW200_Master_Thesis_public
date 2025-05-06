@@ -25,11 +25,11 @@ my_data_filterd <- my_data %>%
     Unique_Plant_Cummunities,
     Unique_Habitat_Types,
     Unique_Plant_Types,
-    Unique_Spectral_Species
+    Unique_Spectral_Species_WSS
   )
 
 # Convert columns to numeric
-my_data_filterd$Unique_Spectral_Species <- as.numeric(my_data_filterd$Unique_Spectral_Species)
+my_data_filterd$Unique_Spectral_Species_WSS <- as.numeric(my_data_filterd$Unique_Spectral_Species_WSS)
 my_data_filterd$Unique_Plant_Types <- as.numeric(my_data_filterd$Unique_Plant_Types)
 my_data_filterd$Unique_Habitat_Types <- as.numeric(my_data_filterd$Unique_Habitat_Types)
 my_data_filterd$Unique_Plant_Cummunities <- as.numeric(my_data_filterd$Unique_Plant_Cummunities)
@@ -38,7 +38,7 @@ my_data_filterd$Unique_Plant_Cummunities <- as.numeric(my_data_filterd$Unique_Pl
 df_long <- my_data_filterd %>%
   pivot_longer(
     cols = c(
-      Unique_Spectral_Species,
+      Unique_Spectral_Species_WSS,
       Unique_Plant_Types,
       Unique_Habitat_Types,
       Unique_Plant_Cummunities
@@ -49,7 +49,7 @@ df_long <- my_data_filterd %>%
 
 # Set factor levels in the correct order
 df_long$Species_Count_Type <- factor(df_long$Species_Count_Type,
-                                     levels = c("Unique_Spectral_Species", "Unique_Plant_Types", "Unique_Habitat_Types", "Unique_Plant_Cummunities"))
+                                     levels = c("Unique_Spectral_Species_WSS", "Unique_Plant_Types", "Unique_Habitat_Types", "Unique_Plant_Cummunities"))
 
 # Create the bar plot
 barplot <- ggplot(df_long, aes(x = Testsite, y = Value, fill = Species_Count_Type)) +
@@ -72,7 +72,7 @@ barplot <- ggplot(df_long, aes(x = Testsite, y = Value, fill = Species_Count_Typ
   # Ensure correct colors and labels.  Use the *actual* values from the data.
   scale_fill_manual(
     values = c(
-      "Unique_Spectral_Species" = "#b85042",
+      "Unique_Spectral_Species_WSS" = "#b85042",
       "Unique_Plant_Types" = "#e2975d",
       "Unique_Habitat_Types" = "#4f6d7a",
       "Unique_Plant_Cummunities" = "#66a182"
