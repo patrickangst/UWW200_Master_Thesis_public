@@ -1,0 +1,15 @@
+<PAMDataset>
+  <PAMRasterBand band="1">
+    <Description>lyr1</Description>
+    <Histograms>
+      <HistItem>
+        <HistMin>0.515625</HistMin>
+        <HistMax>32.484375</HistMax>
+        <BucketCount>32</BucketCount>
+        <IncludeOutOfRange>0</IncludeOutOfRange>
+        <Approximate>0</Approximate>
+        <HistCounts>1659|779|1253|994|1378|1559|2125|2171|352|839|360|1162|2598|534|977|633|1329|1599|1127|1357|473|1446|2034|762|1344|1727|915|1250|685|1670|2041|1046</HistCounts>
+      </HistItem>
+    </Histograms>
+  </PAMRasterBand>
+</PAMDataset>

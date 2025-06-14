@@ -21,7 +21,7 @@ library(dplyr)
 perform_part_1 <- TRUE # perform part 1: Masking, rectification, PCA
 perform_part_2 <- TRUE # perform part 2: Create PC plot for analysis
 perform_part_3 <- TRUE # perform part 3: PC selection processing
-perform_part_4 <- FALSE # perform part 4: Cluster analysis
+perform_part_4 <- TRUE # perform part 4: Cluster analysis
 perform_part_5 <- TRUE # perform part 5: Calculate diversity
 
 # Set main folder
@@ -161,6 +161,12 @@ part_one <- function(test_site_folder_path) {
   cat(paste0('Start PCA for: ', test_site_name, '\n'))
 
   # perform biodivMapR PCA
+
+  Excluded_WL <- c(0, 442)
+  Excluded_WL <- rbind(Excluded_WL, c(1368, 1499))
+  Excluded_WL <- rbind(Excluded_WL, c(1779, 2055))
+  Excluded_WL <- rbind(Excluded_WL, c(2400, 2501))
+
   PCA_Output <- biodivMapR::perform_PCA(
     Input_Image_File = image_rectified_file_path,
     Input_Mask_File = mask_file_path,
@@ -171,7 +177,8 @@ part_one <- function(test_site_folder_path) {
     FilterPCA = FALSE,
     nbCPU = num_cores_to_use,
     MaxRAM = MaxRAM,
-    nb_partitions = nb_partitions
+    nb_partitions = nb_partitions,
+    Excluded_WL = Excluded_WL
   )
 
   # Save the list as an RDS file
