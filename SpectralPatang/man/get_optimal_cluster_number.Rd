@@ -6,7 +6,7 @@
 \usage{
 get_optimal_cluster_number(
   Image_File_Path,
-  Downsample = TRUE,
+  Downsample = FALSE,
   Downsample_factor = 2,
   Downsample_function = "sd",
   Min_Cluster = 2,

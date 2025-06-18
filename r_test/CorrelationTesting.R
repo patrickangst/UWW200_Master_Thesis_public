@@ -210,13 +210,13 @@ ggplot(lm_model_input, aes(x = Unique_Spectral_Species_WSS, y = Unique_Plant_Typ
   geom_smooth(method = "lm", se = TRUE)
 
 # Model Plant Communities vs. Habitat type
-model_ht_pc_lm <- lm(Unique_Habitat_Types ~ Unique_Plant_Cummunities,
-                             data = lm_model_input)
-# anova(model_plant_species_lm)
-par(mfrow = c(2, 2))
-plot(model_ht_pc_lm)
-
-summary(model_ht_pc_lm)
-ggplot(lm_model_input, aes(x = Unique_Habitat_Types, y = Unique_Plant_Cummunities)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = TRUE)
+# model_ht_pc_lm <- lm(Unique_Habitat_Types ~ Unique_Plant_Cummunities,
+#                              data = lm_model_input)
+# # anova(model_plant_species_lm)
+# par(mfrow = c(2, 2))
+# plot(model_ht_pc_lm)
+# 
+# summary(model_ht_pc_lm)
+# ggplot(lm_model_input, aes(x = Unique_Habitat_Types, y = Unique_Plant_Cummunities)) +
+#   geom_point() +
+#   geom_smooth(method = "lm", se = TRUE)

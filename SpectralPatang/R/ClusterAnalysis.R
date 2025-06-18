@@ -87,7 +87,7 @@
 
 
 get_optimal_cluster_number <- function(Image_File_Path,
-                                       Downsample = TRUE,
+                                       Downsample = FALSE,
                                        Downsample_factor = 2,
                                        Downsample_function = "sd",
                                        Min_Cluster = 2,
@@ -115,14 +115,41 @@ get_optimal_cluster_number <- function(Image_File_Path,
   # Define Range of Clusters
   k.values <- Min_Cluster:Max_Cluster
 
-  # Define Clustering Metrics Function
-  compute_wss <- function(data, k, seed = 123) {
-    set.seed(seed)
-    kmeans(data, centers = k, nstart = 10)$tot.withinss
+  # # Define Clustering Metrics Function
+  # compute_wss <- function(data, k, seed = 123) {
+  #   set.seed(seed)
+  #   kmeans(data, centers = k, nstart = 5)$tot.withinss
+  # }
+  #
+  # # Setup Parallel Cluster
+  # cl <- parallel::makeCluster(num_cores)
+  #
+  # # Export required objects and functions to the worker nodes
+  # parallel::clusterExport(
+  #   cl,
+  #   varlist = c("kmeans_clustering_data", "compute_wss"),
+  #   envir = environment()
+  # )
+  #
+  # # Compute Metrics in Parallel
+  # wss_values <- parallel::parSapply(cl, k.values, function(k) {
+  #   compute_wss(kmeans_clustering_data, k)
+  # })
+  #
+  # # Stop Cluster
+  # parallel::stopCluster(cl)
+
+  # Define Clustering Metrics Function (without set.seed inside)
+  compute_wss <- function(data, k) { # Removed 'seed' parameter
+    kmeans(data, centers = k, nstart = 5)$tot.withinss
   }
 
   # Setup Parallel Cluster
   cl <- parallel::makeCluster(num_cores)
+
+  # Set seed for parallel workers (critical for reproducibility)
+  set.seed(123) # Set master seed
+  parallel::clusterSetRNGStream(cl, 123) # Distribute unique streams to workers
 
   # Export required objects and functions to the worker nodes
   parallel::clusterExport(
@@ -133,7 +160,7 @@ get_optimal_cluster_number <- function(Image_File_Path,
 
   # Compute Metrics in Parallel
   wss_values <- parallel::parSapply(cl, k.values, function(k) {
-    compute_wss(kmeans_clustering_data, k)
+    compute_wss(kmeans_clustering_data, k) # No seed passed here
   })
 
   # Stop Cluster

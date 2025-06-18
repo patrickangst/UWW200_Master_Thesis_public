@@ -1,3 +1,40 @@
+# ------------------------------------------------------------------------------
+# Description:
+# To assess the relationship between field-assigned vegetation clusters and
+# spectral species distributions derived from remote sensing data, a custom
+# R script was developed. The analysis involved multiple geospatial and
+# statistical steps. First, all raster files representing spectral species
+# compositions (in .tiff format) were loaded from a specified directory. Each
+# raster corresponded to a different test site. Plot-level metadata, including
+# GPS coordinates and manually assigned vegetation clusters, were read from an
+# Excel file and filtered to match the respective test sites based on filename
+# identifiers.
+#
+# The spatial coordinates of the plots were converted to simple features (sf)
+# objects and reprojected if their coordinate reference system differed from
+# that of the raster. For each plot, the raster value at its location—representing
+# the spectral class—was extracted using bilinear interpolation. Plot points
+# with a raster value of zero (assumed to represent background or no-data) were
+# excluded from the analysis. A contingency table was then constructed for each
+# site, cross-tabulating the observed vegetation clusters and the extracted
+# spectral classes.
+#
+# If the contingency table had more than one row and column, indicating
+# sufficient variability, three types of statistical tests were performed to
+# evaluate the association between clusters and spectral classes: a Chi-squared
+# test, Fisher’s exact test, and a G-test. Fisher’s exact test was used for
+# smaller sample sizes; if it failed due to computational limitations
+# (FEXACT errors), a simulated version was automatically applied. The statistical
+# significance of each test was classified as “Strong” (p < 0.01),
+# “Moderate” (0.01 ≤ p < 0.05), or “None” (p ≥ 0.05). Simulated Fisher test
+# results were explicitly labeled to distinguish them from exact computations.
+#
+# All test results—including p-values and corresponding significance levels—were
+# compiled into a summary data frame and exported as an Excel file. This procedure
+# allowed for a site-by-site quantitative evaluation of the relationship between
+# remotely sensed spectral patterns and ecologically defined vegetation clusters.
+# ------------------------------------------------------------------------------
+
 rm(list = ls(all = TRUE))
 gc()
 graphics.off()
