@@ -220,3 +220,4 @@ ggplot(lm_model_input, aes(x = Unique_Spectral_Species_WSS, y = Unique_Plant_Typ
 # ggplot(lm_model_input, aes(x = Unique_Habitat_Types, y = Unique_Plant_Cummunities)) +
 #   geom_point() +
 #   geom_smooth(method = "lm", se = TRUE)
+
