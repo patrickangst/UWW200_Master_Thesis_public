@@ -199,6 +199,7 @@ files <- list.files(path = input_dir, pattern = "\\.xlsx$", full.names = TRUE)
 
 # Process each file
 for (file in files) {
+  debug(create_plots)
   create_plots(file, testsite_clusterinfo_df)
 }
 
