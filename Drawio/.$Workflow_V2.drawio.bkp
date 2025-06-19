@@ -79,7 +79,7 @@
         <mxCell id="8ISdjuoxh2IjlnjVrgte-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="8ISdjuoxh2IjlnjVrgte-30" target="8ISdjuoxh2IjlnjVrgte-32" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="8ISdjuoxh2IjlnjVrgte-30" value="Group into teststites" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="8ISdjuoxh2IjlnjVrgte-30" value="Group into test stites" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="552" y="190" width="250" height="40" as="geometry" />
         </mxCell>
         <mxCell id="8ISdjuoxh2IjlnjVrgte-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="8ISdjuoxh2IjlnjVrgte-32" target="8ISdjuoxh2IjlnjVrgte-36" edge="1">
@@ -88,7 +88,7 @@
         <mxCell id="THLXYA2wBlbZ48H8L5lp-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="8ISdjuoxh2IjlnjVrgte-32" target="THLXYA2wBlbZ48H8L5lp-6" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="8ISdjuoxh2IjlnjVrgte-32" value="Define plant communities on testsite level" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="8ISdjuoxh2IjlnjVrgte-32" value="Define plant communities on test site level" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="552" y="250" width="250" height="40" as="geometry" />
         </mxCell>
         <mxCell id="8ISdjuoxh2IjlnjVrgte-36" value="Extract relevant indices&lt;div&gt;(p&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;lant community, plant species, habitat type)&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
