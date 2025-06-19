@@ -11,6 +11,7 @@ library(tools)
 tif_folder <- "hs"
 min_clusters <- 2
 max_clusters <- 50
+nstart <- 10
 set.seed(123)
 
 # Downsampling toggle
@@ -27,7 +28,7 @@ compute_optimal_k <- function(data_matrix, min_k = 2, max_k = 50) {
   
   # Compute WSS
   wss_values <- sapply(min_k:max_k, function(k) {
-    kmeans(scaled_data, centers = k, nstart = 25, trace = FALSE)$tot.withinss
+    kmeans(scaled_data, centers = k, nstart = nstart, trace = FALSE)$tot.withinss
   })
   
   # Calculate second derivative
