@@ -20,7 +20,7 @@ clustering_index_name <- 'Unique_Spectral_Species_WCSS'
 index_name <-sub(".*_(.*)$", "\\1", clustering_index_name)
 
 metrics_data <- read_excel(file.path(plot_metrics_path, "Plot_Metrics_Combined.xlsx"),
-                           sheet = 'Sheet1')
+                           sheet = 'part_e')
 output_folder_path <- 'correlation_plots'
 
 # Convert to data frame
@@ -52,9 +52,9 @@ cor_metrics <- data.frame(
     "Unique_Plant_Types"
   ),
   filename = c(
-    "correlation_plant_communities.png",
-    "correlation_habitat_types.png",
-    "correlation_plant_types.png"
+    "correlation_plant_communities_part_e.png",
+    "correlation_habitat_types_part_e.png",
+    "correlation_plant_species_part_e.png"
   )
 )
 
