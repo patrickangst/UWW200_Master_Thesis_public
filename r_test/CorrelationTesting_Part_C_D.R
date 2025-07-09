@@ -178,6 +178,9 @@ model_plant_communities_lm <- lm(Unique_Plant_Cummunities ~ Unique_Spectral_Spec
 par(mfrow = c(2, 2))
 plot(model_plant_communities_lm)
 
+
+
+
 summary(model_plant_communities_lm)
 ggplot(lm_model_input, aes(x = Unique_Spectral_Species_WCSS, y = Unique_Plant_Cummunities)) +
   geom_point() +
