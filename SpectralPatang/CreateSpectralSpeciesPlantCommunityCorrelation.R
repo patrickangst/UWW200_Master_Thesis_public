@@ -10,7 +10,7 @@ library(dplyr)
 library(sf)
 
 # Paths
-tiff_name <- 'FLXTWRZONA_SD_4_SpectralSpecies'
+tiff_name <- 'AN_TJ_1_SpectralSpecies'
 tiff_path <- paste0("data/MasterThesis/03_Spectral_Species/", tiff_name, ".tiff")
 excel_file <- "data/MasterThesis/11_PlotClusters/Cluster_Assignement.xlsx"
 

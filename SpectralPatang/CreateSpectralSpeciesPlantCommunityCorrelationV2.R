@@ -1,40 +1,3 @@
-# ------------------------------------------------------------------------------
-# Description:
-# To assess the relationship between field-assigned vegetation clusters and
-# spectral species distributions derived from remote sensing data, a custom
-# R script was developed. The analysis involved multiple geospatial and
-# statistical steps. First, all raster files representing spectral species
-# compositions (in .tiff format) were loaded from a specified directory. Each
-# raster corresponded to a different test site. Plot-level metadata, including
-# GPS coordinates and manually assigned vegetation clusters, were read from an
-# Excel file and filtered to match the respective test sites based on filename
-# identifiers.
-#
-# The spatial coordinates of the plots were converted to simple features (sf)
-# objects and reprojected if their coordinate reference system differed from
-# that of the raster. For each plot, the raster value at its location—representing
-# the spectral class—was extracted using bilinear interpolation. Plot points
-# with a raster value of zero (assumed to represent background or no-data) were
-# excluded from the analysis. A contingency table was then constructed for each
-# site, cross-tabulating the observed vegetation clusters and the extracted
-# spectral classes.
-#
-# If the contingency table had more than one row and column, indicating
-# sufficient variability, three types of statistical tests were performed to
-# evaluate the association between clusters and spectral classes: a Chi-squared
-# test, Fisher’s exact test, and a G-test. Fisher’s exact test was used for
-# smaller sample sizes; if it failed due to computational limitations
-# (FEXACT errors), a simulated version was automatically applied. The statistical
-# significance of each test was classified as “Strong” (p < 0.01),
-# “Moderate” (0.01 ≤ p < 0.05), or “None” (p ≥ 0.05). Simulated Fisher test
-# results were explicitly labeled to distinguish them from exact computations.
-#
-# All test results—including p-values and corresponding significance levels—were
-# compiled into a summary data frame and exported as an Excel file. This procedure
-# allowed for a site-by-site quantitative evaluation of the relationship between
-# remotely sensed spectral patterns and ecologically defined vegetation clusters.
-# ------------------------------------------------------------------------------
-
 rm(list = ls(all = TRUE))
 gc()
 graphics.off()
@@ -42,7 +5,7 @@ graphics.off()
 # Load libraries
 library(terra)
 library(readxl)
-library(ggplot2)
+library(ggplot2) # Not used in the provided code, but good to keep if you use it elsewhere
 library(dplyr)
 library(sf)
 library(writexl)
@@ -56,20 +19,24 @@ output_excel <- "data/MasterThesis/11_PlotClusters/Cluster_Raster_Stats.xlsx"
 # Read Excel file once
 cluster_info <- read_excel(excel_file)
 
-# Initialize results data frame
+# Initialize results data frame with all columns including G-test
 results_df <- data.frame(
   Testsite = character(),
   Chi_p_value = numeric(),
   Chi_significance = character(),
   Fisher_p_value = numeric(),
   Fisher_significance = character(),
+  G_p_value = numeric(),
+  G_significance = character(),
   stringsAsFactors = FALSE
 )
 
 # List all .tiff files
-tiff_files <- list.files(path = tiff_dir,
-                         pattern = "\\.tiff$",
-                         full.names = TRUE)
+tiff_files <- list.files(
+  path = tiff_dir,
+  pattern = "\\.tiff$",
+  full.names = TRUE
+)
 
 # Iterate over all tiff files
 for (tiff_path in tiff_files) {
@@ -86,9 +53,11 @@ for (tiff_path in tiff_files) {
 
   if (nrow(matching_entries) > 0) {
     # Convert to sf
-    points_sf <- st_as_sf(matching_entries,
-                          coords = c("Longitude", "Latitude"),
-                          crs = 4326)
+    points_sf <- st_as_sf(
+      matching_entries,
+      coords = c("Longitude", "Latitude"),
+      crs = 4326
+    )
 
     # Transform if CRS differs
     if (st_crs(points_sf) != st_crs(r)) {
@@ -96,83 +65,78 @@ for (tiff_path in tiff_files) {
     }
 
     # Extract raster values
-    extracted_values <- terra::extract(r, vect(points_sf))
+    # Use method = "bilinear" explicitly if that's your intention as per description
+    extracted_values <- terra::extract(r, vect(points_sf), method = "bilinear")
     matching_entries$Raster_Value <- extracted_values[, 2]
 
     # Filter and prepare
     matching_entries <- matching_entries %>%
-      filter(Raster_Value != 0) %>%
-      mutate(Raster_Value = as.factor(Raster_Value),
-             Cluster = as.factor(Cluster))
+      filter(Raster_Value != 0) %>% # Exclude background/no-data
+      mutate(
+        Raster_Value = as.factor(Raster_Value),
+        Cluster = as.factor(Cluster)
+      )
 
-    # Only proceed if valid contingency table
+    # Only proceed if valid contingency table (more than one row AND column)
     contingency_table <- table(matching_entries$Cluster, matching_entries$Raster_Value)
 
     if (all(dim(contingency_table) > 1)) {
-      # Chi-squared test
-      chi_result <- chisq.test(contingency_table)
-      chi_sig <- ifelse(
-        chi_result$p.value < 0.01,
-        "Strong",
-        ifelse(chi_result$p.value < 0.05, "Moderate", "None")
-      )
-
-      # Initialize Fisher's p-value and significance
-      fisher_p_value <- NA
-      fisher_sig <- "Error/NA"
-      fischer_error <- FALSE
-
-      # Fisher's exact test
-      fisher_result <- tryCatch({
-        fisher_test_result <- fisher.test(contingency_table)
-        fisher_p_value <- fisher_test_result$p.value
-
-        fisher_test_result # Return the result object
-      }, error = function(e) {
-        if (grepl("FEXACT error 501", e$message) ||
-            grepl("FEXACT error 5", e$message)) {
-          cat(
-            "Exact Fisher's test failed due to FEXACT error (501 or 5). Performing simulation...\n"
-          )
-          fischer_error <<- TRUE
-          fisher_test_result_simulated <- fisher.test(contingency_table, simulate.p.value = TRUE)
-          fisher_p_value <- fisher_test_result_simulated$p.value
-          fisher_test_result_simulated # Return the simulated result object
+      # Helper function to get significance level
+      get_significance <- function(p_value, is_simulated = FALSE) {
+        suffix <- if (is_simulated) " (Sim.)" else ""
+        if (p_value < 0.01) {
+          return(paste0("Strong", suffix))
+        } else if (p_value < 0.05) {
+          return(paste0("Moderate", suffix))
         } else {
-          stop(e)
+          return(paste0("None", suffix))
         }
-      })
-
-      fischer_suffix <- ""
-      if (fischer_error) {
-        fischer_suffix <- " (Sim.)"
       }
 
-      fisher_sig <- ifelse(
-        fisher_result$p.value < 0.01,
-        paste0("Strong", fischer_suffix),
-        ifelse(
-          fisher_result$p.value < 0.05,
-          paste0("Moderate", fischer_suffix),
-          paste0("None", fischer_suffix)
-        )
-      )
+      # Chi-squared test
+      chi_result <- tryCatch({
+        chisq.test(contingency_table)
+      }, warning = function(w) {
+        message(paste("Chi-squared warning for", tiff_name_clean, ":", w$message))
+        chisq.test(contingency_table) # Still return the result
+      })
+      chi_sig <- get_significance(chi_result$p.value)
 
+      # Fisher's exact test
+      fisher_p_value <- NA
+      fisher_sig <- "Error/NA"
+      is_fisher_simulated <- FALSE
 
+      fisher_result <- tryCatch({
+        # Try exact test first
+        fisher.test(contingency_table)
+      }, error = function(e) {
+        # Catch any FEXACT error and switch to simulation
+        if (grepl("FEXACT error", e$message)) {
+          message(
+            paste(
+              "Exact Fisher's test failed for",
+              tiff_name_clean,
+              "due to FEXACT error (",
+              e$message,
+              "). Performing simulation..."
+            )
+          )
+          is_fisher_simulated <<- TRUE
+          fisher.test(contingency_table, simulate.p.value = TRUE, B = 10000) # Increased B for more accuracy
+        } else {
+          stop(e) # Re-throw other unexpected errors
+        }
+      })
+      fisher_p_value <- fisher_result$p.value
+      fisher_sig <- get_significance(fisher_p_value, is_fisher_simulated)
 
       # G-test
-      gtest_p_value <- NA
-      gtest_sig <- "Error/NA"
-      gtest_available <- FALSE
-
       gtest_result <- GTest(contingency_table)
       gtest_p_value <- gtest_result$p.value
-      gtest_sig <- ifelse(gtest_p_value < 0.01,
-                          "Strong",
-                          ifelse(gtest_p_value < 0.05, "Moderate", "None"))
-      gtest_available <- TRUE
+      gtest_sig <- get_significance(gtest_p_value)
 
-      # Save results (expanded with G-test)
+      # Save results
       results_df <- rbind(
         results_df,
         data.frame(
@@ -181,42 +145,29 @@ for (tiff_path in tiff_files) {
           Chi_significance = chi_sig,
           Fisher_p_value = fisher_p_value,
           Fisher_significance = fisher_sig,
-          G_p_value = ifelse(gtest_available, gtest_p_value, NA),
-          G_significance = ifelse(gtest_available, gtest_sig, "Not available"),
+          G_p_value = gtest_p_value,
+          G_significance = gtest_sig,
           stringsAsFactors = FALSE
         )
       )
-
-
-
-
-
-
-      # Save results
-      # results_df <- rbind(
-      #   results_df,
-      #   data.frame(
-      #     Testsite = tiff_name_clean,
-      #     Chi_p_value = chi_result$p.value,
-      #     Chi_significance = chi_sig,
-      #     Fisher_p_value = fisher_p_value,
-      #     Fisher_significance = fisher_sig,
-      #     stringsAsFactors = FALSE
-      #   )
-      # )
     } else {
-      message(paste(
-        "Skipping",
-        tiff_name_clean,
-        "- contingency table too small"
-      ))
+      message(
+        paste(
+          "Skipping",
+          tiff_name_clean,
+          "- contingency table too small or single dimension after filtering."
+        )
+      )
     }
   } else {
     message(paste("No matching entries found for", tiff_name_clean))
   }
-
 }
 
 # Save to Excel
-write_xlsx(results_df, output_excel)
-cat("Results saved to:", output_excel, "\n")
+if (nrow(results_df) > 0) {
+  write_xlsx(results_df, output_excel)
+  cat("Results saved to:", output_excel, "\n")
+} else {
+  cat("No results to save. No valid test sites found or processed.\n")
+}

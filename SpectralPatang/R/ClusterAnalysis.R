@@ -86,107 +86,189 @@
 
 
 
+# get_optimal_cluster_number <- function(Image_File_Path,
+#                                        Downsample = FALSE,
+#                                        Downsample_factor = 2,
+#                                        Downsample_function = "sd",
+#                                        Min_Cluster = 2,
+#                                        Max_Cluster = 50) {
+#   # Load the raster image
+#   pca_hs_image <- terra::rast(Image_File_Path)
+#
+#   if(Downsample){
+#     pca_hs_image <- terra::aggregate(pca_hs_image,
+#                                                  fact = Downsample_factor,
+#                                                  fun = Downsample_function,
+#                                                  na.rm = TRUE)
+#   }
+#
+#   pca_data <- as.matrix(terra::values(pca_hs_image))
+#
+#   # Define cores for parallel processing
+#   num_cores <- parallel::detectCores() - 2
+#
+#   # Prepare the data
+#   pca_data_na_omitted <- na.omit(pca_data)  # Clean the data (remove NAs)
+#   pca_data_na_omitted_scaled <- scale(pca_data_na_omitted)  # Standardize data for clustering
+#   kmeans_clustering_data <- pca_data_na_omitted_scaled
+#
+#   # Define Range of Clusters
+#   k.values <- Min_Cluster:Max_Cluster
+#
+#   # # Define Clustering Metrics Function
+#   # compute_wss <- function(data, k, seed = 123) {
+#   #   set.seed(seed)
+#   #   kmeans(data, centers = k, nstart = 5)$tot.withinss
+#   # }
+#   #
+#   # # Setup Parallel Cluster
+#   # cl <- parallel::makeCluster(num_cores)
+#   #
+#   # # Export required objects and functions to the worker nodes
+#   # parallel::clusterExport(
+#   #   cl,
+#   #   varlist = c("kmeans_clustering_data", "compute_wss"),
+#   #   envir = environment()
+#   # )
+#   #
+#   # # Compute Metrics in Parallel
+#   # wss_values <- parallel::parSapply(cl, k.values, function(k) {
+#   #   compute_wss(kmeans_clustering_data, k)
+#   # })
+#   #
+#   # # Stop Cluster
+#   # parallel::stopCluster(cl)
+#
+#   # Define Clustering Metrics Function (without set.seed inside)
+#   compute_wss <- function(data, k) { # Removed 'seed' parameter
+#     kmeans(data, centers = k, nstart = 5)$tot.withinss
+#   }
+#
+#   # Setup Parallel Cluster
+#   cl <- parallel::makeCluster(num_cores)
+#
+#   # Set seed for parallel workers (critical for reproducibility)
+#   set.seed(123) # Set master seed
+#   parallel::clusterSetRNGStream(cl, 123) # Distribute unique streams to workers
+#
+#   # Export required objects and functions to the worker nodes
+#   parallel::clusterExport(
+#     cl,
+#     varlist = c("kmeans_clustering_data", "compute_wss"),
+#     envir = environment()
+#   )
+#
+#   # Compute Metrics in Parallel
+#   wss_values <- parallel::parSapply(cl, k.values, function(k) {
+#     compute_wss(kmeans_clustering_data, k) # No seed passed here
+#   })
+#
+#   # Stop Cluster
+#   parallel::stopCluster(cl)
+#
+#   # Create Data Frame with Metrics
+#   cluster_metrics <- data.frame(k = k.values, WSS = wss_values)
+#
+#   # Determine Optimal Clusters
+#   # Elbow Method: Find the point where the second derivative is minimized
+#   diff_wss <- diff(cluster_metrics$WSS)
+#   diff2_wss <- diff(diff_wss)
+#   optimal_clusters_elbow <- which.min(diff2_wss) + Min_Cluster  # Adjust by Min_Cluster
+#
+#   cat("Optimal number of clusters (Elbow Method):",
+#       optimal_clusters_elbow,
+#       "\n")
+#
+#   # Save to a text file
+#   output_folder_path <- dirname(Image_File_Path)
+#   output_file_path <- file.path(output_folder_path,'optimal_number_of_clusters.txt')
+#   write(optimal_clusters_elbow, file = output_file_path)
+#
+#   return(optimal_clusters_elbow)
+#
+# }
+
+
 get_optimal_cluster_number <- function(Image_File_Path,
                                        Downsample = FALSE,
                                        Downsample_factor = 2,
                                        Downsample_function = "sd",
                                        Min_Cluster = 2,
                                        Max_Cluster = 50) {
-  # Load the raster image
-  pca_hs_image <- terra::rast(Image_File_Path)
 
-  if(Downsample){
-    pca_hs_image <- terra::aggregate(pca_hs_image,
-                                                 fact = Downsample_factor,
-                                                 fun = Downsample_function,
-                                                 na.rm = TRUE)
+  nstart_values <- c(1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)
+  set.seed(123)
+
+  cat("\nProcessing file:", Image_File_Path, "\n")
+
+  # Load the PCA GeoTIFF
+  pca_data <- rast(Image_File_Path)
+
+  # Optional downsampling
+  if (Downsample) {
+    fun <- match.fun(Downsample_function)
+    pca_data <- aggregate(pca_data, fact = Downsample_factor, fun = fun)
   }
 
-  pca_data <- as.matrix(terra::values(pca_hs_image))
+  # Convert raster to matrix
+  pca_matrix <- as.matrix(terra::values(pca_data))
 
-  # Define cores for parallel processing
-  num_cores <- parallel::detectCores() - 2
+  # Track NA positions
+  na_rows <- apply(pca_matrix, 1, function(x) any(is.na(x)))
 
-  # Prepare the data
-  pca_data_na_omitted <- na.omit(pca_data)  # Clean the data (remove NAs)
-  pca_data_na_omitted_scaled <- scale(pca_data_na_omitted)  # Standardize data for clustering
-  kmeans_clustering_data <- pca_data_na_omitted_scaled
+  # Clean matrix
+  pca_matrix_clean <- na.omit(pca_matrix)
 
-  # Define Range of Clusters
-  k.values <- Min_Cluster:Max_Cluster
-
-  # # Define Clustering Metrics Function
-  # compute_wss <- function(data, k, seed = 123) {
-  #   set.seed(seed)
-  #   kmeans(data, centers = k, nstart = 5)$tot.withinss
-  # }
-  #
-  # # Setup Parallel Cluster
-  # cl <- parallel::makeCluster(num_cores)
-  #
-  # # Export required objects and functions to the worker nodes
-  # parallel::clusterExport(
-  #   cl,
-  #   varlist = c("kmeans_clustering_data", "compute_wss"),
-  #   envir = environment()
-  # )
-  #
-  # # Compute Metrics in Parallel
-  # wss_values <- parallel::parSapply(cl, k.values, function(k) {
-  #   compute_wss(kmeans_clustering_data, k)
-  # })
-  #
-  # # Stop Cluster
-  # parallel::stopCluster(cl)
-
-  # Define Clustering Metrics Function (without set.seed inside)
-  compute_wss <- function(data, k) { # Removed 'seed' parameter
-    kmeans(data, centers = k, nstart = 5)$tot.withinss
+  if (nrow(pca_matrix_clean) < Max_Cluster) {
+    warning("Insufficient data points after removing NA. Skipping.")
+    return(NULL)
   }
 
-  # Setup Parallel Cluster
-  cl <- parallel::makeCluster(num_cores)
+  # Scale the data
+  scaled_pca_matrix <- scale(pca_matrix_clean)
 
-  # Set seed for parallel workers (critical for reproducibility)
-  set.seed(123) # Set master seed
-  parallel::clusterSetRNGStream(cl, 123) # Distribute unique streams to workers
+  # Find best nstart
+  best_nstart <- nstart_values[1]
+  lowest_wss <- Inf
 
-  # Export required objects and functions to the worker nodes
-  parallel::clusterExport(
-    cl,
-    varlist = c("kmeans_clustering_data", "compute_wss"),
-    envir = environment()
-  )
+  cat("Evaluating nstart values...\n")
+  for (nstart in nstart_values) {
+    wss <- kmeans(scaled_pca_matrix, centers = Min_Cluster, nstart = nstart)$tot.withinss
+    if (wss < lowest_wss) {
+      lowest_wss <- wss
+      best_nstart <- nstart
+    }
+  }
+  cat("Best nstart:", best_nstart, "\n")
 
-  # Compute Metrics in Parallel
-  wss_values <- parallel::parSapply(cl, k.values, function(k) {
-    compute_wss(kmeans_clustering_data, k) # No seed passed here
+  # Evaluate WSS across cluster range
+  potential_k_values <- Min_Cluster:Max_Cluster
+  wss_values <- sapply(potential_k_values, function(k) {
+    kmeans(scaled_pca_matrix, centers = k, nstart = best_nstart)$tot.withinss
   })
 
-  # Stop Cluster
-  parallel::stopCluster(cl)
-
-  # Create Data Frame with Metrics
-  cluster_metrics <- data.frame(k = k.values, WSS = wss_values)
-
-  # Determine Optimal Clusters
-  # Elbow Method: Find the point where the second derivative is minimized
-  diff_wss <- diff(cluster_metrics$WSS)
+  # Compute second derivative for elbow
+  diff_wss <- diff(wss_values)
   diff2_wss <- diff(diff_wss)
-  optimal_clusters_elbow <- which.min(diff2_wss) + Min_Cluster  # Adjust by Min_Cluster
 
-  cat("Optimal number of clusters (Elbow Method):",
-      optimal_clusters_elbow,
-      "\n")
+  optimal_clusters_elbow <- Min_Cluster
+  if (length(diff2_wss) > 0) {
+    elbow_index <- which.min(diff2_wss) + 1
+    optimal_clusters_elbow <- potential_k_values[elbow_index]
+  } else {
+    cat("Not enough points to compute elbow. Using Min_Cluster.\n")
+  }
+
+  cat("Optimal number of clusters (Elbow Method):", optimal_clusters_elbow, "\n")
 
   # Save to a text file
   output_folder_path <- dirname(Image_File_Path)
-  output_file_path <- file.path(output_folder_path,'optimal_number_of_clusters.txt')
+  output_file_path <- file.path(output_folder_path, 'optimal_number_of_clusters.txt')
   write(optimal_clusters_elbow, file = output_file_path)
 
   return(optimal_clusters_elbow)
-
 }
+
 
 #debug(get_optimal_cluster_number)
 # path_name <- get_optimal_cluster_number(
