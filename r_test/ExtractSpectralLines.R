@@ -95,6 +95,46 @@ signature_plot <- ggplot(
 print(signature_plot)
 
 
+################################################################################
+################################################################################
+
+AN_TJ_1_pixel_values_long <- AN_TJ_1_pixel_values_long %>%
+  mutate(
+    Reflectance = case_when(
+      Wavelength >= 191 & Wavelength <= 211 ~ NA_real_,
+      Wavelength >= 285 & Wavelength <= 321 ~ NA_real_,
+      Wavelength >= 416 ~ NA_real_,
+      TRUE ~ Reflectance
+    )
+  )
+
+# Ensure wavelengths are sorted correctly
+unique_wavelengths_signature <- sort(unique(AN_TJ_1_pixel_values_long$Wavelength))
+
+
+
+# Generate spectral signature plot
+signature_plot <- ggplot(
+  AN_TJ_1_pixel_values_long,
+  aes(
+    x = Wavelength,
+    y = Reflectance,
+    color = HbttTyp,
+    group = PltIdnt
+  )
+) +
+  geom_line() +
+  labs(x = "Wavelength (nm)", y = "Reflectance", title = paste0("Spectral Signatures ",testsite_name)) +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(min(AN_TJ_1_pixel_values_long$Wavelength), max(AN_TJ_1_pixel_values_long$Wavelength), by = 5)) + # Example: breaks every 50 nm
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_color_viridis(discrete = TRUE)
+
+# Display the plot
+print(signature_plot)
+
+################################################################################
+################################################################################
 
 
 
