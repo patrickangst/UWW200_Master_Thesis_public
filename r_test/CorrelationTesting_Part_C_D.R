@@ -49,7 +49,7 @@ cor_metrics <- data.frame(
   x = c(
     "Unique_Plant_Cummunities",
     "Unique_Habitat_Types",
-    "Unique_Plant_Types"
+    "Unique_Plant_Species"
   ),
   filename = c(
     "correlation_plant_communities_part_c_d.png",
@@ -166,7 +166,7 @@ message("Saved correlation summary CSV.")
 # Statistical testing
 ######
 lm_model_input <- metrics_data_df %>%
-  select(Testsite,Unique_Plant_Cummunities,Unique_Spectral_Species_WCSS,Unique_Habitat_Types,Unique_Plant_Types) %>%
+  select(Testsite,Unique_Plant_Cummunities,Unique_Spectral_Species_WCSS,Unique_Habitat_Types,Unique_Plant_Species) %>%
   mutate(Testsite = as.factor(Testsite))
 
 str(lm_model_input)
@@ -200,7 +200,7 @@ ggplot(lm_model_input, aes(x = Unique_Spectral_Species_WCSS, y = Unique_Habitat_
   geom_smooth(method = "lm", se = TRUE)
 
 # Model Plant Species
-model_plant_species_lm <- lm(Unique_Plant_Types ~ Unique_Spectral_Species_WCSS,
+model_plant_species_lm <- lm(Unique_Plant_Species ~ Unique_Spectral_Species_WCSS,
                              data = lm_model_input)
 # anova(model_plant_species_lm)
 par(mfrow = c(2, 2))
@@ -208,7 +208,7 @@ plot(model_plant_species_lm)
 
 summary(model_plant_species_lm)
 
-# ggplot(lm_model_input, aes(x = Unique_Spectral_Species_WCSS, y = Unique_Plant_Types)) +
+# ggplot(lm_model_input, aes(x = Unique_Spectral_Species_WCSS, y = Unique_Plant_Species)) +
 #   geom_point() +
 #   geom_smooth(method = "lm", se = TRUE)
 

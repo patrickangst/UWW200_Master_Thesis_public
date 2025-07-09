@@ -1,9 +1,4 @@
 "Metric","Variable","R","P_value","Abs_R","Interpretation"
 "Plant Communities","Unique_Plant_Cummunities",-0.816,0.221,0.816,"Strong negative"
 "Habitat Types","Unique_Habitat_Types",1,0.333,1,"Very strong positive"
-"Plant Species","Unique_Plant_Types",1,0.333,1,"Very strong positive"
-
-"Metric","Variable","R","P_value","Abs_R","Interpretation"
-"Plant Communities","Unique_Plant_Cummunities",-0.014,0.965,0.014,"Very weak negative"
-"Habitat Types","Unique_Habitat_Types",-0.23,0.45,0.23,"Very weak negative"
-"Plant Species","Unique_Plant_Types",0.355,0.233,0.355,"Weak positive"
+"Plant Species","Unique_Plant_Species",1,0.333,1,"Very strong positive"
