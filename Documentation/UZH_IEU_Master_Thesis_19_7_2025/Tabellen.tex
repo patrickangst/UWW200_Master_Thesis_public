@@ -1,0 +1,61 @@
+
+
+
+
+
+
+
+
+\begin{table}[ht]
+\centering
+\caption{Chi-squared and Fisher's exact test results comparing spectral species to ground-truth classifications by testsite}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Testsite} & \textbf{Chi \textit{p}-value} & \textbf{Chi Significance} & \textbf{Fisher \textit{p}-value} & \textbf{Fisher Significance} \\
+\hline
+AN\_TJ\_1            & 0.456 & None   & 1.000         & None          \\
+AN\_TJ\_2            & 0.211 & None   & 0.495         & None          \\
+ATQ\_VK\_1           & 0.111 & None   & 5.21E-08      & Strong        \\
+BRW\_PW\_1           & 0.085 & None   & 0.00026       & Strong        \\
+BRW\_VS\_1           & 0.412 & None   & ---           & None (Sim.)   \\
+FLXTWRZONA\_SD\_1    & 0.091 & None   & 0.039         & Moderate      \\
+FLXTWRZONA\_SD\_2    & 0.541 & None   & ---           & None (Sim.)   \\
+FLXTWRZONA\_SD\_3    & 0.399 & None   & 0.475         & None          \\
+FLXTWRZONA\_SD\_4    & 0.0004 & Strong & 2.94E-08     & Strong        \\
+FRST\_AK\_2          & 0.492 & None   & 1.000         & None          \\
+FRST\_AK\_3          & 0.728 & None   & 0.968         & None          \\
+PRUAIR\_DW\_1        & 0.146 & None   & 0.311         & None          \\
+PRUARC\_DW\_1        & 0.202 & None   & 0.306         & None          \\
+\hline
+\end{tabular}
+\label{tab:chi_fisher_results}
+\end{table}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Index scores for various test sites.} % Caption moved here
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrrrrrrrrrr}
+\toprule
+\textbf{Testsite} & \multicolumn{16}{c}{\textbf{Index}} \\
+\cmidrule(lr){2-17}
+ & ratkowsky & ptbiserial & sdbw & ch & db & sdindex & dunn & ball & tracew & friedman & rubin & pseudot2 & beale & trcovw & silhouette & WSS \\
+\midrule
+AN\_TJ\_1 & 4 & 2 & 46 & 2 & 2 & 4 & 36 & 3 & 3 & 39 & 39 & 3 & 2 & 3 &   & 22 \\
+AN\_TJ\_2 & 4 & 3 & 45 & 4 & 4 & 6 & 44 & 3 & 3 & 8 & 6 & 3 & 3 & 3 & 2 & 19 \\
+ATQ\_VK\_1 & 6 &   & 50 &   & 2 & 4 &   & 3 & 3 & 38 & 35 & 2 & 2 & 3 &   & 36 \\
+BRW\_PW\_1 & 5 &   & 50 &   & 2 & 5 &   & 3 & 3 & 20 & 17 & 2 & 2 & 3 &   & 17 \\
+BRW\_VS\_1 & 6 & 2 & 48 & 3 & 2 & 3 & 50 & 3 & 3 & 5 & 3 & 3 & 2 & 3 & 2 & 45 \\
+FLXTWRZONA\_SD\_1 & 5 & 2 & 50 & 2 & 2 & 8 & 16 & 3 & 3 & 15 & 32 & 2 & 2 & 3 & 2 & 11 \\
+FLXTWRZONA\_SD\_2 & 6 & 2 & 48 & 2 & 2 & 3 & 39 & 3 & 3 & 5 & 48 & 3 & 2 & 3 & 2 & 43 \\
+FLXTWRZONA\_SD\_3 & 12 & 2 & 50 & 2 & 2 & 8 & 22 & 3 & 3 & 42 & 14 & 2 & 2 & 3 & 2 & 6 \\
+FLXTWRZONA\_SD\_4 & 3 & 3 & 50 & 3 & 20 & 9 & 39 & 3 & 3 & 39 & 40 & 2 & 2 & 3 & 3 & 19 \\
+FRST\_AK\_2 & 4 & 3 & 50 & 4 & 3 & 10 & 17 & 3 & 3 & 4 & 41 & 3 & 2 & 3 & 2 & 11 \\
+FRST\_AK\_3 & 3 & 2 & 50 & 2 & 2 & 8 & 31 & 3 & 3 & 42 & 37 & 3 & 3 & 3 & 2 & 32 \\
+PRUAIR\_DW\_1 & 6 & 2 & 50 & 2 & 2 & 4 & 30 & 3 & 4 & 44 & 40 & 2 & 2 & 4 & 2 & 44 \\
+PRUARC\_DW\_1 & 4 & 2 & 50 & 2 & 2 & 5 & 46 & 3 & 3 & 16 & 16 & 2 & 2 & 3 &   & 47 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

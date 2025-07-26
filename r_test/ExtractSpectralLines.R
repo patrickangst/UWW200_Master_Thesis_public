@@ -35,7 +35,22 @@ cluster_shp_data <- st_transform(cluster_shp_data, crs(hyperspectral))
 AN_TJ_1 <- cluster_shp_data %>%
   filter(Testsit==testsite_name)
 
+
 AN_TJ_1_pixel_values <- terra::extract(hyperspectral, vect(AN_TJ_1))
+
+
+# Extract mean of pixel values within a 5-meter buffer around each point/polygon
+AN_TJ_1_pixel_values <- terra::extract(
+  hyperspectral,
+  vect(AN_TJ_1),
+  buffer = 5,           # buffer size in map units (e.g., meters)
+  fun = mean,           # function to apply (mean, median, etc.)
+  na.rm = TRUE,         # ignore NA values
+  df = TRUE             # return as data frame
+)
+
+
+
 
 AN_TJ_1_combined <- bind_cols(AN_TJ_1, AN_TJ_1_pixel_values)
 
@@ -58,41 +73,41 @@ AN_TJ_1_pixel_values_long <- AN_TJ_1_combined_df %>%
                names_to = "Band",
                values_to = "Reflectance") %>%
   mutate(Wavelength = as.numeric(str_extract(Band, "\\d+"))) %>%
-  mutate(Reflectance = Reflectance / 10000)  # Scaling reflectance if needed
+  mutate(Reflectance = Reflectance)  # Scaling reflectance if needed
 
-AN_TJ_1_pixel_values_long <- AN_TJ_1_pixel_values_long %>%
-  mutate(
-    Reflectance = case_when(
-      Wavelength >= 1340 & Wavelength <= 1445 ~ NA_real_,
-      Wavelength >= 1790 & Wavelength <= 1970 ~ NA_real_,
-      Wavelength >= 2450 ~ NA_real_,
-      TRUE ~ Reflectance
-    )
-  )
-
-# Ensure wavelengths are sorted correctly
-unique_wavelengths_signature <- sort(unique(AN_TJ_1_pixel_values_long$Wavelength))
-
-
-# Generate spectral signature plot
-signature_plot <- ggplot(
-  AN_TJ_1_pixel_values_long,
-  aes(
-    x = Wavelength,
-    y = Reflectance,
-    color = HbttTyp,
-    group = PltIdnt
-  )
-) +
-  geom_line() +
-  labs(x = "Wavelength (nm)", y = "Reflectance", title = paste0("Spectral Signatures ",testsite_name)) +
-  theme_minimal() +
-  scale_x_continuous(breaks = unique_wavelengths_signature) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_color_viridis(discrete = TRUE)
-
-# Display the plot
-print(signature_plot)
+# AN_TJ_1_pixel_values_long <- AN_TJ_1_pixel_values_long %>%
+#   mutate(
+#     Reflectance = case_when(
+#       Wavelength >= 1340 & Wavelength <= 1445 ~ NA_real_,
+#       Wavelength >= 1790 & Wavelength <= 1970 ~ NA_real_,
+#       Wavelength >= 2450 ~ NA_real_,
+#       TRUE ~ Reflectance
+#     )
+#   )
+# 
+# # Ensure wavelengths are sorted correctly
+# unique_wavelengths_signature <- sort(unique(AN_TJ_1_pixel_values_long$Wavelength))
+# 
+# 
+# # Generate spectral signature plot
+# signature_plot <- ggplot(
+#   AN_TJ_1_pixel_values_long,
+#   aes(
+#     x = Wavelength,
+#     y = Reflectance,
+#     color = HbttTyp,
+#     group = PltIdnt
+#   )
+# ) +
+#   geom_line() +
+#   labs(x = "Wavelength (nm)", y = "Reflectance", title = paste0("Spectral Signatures ",testsite_name)) +
+#   theme_minimal() +
+#   scale_x_continuous(breaks = unique_wavelengths_signature) +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+#   scale_color_viridis(discrete = TRUE)
+# 
+# # Display the plot
+# print(signature_plot)
 
 
 ################################################################################
@@ -124,7 +139,7 @@ signature_plot <- ggplot(
   )
 ) +
   geom_line() +
-  labs(x = "Wavelength (nm)", y = "Reflectance", title = paste0("Spectral Signatures ",testsite_name)) +
+  labs(x = "Wavelength (nm)", y = "Reflectance", title = paste0("Spectral signatures per habitat type ",testsite_name)) +
   theme_minimal() +
   scale_x_continuous(breaks = seq(min(AN_TJ_1_pixel_values_long$Wavelength), max(AN_TJ_1_pixel_values_long$Wavelength), by = 5)) + # Example: breaks every 50 nm
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
@@ -138,30 +153,86 @@ print(signature_plot)
 
 
 
-# Compute mean reflectance per habitat type per wavelength
-AN_TJ_1_pixel_values_mean <- AN_TJ_1_pixel_values_long %>%
+AN_TJ_1_pixel_values_summary <- AN_TJ_1_pixel_values_long %>%
   group_by(HbttTyp, Wavelength) %>%
-  summarize(MeanReflectance = mean(Reflectance, na.rm = TRUE), .groups = "drop")
-
-# Generate the mean spectral signature plot
-mean_signature_plot <- ggplot(
-  AN_TJ_1_pixel_values_mean,
-  aes(
-    x = Wavelength,
-    y = MeanReflectance,
-    color = HbttTyp
+  summarize(
+    MeanReflectance = mean(Reflectance, na.rm = TRUE),
+    MinReflectance = min(Reflectance, na.rm = TRUE),
+    MaxReflectance = max(Reflectance, na.rm = TRUE),
+    .groups = "drop"
   )
+
+
+mean_signature_plot <- ggplot(
+  AN_TJ_1_pixel_values_summary,
+  aes(x = Wavelength, y = MeanReflectance, color = HbttTyp, fill = HbttTyp)
 ) +
+  geom_ribbon(
+    aes(ymin = MinReflectance, ymax = MaxReflectance),
+    alpha = 0.2,
+    color = NA
+  ) +
   geom_line(linewidth = 1.2) +
-  labs(x = "Wavelength (nm)", y = "Mean Reflectance", title = paste0("Mean Spectral Signatures per Habitat type ",testsite_name)) +
+  labs(
+    x = "Wavelength (nm)",
+    y = "Mean Reflectance",
+    title = paste0("Mean spectral signatures per habitat type ", testsite_name)
+  ) +
   theme_minimal() +
-  scale_x_continuous(breaks = unique_wavelengths_signature) +
+  scale_x_continuous(
+    breaks = seq(min(AN_TJ_1_pixel_values_summary$Wavelength),
+                 max(AN_TJ_1_pixel_values_summary$Wavelength), by = 5)
+  ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_color_viridis(discrete = TRUE)
+  scale_color_viridis(discrete = TRUE) +
+  scale_fill_viridis(discrete = TRUE)
 
 # Display the plot
 print(mean_signature_plot)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 
+# # Compute mean reflectance per habitat type per wavelength
+# AN_TJ_1_pixel_values_mean <- AN_TJ_1_pixel_values_long %>%
+#   group_by(HbttTyp, Wavelength) %>%
+#   summarize(MeanReflectance = mean(Reflectance, na.rm = TRUE), .groups = "drop")
+# 
+# # Generate the mean spectral signature plot
+# mean_signature_plot <- ggplot(
+#   AN_TJ_1_pixel_values_mean,
+#   aes(
+#     x = Wavelength,
+#     y = MeanReflectance,
+#     color = HbttTyp
+#   )
+# ) +
+#   geom_line(linewidth = 1.2) +
+#   labs(x = "Wavelength (nm)", y = "Mean Reflectance", title = paste0("Mean Spectral Signatures per Habitat type ",testsite_name)) +
+#   theme_minimal() +
+#   scale_x_continuous(breaks = seq(min(AN_TJ_1_pixel_values_mean$Wavelength), max(AN_TJ_1_pixel_values_mean$Wavelength), by = 5)) + # Example: breaks every 50 nm
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+#   scale_color_viridis(discrete = TRUE)
+# 
+# # Display the plot
+# print(mean_signature_plot)
+# 
 
 
 #

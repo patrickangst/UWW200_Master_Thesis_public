@@ -1,0 +1,227 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is a LaTeX template for Bachelor or Master theses at ZHAW, in accordance with the 
+% guidelines provided here:
+% https://www.zhaw.ch/en/lsfm/study/studiweb/master-ls/masters-thesis/
+%
+%
+% This template is based on previous works by:
+% Steve Gunn (http://users.ecs.soton.ac.uk/srg/softwaretools/document/templates/)
+% Sunil Patel (http://www.sunilpatel.co.uk/thesis-template/)
+% Matteo Delucchi (https://github.com/matteodelucchi/ZHAW_thesis-template)
+%
+% University specific changes were made by:
+% Matteo Delucchi
+% Norman Juchler
+% 
+% Template license:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+% DOCUMENT SPECIFICATION
+%----------------------------------------------------------------------------------------
+\documentclass[
+    11pt,                      % Default font size
+    %oneside,                  % One-side binding. Default: Two-side binding / alternating margins
+    english,                   % Language. Use ngerman for German (Neue Rechtschreibung)
+    singlespacing,             % Spacing option: singlespacing, onehalfspacing or doublespacing
+    %nolistspacing,            % Set spacing in lists to single
+    %draft,                    % Enable draft mode: no pictures, no links, overfull hboxes indicated
+    liststotoc,               % Include list of figures/tables/etc in the table of contents
+    %toctotoc,                 % Include the main table of contents to the table of contents
+    parskip,                  % Add vertical space between paragraphs
+    %nohyperref,               % Disable links in the entire document
+    headsepline,               % Show a horizontal line under the header
+    %chapterinoneline,         % Place the chapter title and chapter number on one line
+    consistentlayout,          % Have the same layout for special chapters: 
+                               % declaration, abstract and acknowledgements
+]{MastersDoctoralThesis}
+
+% Uncomment the following lines to only include a subset of chapters.
+% This is useful for long documents, as typesetting takes a bit of time
+%\includeonly{
+%    Front/titlepage,
+%    Front/imprint,
+%    Front/abstract,
+%    %Front/declaration,
+%    %Front/acknowledgements,
+%    %Front/symbols,
+%    Chapters/Chapter1,
+%    %Chapters/Chapter2
+%    }
+
+
+%----------------------------------------------------------------------------------------
+% PREAMBLE: PACKAGES AND CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+\input{preamble}
+
+
+%----------------------------------------------------------------------------------------
+% THESIS INFORMATION: MODIFY THIS SECTION!
+%----------------------------------------------------------------------------------------
+
+% The information below is used in the following parts:
+% - Title page
+% - Imprint
+% - Abstract / Zusammenfassung
+% - Meta information of PDF
+
+\thesistitle{Biodiversity monitoring in the Arctic Tundra using spectral variability analysis}             % Thesis title,              command: \ttitle
+\thesistype{Master's Thesis}             % Type of thesis (e.g. Master Thesis) \ttype
+\thesisdate{\today}                     % Date of submission                  \tdate
+\keywords{Remote sensing, hyperspectral images, biodiversity}
+                                        % Keywords for the thesis,            \keywordnames
+\author{Patrick Byron Angst}                  % Your name,                          \authorname
+\degree{Master of Science UZH}          % Degree name,                        \degreename
+\studyprogram{Quantitative Environmental Sciences} 
+                                        % Study program                       \studyprog
+\studyprogramlink{https://www.uzh.ch/en/studies/programs/master/quantitative_environmental_sciences.html}
+                                        % Link to study program               \studyproglink
+
+\supervisorA{Prof. Dr. Gabriela Schaepman-Strub}       % Name of supervisor 1,               \supnameA
+\supervisorAmail{gabriela.schaepman@ieu.uzh.ch}         % Email address of supervisor 1,      \supmailA
+\supervisorAweb{https://www.ieu.uzh.ch/en/staff/member/schaepman_strub_gabriela.html}  %            \supwebA
+\supervisorAinfo{                       % Formatted info about supervisor 1:  \supinfoA
+    \supnameA\\
+    University of Zurich UZH\\
+    Email: \href{mailto:\supmailA}{\supmailA}\\
+    Web: \href{\supwebA}{Link}
+}
+
+% Keep empty if there is no supervisor 2: \supervisorB{}
+\supervisorB{Dr. Jakob Johann Assmann}              % Name of supervisor 2,               \supnameB
+\supervisorBmail{jakob.assmann@uzh.ch}       % Email address of supervisor 2,      \supmailB
+\supervisorBweb{https://www.ieu.uzh.ch/en/staff/member/assmann_jakob.html}                  % \supwebB
+\supervisorBinfo{                       % Formatted info about supervisor 2:  \supinfoB
+    \supnameB\\
+    University of Cambridge\\
+    Email: \href{mailto:\supmailB}{\supmailB}\\
+    Web: \href{\supwebB}{Link}
+}
+
+\university{University of Zurich UZH}
+                                        % University name                     \univname
+\universitygerman{Universität Zürich UZH}
+                                        % University, in German               \univnameger
+\department{Department of Evolutionary Biology and Environmental Studies} 
+                                        % Department,                         \deptname
+\institute{Department of Evolutionary Biology and Environmental Studies} 
+                                        % Institute,                          \instname
+\group{Spatial Ecology & Remote Sensing} 
+                                        % Research group                      \groupname
+
+% Links
+\universitylink      {https://uzh.ch/en.html}                   % \univlink
+\universitylinkgerman{https://uzh.ch/de.html}                   % \univlinkger
+\departmentlink      {https://www.ieu.uzh.ch/en.html}                         % \deptlink
+\institutelink       {https://www.ieu.uzh.ch/en.html} % \instlink
+\grouplink  {https://www.ieu.uzh.ch/en/research/ecology/spatial.html} % \grplink
+
+
+
+\AtBeginDocument{
+\hypersetup{pdftitle=\ttitle} % Set the PDF's title to your title
+\hypersetup{pdfauthor=\authorname} % Set the PDF's author to your name
+\hypersetup{pdfkeywords=\keywordnames} % Set the PDF's keywords to your keywords
+}
+
+\begin{document}
+\frontmatter                  % Roman page numbering for the pre-content pages
+\pagestyle{plain}             % Default to the plain heading style until the thesis style 
+                              % is called for the body content
+
+
+%----------------------------------------------------------------------------------------
+% TITLE PAGE AND IMPRINT
+%----------------------------------------------------------------------------------------
+\include{Front/titlepage}
+\let\cleardoublepage\clearpage
+\include{Front/imprint}
+
+
+%----------------------------------------------------------------------------------------
+% DECLARATION
+%----------------------------------------------------------------------------------------
+% Comment out this section if the declaration of originality from ZHAW is used.
+%\include{Front/declaration}
+\cleardoublepage
+
+
+%----------------------------------------------------------------------------------------
+% ABSTRACT
+%----------------------------------------------------------------------------------------
+%\include{Front/abstract}
+
+
+%----------------------------------------------------------------------------------------
+% ACKNOWLEDGEMENTS
+%----------------------------------------------------------------------------------------
+%\include{Front/acknowledgements}
+
+
+%----------------------------------------------------------------------------------------
+% LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+% Comment out if any of the following is not needed:
+\tableofcontents  % Add main table of contents
+%\listoffigures    % Add list of figures
+%\listoftables     % Add list of tables
+
+
+%----------------------------------------------------------------------------------------
+% ABBREVIATIONS / SYMBOLS
+%----------------------------------------------------------------------------------------
+%\include{Front/symbols}
+\printacronyms
+
+%----------------------------------------------------------------------------------------
+% DEDICATION
+%----------------------------------------------------------------------------------------
+%\dedicatory{For/Dedicated to/To my\ldots} 
+
+
+%----------------------------------------------------------------------------------------
+% THESIS CONTENT - CHAPTERS
+%----------------------------------------------------------------------------------------
+\mainmatter % Begin numeric (1,2,3...) page numbering
+\pagestyle{thesis} % Return the page headers back to the "thesis" style
+
+% Include the chapters of the thesis as separate files from the Chapters folder
+% Uncomment the lines as you write the chapters
+%\include{Tabellen}
+
+\include{Chapters/1_Introduction}
+\include{Chapters/2_MaterialsAndMethods}
+\include{Chapters/3_0_Results} 
+%\include{Chapters/4_Discussion}
+%\include{Chapters/Chapter4} 
+%\include{Chapters/Chapter5} 
+
+
+%----------------------------------------------------------------------------------------
+% THESIS CONTENT - APPENDICES
+%----------------------------------------------------------------------------------------
+\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
+
+% Include the appendices of the thesis as separate files from the Appendices folder
+% Uncomment the lines as you write the Appendices
+%\include{Appendices/AppendixA}
+% from https://www.zhaw.ch/en/lsfm/study/studiweb/master-ls/masters-thesis/
+%\include{Appendices/AppendixB}
+%\include{Appendices/AppendixC}
+%\include{Appendices/DeclarationOfOriginalityZHAW} 
+
+% \include{Appendices/Appendix_LinearRegression}
+% \include{Appendices/Appendix_PlantCommunityClustering}
+
+\include{Appendices/Appendices}
+
+%----------------------------------------------------------------------------------------
+% BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+\printbibliography[heading=bibintoc]
+
+
+%----------------------------------------------------------------------------------------
+\end{document}  

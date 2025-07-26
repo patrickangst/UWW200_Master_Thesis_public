@@ -1,0 +1,77 @@
+\acswitchoff 
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.3}%
+\contentsline {chapter}{\numberline {2}Material and methods}{3}{chapter.4}%
+\contentsline {section}{\numberline {2.1}Study area}{3}{section.5}%
+\contentsline {section}{\numberline {2.2}Data Source}{3}{section.6}%
+\contentsline {subsection}{\numberline {2.2.1}In-Situ data}{3}{subsection.7}%
+\contentsline {subsection}{\numberline {2.2.2}Hyperspectral data}{3}{subsection.8}%
+\contentsline {section}{\numberline {2.3}Data workflow}{4}{section.9}%
+\contentsline {section}{\numberline {2.4}Test site definition}{5}{section.11}%
+\contentsline {section}{\numberline {2.5}In-Situ data workflow}{6}{section.14}%
+\contentsline {section}{\numberline {2.6}Hyperspectral data workflow}{6}{section.16}%
+\contentsline {subsection}{\numberline {2.6.1}Image pre-processing}{6}{subsection.17}%
+\contentsline {subsection}{\numberline {2.6.2}\ac {pca}}{7}{subsection.19}%
+\contentsline {subsection}{\numberline {2.6.3}PC selection}{7}{subsection.20}%
+\contentsline {subsection}{\numberline {2.6.4}Cluster analysis}{7}{subsection.21}%
+\contentsline {subsection}{\numberline {2.6.5}Spectral Species and Diversity Indices}{8}{subsection.22}%
+\contentsline {section}{\numberline {2.7}Data analysis}{8}{section.23}%
+\contentsline {subsection}{\numberline {2.7.1}Correlation analysis}{9}{subsection.25}%
+\contentsline {subsection}{\numberline {2.7.2}Regression analysis}{9}{subsection.26}%
+\contentsline {subsection}{\numberline {2.7.3}Spectral curve analysis}{9}{subsection.27}%
+\contentsline {subsection}{\numberline {2.7.4}Spatial autocorrelation}{10}{subsection.28}%
+\contentsline {chapter}{\numberline {3}Results}{11}{chapter.29}%
+\contentsline {section}{\numberline {3.1}Plant species - spectral species}{11}{section.30}%
+\contentsline {subsection}{\numberline {3.1.1}Results over all test sites}{11}{subsection.31}%
+\contentsline {subsection}{\numberline {3.1.2}Results for Group C/D}{12}{subsection.34}%
+\contentsline {subsection}{\numberline {3.1.3}Results for Group E}{13}{subsection.37}%
+\contentsline {section}{\numberline {3.2}Plant communities - spectral species}{13}{section.40}%
+\contentsline {subsection}{\numberline {3.2.1}Results over all test sites}{13}{subsection.41}%
+\contentsline {subsection}{\numberline {3.2.2}Results for Group C/D}{14}{subsection.44}%
+\contentsline {subsection}{\numberline {3.2.3}Results for Group E}{15}{subsection.47}%
+\contentsline {section}{\numberline {3.3}Habitat types - spectral species}{16}{section.50}%
+\contentsline {subsection}{\numberline {3.3.1}Results over all test sites}{16}{subsection.51}%
+\contentsline {subsection}{\numberline {3.3.2}Results for Group C/D}{17}{subsection.54}%
+\contentsline {subsection}{\numberline {3.3.3}Results for Group E}{18}{subsection.57}%
+\contentsline {section}{\numberline {3.4}Plot location spectral curves}{19}{section.60}%
+\contentsline {subsection}{\numberline {3.4.1}AN\_TJ\_1}{19}{subsection.61}%
+\contentsline {subsection}{\numberline {3.4.2}AN\_TJ\_2}{20}{subsection.64}%
+\contentsline {subsection}{\numberline {3.4.3}ATQ\_VK\_1}{21}{subsection.67}%
+\contentsline {subsection}{\numberline {3.4.4}BRW\_PW\_1}{21}{subsection.70}%
+\contentsline {subsection}{\numberline {3.4.5}BRW\_VS\_1}{22}{subsection.73}%
+\contentsline {subsection}{\numberline {3.4.6}FLXTWRZONA\_SD\_1}{23}{subsection.76}%
+\contentsline {subsection}{\numberline {3.4.7}FLXTWRZONA\_SD\_2}{23}{subsection.79}%
+\contentsline {subsection}{\numberline {3.4.8}FLXTWRZONA\_SD\_3}{24}{subsection.82}%
+\contentsline {subsection}{\numberline {3.4.9}FLXTWRZONA\_SD\_4}{25}{subsection.85}%
+\contentsline {subsection}{\numberline {3.4.10}FRST\_AK\_2}{25}{subsection.88}%
+\contentsline {subsection}{\numberline {3.4.11}FRST\_AK\_3}{26}{subsection.91}%
+\contentsline {subsection}{\numberline {3.4.12}PRUAIR\_DW\_1}{27}{subsection.94}%
+\contentsline {subsection}{\numberline {3.4.13}PRUARC\_DW\_1}{27}{subsection.97}%
+\contentsline {subsection}{\numberline {3.4.14}Combined test sites}{28}{subsection.100}%
+\contentsline {chapter}{\numberline {A}Linear Regression Models}{29}{appendix.102}%
+\contentsline {section}{\numberline {A.1}Plant species - spectral species}{29}{section.103}%
+\contentsline {subsection}{\numberline {A.1.1}Results over all test sites}{29}{subsection.104}%
+\contentsline {subsection}{\numberline {A.1.2}Results for Group C/D}{30}{subsection.107}%
+\contentsline {subsection}{\numberline {A.1.3}Results for Group E}{30}{subsection.110}%
+\contentsline {section}{\numberline {A.2}Plant communities - spectral species}{31}{section.113}%
+\contentsline {subsection}{\numberline {A.2.1}Results over all test sites}{31}{subsection.114}%
+\contentsline {subsection}{\numberline {A.2.2}Results for Group C/D}{32}{subsection.117}%
+\contentsline {subsection}{\numberline {A.2.3}Results for Group E}{33}{subsection.120}%
+\contentsline {section}{\numberline {A.3}Habitat types - spectral species}{34}{section.123}%
+\contentsline {subsection}{\numberline {A.3.1}Results for Group C/D}{35}{subsection.126}%
+\contentsline {subsection}{\numberline {A.3.2}Results for Group E}{36}{subsection.129}%
+\contentsline {chapter}{\numberline {B}Plant Community Clustering}{38}{appendix.132}%
+\contentsline {section}{\numberline {B.1}HDBSCAN cluster plots}{38}{section.133}%
+\contentsline {subsection}{\numberline {B.1.1}AN\_TJ\_1}{38}{subsection.134}%
+\contentsline {subsection}{\numberline {B.1.2}AN\_TJ\_2}{40}{subsection.137}%
+\contentsline {subsection}{\numberline {B.1.3}ATQ\_VK\_1}{41}{subsection.140}%
+\contentsline {subsection}{\numberline {B.1.4}BRW\_PW\_1}{42}{subsection.143}%
+\contentsline {subsection}{\numberline {B.1.5}BRW\_VS\_1}{43}{subsection.146}%
+\contentsline {subsection}{\numberline {B.1.6}FLXTWRZONA\_SD\_1}{44}{subsection.149}%
+\contentsline {subsection}{\numberline {B.1.7}FLXTWRZONA\_SD\_2}{45}{subsection.152}%
+\contentsline {subsection}{\numberline {B.1.8}FLXTWRZONA\_SD\_3}{46}{subsection.155}%
+\contentsline {subsection}{\numberline {B.1.9}FLXTWRZONA\_SD\_4}{47}{subsection.158}%
+\contentsline {subsection}{\numberline {B.1.10}FRST\_AK\_2}{48}{subsection.161}%
+\contentsline {subsection}{\numberline {B.1.11}FRST\_AK\_3}{49}{subsection.164}%
+\contentsline {subsection}{\numberline {B.1.12}PRUAIR\_DW\_1}{50}{subsection.167}%
+\contentsline {subsection}{\numberline {B.1.13}PRUARC\_DW\_1}{51}{subsection.170}%

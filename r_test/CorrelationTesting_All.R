@@ -48,7 +48,7 @@ cor_metrics <- data.frame(
   Metric = c("Plant Communities", "Habitat Types", "Plant Species"),
   x = c(
     "Unique_Plant_Cummunities",
-    "Unique_Habitat_Types",
+    "Unique_Habitat_Types_Short3",
     "Unique_Plant_Species"
   ),
   filename = c(
@@ -70,7 +70,6 @@ correlation_results <- data.frame(
 )
 
 
-# Loop over each metric and generate/save plot
 # Loop over each metric and generate/save plot
 for (i in 1:nrow(cor_metrics)) {
   xvar <- cor_metrics$x[i]
@@ -155,6 +154,8 @@ for (i in 1:nrow(cor_metrics)) {
   ggsave(file_path, base_plot, width = 8, height = 5)
   message(paste("Saved plot:", file_name))
   
+  print(base_plot)
+  
 }
 
 
@@ -166,7 +167,7 @@ message("Saved correlation summary CSV.")
 # Statistical testing
 ######
 lm_model_input <- metrics_data_df %>%
-  select(Testsite,Unique_Plant_Cummunities,Unique_Spectral_Species_WCSS,Unique_Habitat_Types,Unique_Plant_Species) %>%
+  select(Testsite,Unique_Plant_Cummunities,Unique_Spectral_Species_WCSS,Unique_Habitat_Types_Short3,Unique_Plant_Species) %>%
   mutate(Testsite = as.factor(Testsite))
 
 str(lm_model_input)
@@ -179,22 +180,22 @@ par(mfrow = c(2, 2))
 plot(model_plant_communities_lm)
 
 summary(model_plant_communities_lm)
-ggplot(lm_model_input, aes(x = Unique_Spectral_Species_WCSS, y = Unique_Plant_Cummunities)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = TRUE)
+# ggplot(lm_model_input, aes(x = Unique_Spectral_Species_WCSS, y = Unique_Plant_Cummunities)) +
+#   geom_point() +
+#   geom_smooth(method = "lm", se = TRUE)
 
 
 # Model Habitat Type
-model_habitat_types_lm <- lm(Unique_Habitat_Types ~ Unique_Spectral_Species_WCSS,
+model_habitat_types_lm <- lm(Unique_Habitat_Types_Short3 ~ Unique_Spectral_Species_WCSS,
                                  data = lm_model_input)
 # anova(model_habitat_types_lm)
 par(mfrow = c(2, 2))
 plot(model_habitat_types_lm)
 
 summary(model_habitat_types_lm)
-ggplot(lm_model_input, aes(x = Unique_Spectral_Species_WCSS, y = Unique_Habitat_Types)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = TRUE)
+# ggplot(lm_model_input, aes(x = Unique_Spectral_Species_WCSS, y = Unique_Habitat_Types_Short3)) +
+#   geom_point() +
+#   geom_smooth(method = "lm", se = TRUE)
 
 # Model Plant Species
 model_plant_species_lm <- lm(Unique_Plant_Species ~ Unique_Spectral_Species_WCSS,
@@ -210,14 +211,14 @@ summary(model_plant_species_lm)
 #   geom_smooth(method = "lm", se = TRUE)
 
 # Model Plant Communities vs. Habitat type
-# model_ht_pc_lm <- lm(Unique_Habitat_Types ~ Unique_Plant_Cummunities,
+# model_ht_pc_lm <- lm(Unique_Habitat_Types_Short3 ~ Unique_Plant_Cummunities,
 #                              data = lm_model_input)
 # # anova(model_plant_species_lm)
 # par(mfrow = c(2, 2))
 # plot(model_ht_pc_lm)
 # 
 # summary(model_ht_pc_lm)
-# ggplot(lm_model_input, aes(x = Unique_Habitat_Types, y = Unique_Plant_Cummunities)) +
+# ggplot(lm_model_input, aes(x = Unique_Habitat_Types_Short3, y = Unique_Plant_Cummunities)) +
 #   geom_point() +
 #   geom_smooth(method = "lm", se = TRUE)
 

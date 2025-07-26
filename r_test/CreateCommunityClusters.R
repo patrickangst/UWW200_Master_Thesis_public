@@ -63,7 +63,11 @@ create_plots <- function(file_path, clusterinfo_df) {
   
   # Select species abundance columns only
   df_species_list <- df %>%
-    select(-PlotIdentifier, -Shannon, -Simpson, -Evenness, -Richness)
+    select(-PlotIdentifier, -Shannon, -Simpson, -Evenness, -Richness, -HabitatType)
+  
+  df_habitat_info <- df %>%
+    select(PlotIdentifier, HabitatType) %>%
+    rename(Testsite = PlotIdentifier)
   
   # Calculate Bray-Curtis dissimilarity matrix
   bray_dist <- vegdist(df_species_list, method = "bray")
@@ -147,6 +151,15 @@ create_plots <- function(file_path, clusterinfo_df) {
     rename(Cluster = ClusterHDBSCAN) %>%
     arrange(Testsite)
   
+  df_combined <- merge(df_combined, df_habitat_info, by = "Testsite", all.x = TRUE)
+  
+  df_combined <- df_combined %>%
+    mutate(
+      HTS1 = sub("\\.[^.]*$", "", HabitatType),      # Removes last segment
+      HTS2 = sub("\\..*", "", HabitatType)           # Keeps only first segment
+    )
+
+  
   # Create spatial data frame
   df_combined_sf <- st_as_sf(df_combined, coords = c("Longitude", "Latitude"), crs = 4326)
   
@@ -199,7 +212,7 @@ files <- list.files(path = input_dir, pattern = "\\.xlsx$", full.names = TRUE)
 
 # Process each file
 for (file in files) {
-  debug(create_plots)
+  #debug(create_plots)
   create_plots(file, testsite_clusterinfo_df)
 }
 
