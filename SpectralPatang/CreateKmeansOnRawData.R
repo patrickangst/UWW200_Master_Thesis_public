@@ -74,6 +74,8 @@ image_paths <- c(
   '~/Documents/GitHub/UWW200_Master_Thesis_public/SpectralPatang/data/MasterThesis/final_hs_data_folder/PRUARC_DW_1/image_rectified/ang20170709t000442_corr_v2p9_img_rectified'
 )
 
+savi_threshold <- 0.2
+
 for (image_path in image_paths) {
   # Load hyperspectral image
   hyperspectral <- rast(image_path)
@@ -87,15 +89,19 @@ for (image_path in image_paths) {
   if (masked) {
     # Select appropriate bands for Red (670nm) and NIR ((800nm)
     # General formula: (800nm - 670nm) / (800nm + 670nm + L) * (1 + L)
-    red_band <- hyperspectral[[60]]    # Update with actual index
-    nir_band <- hyperspectral[[86]]    # Update with actual index
+    # red_band <- hyperspectral[[60]]    # Update with actual index
+    # nir_band <- hyperspectral[[86]]    # Update with actual index
+    # Calculate red band averages (used for SAVI)
+    red_average <- terra::app(tile[[56:65]], fun = mean, na.rm = TRUE)
+    # Calculate the mean of a few values of the near infrared bands (used for NDWI and SAVI)
+    NIR_average <- terra::app(tile[[86:105]], fun = mean, na.rm = TRUE)
 
     # Compute SAVI
     L <- 0.5
-    savi <- ((nir_band - red_band) / (nir_band + red_band + L)) * (1 + L)
+    savi <- ((NIR_average - red_average) / (NIR_average + red_average + L)) * (1 + L)
 
-    # Mask threshold (e.g., SAVI > 0.3 indicates vegetation)
-    veg_mask <- savi > 0.3
+    # Mask threshold (e.g., SAVI > 0.2 indicates vegetation)
+    veg_mask <- savi > savi_threshold
 
     masked_hyperspectral <- mask(hyperspectral, veg_mask, maskvalues = FALSE)
 
@@ -171,105 +177,119 @@ for (image_path in image_paths) {
     col = scico(optimal_k, palette = "batlow")
   )
 
-  # Load hyperspectral image
+  # Perform a little housekeeping
+  gc()
+
+}
+
+
+# Masked workflow
+for (image_path in image_paths) {
+    # Load hyperspectral image
   hyperspectral <- rast(image_path)
 
   test_site_image_name <- basename(dirname(dirname(image_path)))
 
+  print(paste0(test_site_image_name,' masked start'))
 
   # # Run the same clustering with a SAVI mask applied to the raw image
-  # masked <- TRUE
-  #
-  # if (masked) {
-  #   # Select appropriate bands for Red (670nm) and NIR ((800nm)
-  #   # General formula: (800nm - 670nm) / (800nm + 670nm + L) * (1 + L)
-  #   red_band <- hyperspectral[[60]]    # Update with actual index
-  #   nir_band <- hyperspectral[[86]]    # Update with actual index
-  #
-  #   # Compute SAVI
-  #   L <- 0.5
-  #   savi <- ((nir_band - red_band) / (nir_band + red_band + L)) * (1 + L)
-  #
-  #   # Mask threshold (e.g., SAVI > 0.3 indicates vegetation)
-  #   veg_mask <- savi > 0.3
-  #
-  #   masked_hyperspectral <- mask(hyperspectral, veg_mask, maskvalues = FALSE)
-  #
-  #   hyperspectral <- masked_hyperspectral
-  # }
-  # # Check number of bands
-  # nr_bands <- nlyr(hyperspectral)
-  # if (nr_bands != 425) {
-  #   stop("Expected 425 bands, but found a different number.")
-  # }
-  #
-  # bands <- nlyr(hyperspectral)
-  # nrows <- nrow(hyperspectral)
-  # ncols <- ncol(hyperspectral)
-  #
-  # message(paste0(
-  #   "Loaded raster with ",
-  #   bands,
-  #   " bands, ",
-  #   nrows,
-  #   " rows, ",
-  #   ncols,
-  #   " columns."
-  # ))
-  #
-  # pixel_matrix <- as.matrix(hyperspectral)
-  #
-  # # Rename columns for clarity
-  # colnames(pixel_matrix) <- paste0("Band_", 1:425)
-  #
-  # # Set selected bands to NA
-  # pixel_matrix[, 1:15]     <- NA  # Note: R is 1-indexed, not 0
-  # pixel_matrix[, 191:211]  <- NA
-  # pixel_matrix[, 285:320]  <- NA
-  # pixel_matrix[, 418:425]  <- NA
-  #
-  # pixel_matrix <- pixel_matrix[, colSums(!is.na(pixel_matrix)) > 0]
-  #
-  # # Remove rows with NA values
-  # valid_rows <- complete.cases(pixel_matrix)
-  # raster_clean <- pixel_matrix[valid_rows, ]
-  #
-  # optimal_k <- estimate_optimal_clusters(raster_clean, max_k = 50)
-  # print(paste("Estimated optimal number of clusters:", optimal_k))
-  #
-  # # Perform k-means clustering
-  # set.seed(42)
-  # kmeans_result <- kmeans(raster_clean, centers = optimal_k, nstart = 50)
-  #
-  # # Create an empty vector for cluster labels
-  # clusters <- rep(NA, nrow(pixel_matrix))
-  # clusters[valid_rows] <- kmeans_result$cluster
-  #
-  # # Convert clusters to raster shape
-  # r_clusters <- rast(hyperspectral[[1]])  # Use first band as template
-  # values(r_clusters) <- clusters
-  #
-  # # Save output raster
-  #
-  # ouput_file_name <- paste0(test_site_image_name, '_KmeansOnRawData.tiff')
-  # if (masked) {
-  #   ouput_file_name <- paste0(test_site_image_name, '_KmeansOnRawDataMasked.tiff')
-  # }
-  #
-  # output_path <- file.path('data/MasterThesis/RawDataClustering',ouput_file_name)
-  # writeRaster(r_clusters, output_path, overwrite = TRUE)
-  #
-  # # Visualize result
-  #
-  # plot(
-  #   r_clusters,
-  #   main = paste("K-means Clusters (k =", optimal_k, ")"),
-  #   col = scico(optimal_k, palette = "batlow")
-  # )
-  #
-  print(paste0(test_site_image_name,' done'))
+  masked <- TRUE
+
+  if (masked) {
+    # Select appropriate bands for Red (670nm) and NIR ((800nm)
+    # General formula: (800nm - 670nm) / (800nm + 670nm + L) * (1 + L)
+    # red_band <- hyperspectral[[60]]    # Update with actual index
+    # nir_band <- hyperspectral[[86]]    # Update with actual index
+    # Calculate red band averages (used for SAVI)
+    red_average <- terra::app(hyperspectral[[56:65]], fun = mean, na.rm = TRUE)
+    # Calculate the mean of a few values of the near infrared bands (used for NDWI and SAVI)
+    NIR_average <- terra::app(hyperspectral[[86:105]], fun = mean, na.rm = TRUE)
+
+    # Compute SAVI
+    L <- 0.5
+    savi <- ((NIR_average - red_average) / (NIR_average + red_average + L)) * (1 + L)
+
+    # Mask threshold (e.g., SAVI > 0.2 indicates vegetation)
+    veg_mask <- savi > savi_threshold
+
+    masked_hyperspectral <- mask(hyperspectral, veg_mask, maskvalues = FALSE)
+
+    hyperspectral <- masked_hyperspectral
+  }
+  # Check number of bands
+  nr_bands <- nlyr(hyperspectral)
+  if (nr_bands != 425) {
+    stop("Expected 425 bands, but found a different number.")
+  }
+
+  bands <- nlyr(hyperspectral)
+  nrows <- nrow(hyperspectral)
+  ncols <- ncol(hyperspectral)
+
+  message(paste0(
+    "Loaded raster with ",
+    bands,
+    " bands, ",
+    nrows,
+    " rows, ",
+    ncols,
+    " columns."
+  ))
+
+  pixel_matrix <- as.matrix(hyperspectral)
+
+  # Rename columns for clarity
+  colnames(pixel_matrix) <- paste0("Band_", 1:425)
+
+  # Set selected bands to NA
+  pixel_matrix[, 1:15]     <- NA  # Note: R is 1-indexed, not 0
+  pixel_matrix[, 191:211]  <- NA
+  pixel_matrix[, 285:320]  <- NA
+  pixel_matrix[, 418:425]  <- NA
+
+  pixel_matrix <- pixel_matrix[, colSums(!is.na(pixel_matrix)) > 0]
+
+  # Remove rows with NA values
+  valid_rows <- complete.cases(pixel_matrix)
+  raster_clean <- pixel_matrix[valid_rows, ]
+
+  optimal_k <- estimate_optimal_clusters(raster_clean, max_k = 50)
+  print(paste("Estimated optimal number of clusters:", optimal_k))
+
+  # Perform k-means clustering
+  set.seed(42)
+  kmeans_result <- kmeans(raster_clean, centers = optimal_k, nstart = 50)
+
+  # Create an empty vector for cluster labels
+  clusters <- rep(NA, nrow(pixel_matrix))
+  clusters[valid_rows] <- kmeans_result$cluster
+
+  # Convert clusters to raster shape
+  r_clusters <- rast(hyperspectral[[1]])  # Use first band as template
+  values(r_clusters) <- clusters
+
+  # Save output raster
+
+  ouput_file_name <- paste0(test_site_image_name, '_KmeansOnRawData.tiff')
+  if (masked) {
+    ouput_file_name <- paste0(test_site_image_name, '_KmeansOnRawDataMasked.tiff')
+  }
+
+  output_path <- file.path('data/MasterThesis/RawDataClusteringMasked',ouput_file_name)
+  writeRaster(r_clusters, output_path, overwrite = TRUE)
+
+  # Visualize result
+
+  plot(
+    r_clusters,
+    main = paste("K-means Clusters (k =", optimal_k, ")"),
+    col = scico(optimal_k, palette = "batlow")
+  )
+
+  print(paste0(test_site_image_name,' masked done'))
 
   # Perform a little housekeeping
   gc()
 
 }
+

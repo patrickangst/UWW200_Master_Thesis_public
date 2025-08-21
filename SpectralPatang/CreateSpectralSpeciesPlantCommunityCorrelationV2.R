@@ -17,8 +17,8 @@ tiff_dir <- "data/MasterThesis/03_Spectral_Species/"
 png_output <- "data/MasterThesis/ss_count_plot/"
 
 excel_file <- "data/MasterThesis/11_PlotClusters/Cluster_Assignement.xlsx"
-output_excel_cluster <- "data/MasterThesis/11_PlotClusters/Cluster_Raster_Stats_Cluster.xlsx"
-output_excel_habitat <- "data/MasterThesis/11_PlotClusters/Cluster_Raster_Stats_Habitat.xlsx"
+output_excel_cluster <- "data/MasterThesis/11_PlotClusters/Cluster_Raster_Stats_Cluster_biodivMapR.xlsx"
+output_excel_habitat <- "data/MasterThesis/11_PlotClusters/Cluster_Raster_Stats_Habitat_biodivMapR.xlsx"
 
 # Read Excel file once
 cluster_info <- read_excel(excel_file)
@@ -130,7 +130,7 @@ for (tiff_path in tiff_files) {
 
     cluster_plot_file_path <- file.path(
       png_output,
-      paste0(tiff_name_clean, '_ss_count_plot_cluster.png')
+      paste0(tiff_name_clean, '_ss_count_plot_cluster_biodivmapr.png')
     )
 
     # Save plot
@@ -323,7 +323,7 @@ for (tiff_path in tiff_files) {
 
     cluster_plot_file_path <- file.path(
       png_output,
-      paste0(tiff_name_clean, '_ss_count_plot_habitat.png')
+      paste0(tiff_name_clean, '_ss_count_plot_habitat_biodivmapr.png')
     )
 
     # Save plot

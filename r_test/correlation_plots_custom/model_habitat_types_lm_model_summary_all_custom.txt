@@ -1,0 +1,20 @@
+
+Call:
+lm(formula = Unique_Habitat_Types_Short3 ~ Unique_Spectral_Species_WCSS_Custom, 
+    data = lm_model_input)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.6808 -0.5284  0.3388  0.3831  0.4766 
+
+Coefficients:
+                                     Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                          1.705440   0.253974   6.715 3.31e-05 ***
+Unique_Spectral_Species_WCSS_Custom -0.004919   0.011372  -0.433    0.674    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.5244 on 11 degrees of freedom
+Multiple R-squared:  0.01672,	Adjusted R-squared:  -0.07266 
+F-statistic: 0.1871 on 1 and 11 DF,  p-value: 0.6737
+

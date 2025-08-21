@@ -1,0 +1,20 @@
+
+Call:
+lm(formula = Unique_Plant_Species ~ Unique_Spectral_Species_WCSS_Custom, 
+    data = lm_model_input)
+
+Residuals:
+      1       2       3 
+ 2.8171 -3.2679  0.4507 
+
+Coefficients:
+                                    Estimate Std. Error t value Pr(>|t|)  
+(Intercept)                          84.7841     4.3145  19.651   0.0324 *
+Unique_Spectral_Species_WCSS_Custom  -1.2287     0.1952  -6.296   0.1003  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 4.338 on 1 degrees of freedom
+Multiple R-squared:  0.9754,	Adjusted R-squared:  0.9508 
+F-statistic: 39.63 on 1 and 1 DF,  p-value: 0.1003
+

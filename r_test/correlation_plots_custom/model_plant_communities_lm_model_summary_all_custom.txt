@@ -1,0 +1,20 @@
+
+Call:
+lm(formula = Unique_Plant_Cummunities ~ Unique_Spectral_Species_WCSS_Custom, 
+    data = lm_model_input)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-3.763 -2.465 -1.838  2.998  4.639 
+
+Coefficients:
+                                    Estimate Std. Error t value Pr(>|t|)   
+(Intercept)                          4.16681    1.59925   2.605  0.02445 * 
+Unique_Spectral_Species_WCSS_Custom  0.23879    0.07161   3.335  0.00666 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 3.302 on 11 degrees of freedom
+Multiple R-squared:  0.5027,	Adjusted R-squared:  0.4575 
+F-statistic: 11.12 on 1 and 11 DF,  p-value: 0.006657
+

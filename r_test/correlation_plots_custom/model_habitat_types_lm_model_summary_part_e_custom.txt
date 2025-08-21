@@ -1,0 +1,18 @@
+
+Call:
+lm(formula = Unique_Habitat_Types ~ Unique_Spectral_Species_WCSS_Custom, 
+    data = lm_model_input)
+
+Residuals:
+      1       2       3 
+ 1.1977 -1.3893  0.1916 
+
+Coefficients:
+                                    Estimate Std. Error t value Pr(>|t|)
+(Intercept)                          5.52497    1.83433   3.012    0.204
+Unique_Spectral_Species_WCSS_Custom -0.10324    0.08298  -1.244    0.431
+
+Residual standard error: 1.844 on 1 degrees of freedom
+Multiple R-squared:  0.6075,	Adjusted R-squared:  0.215 
+F-statistic: 1.548 on 1 and 1 DF,  p-value: 0.431
+
