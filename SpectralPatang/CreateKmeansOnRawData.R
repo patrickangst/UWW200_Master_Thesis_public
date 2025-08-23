@@ -1,9 +1,9 @@
-# 🧼 Clean workspace
+# Clean workspace
 rm(list = ls(all = TRUE))
 gc()
 graphics.off()
 
-# 📦 Load required package
+# Load required package
 library(terra)
 library(scico)
 
