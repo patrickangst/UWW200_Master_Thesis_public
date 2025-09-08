@@ -264,7 +264,7 @@ extract_spectral_signature <- function(testsite_name,
     signature_plot_habitat,
     width = 10,
     height = 8,
-    dpi = 300
+    dpi = 150
   )
   message('Saved plot signature_plot_habitat')
 
@@ -343,7 +343,7 @@ extract_spectral_signature <- function(testsite_name,
     signature_plot_plant_community,
     width = 10,
     height = 8,
-    dpi = 300
+    dpi = 150
   )
   message('Saved plot signature_plot_plant_community')
 
@@ -457,7 +457,7 @@ extract_spectral_signature <- function(testsite_name,
     mean_signature_plot_habitat,
     width = 10,
     height = 8,
-    dpi = 300
+    dpi = 150
   )
   message('Saved plot mean_signature_plot_habitat')
 
@@ -571,7 +571,7 @@ extract_spectral_signature <- function(testsite_name,
     mean_signature_plot_plant_community,
     width = 10,
     height = 8,
-    dpi = 300
+    dpi = 150
   )
   message('Saved plot mean_signature_plot_plant_community')
 

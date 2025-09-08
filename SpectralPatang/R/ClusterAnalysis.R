@@ -227,19 +227,22 @@ get_optimal_cluster_number <- function(Image_File_Path,
   # Scale the data
   scaled_pca_matrix <- scale(pca_matrix_clean)
 
-  # Find best nstart
-  best_nstart <- nstart_values[1]
-  lowest_wss <- Inf
+  # # Find best nstart
+  # best_nstart <- nstart_values[1]
+  # lowest_wss <- Inf
+  #
+  # cat("Evaluating nstart values...\n")
+  # for (nstart in nstart_values) {
+  #   wss <- kmeans(scaled_pca_matrix, centers = Min_Cluster, nstart = nstart)$tot.withinss
+  #   if (wss < lowest_wss) {
+  #     lowest_wss <- wss
+  #     best_nstart <- nstart
+  #   }
+  # }
+  # cat("Best nstart:", best_nstart, "\n")
 
-  cat("Evaluating nstart values...\n")
-  for (nstart in nstart_values) {
-    wss <- kmeans(scaled_pca_matrix, centers = Min_Cluster, nstart = nstart)$tot.withinss
-    if (wss < lowest_wss) {
-      lowest_wss <- wss
-      best_nstart <- nstart
-    }
-  }
-  cat("Best nstart:", best_nstart, "\n")
+  # --> nstart is fix at 10 for biodivMapR
+  best_nstart <- 10
 
   # Evaluate WSS across cluster range
   potential_k_values <- Min_Cluster:Max_Cluster
@@ -266,7 +269,12 @@ get_optimal_cluster_number <- function(Image_File_Path,
   output_file_path <- file.path(output_folder_path, 'optimal_number_of_clusters.txt')
   write(optimal_clusters_elbow, file = output_file_path)
 
-  return(optimal_clusters_elbow)
+  # return(optimal_clusters_elbow)
+  return(list(
+    optimal_clusters_elbow = optimal_clusters_elbow,
+    best_nstart = best_nstart
+  ))
+
 }
 
 

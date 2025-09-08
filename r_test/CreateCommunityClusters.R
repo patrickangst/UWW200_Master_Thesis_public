@@ -98,7 +98,7 @@ create_plots <- function(file_path, clusterinfo_df) {
   
   ggsave(
     filename = paste0(output_dir_graphs, "/", file_name_no_ext, "_DENDRO.png"),
-    plot = p_dendro, width = 8, height = 6
+    plot = p_dendro, width = 8, height = 6, dpi = 300
   )
   print(p_dendro)
   
@@ -115,7 +115,7 @@ create_plots <- function(file_path, clusterinfo_df) {
   
   ggsave(
     filename = paste0(output_dir_graphs, "/", file_name_no_ext, "_DBSCAN_clusters.png"),
-    plot = p_dbscan, width = 8, height = 6
+    plot = p_dbscan, width = 8, height = 6, dpi = 300
   )
   print(p_dbscan)
   
@@ -136,7 +136,7 @@ create_plots <- function(file_path, clusterinfo_df) {
   
   ggsave(
     filename = paste0(output_dir_graphs, "/", file_name_no_ext, "_HDBSCAN_clusters.png"),
-    plot = p_hdbscan, width = 8, height = 6
+    plot = p_hdbscan, width = 8, height = 6, dpi = 300
   )
   print(p_hdbscan)
   

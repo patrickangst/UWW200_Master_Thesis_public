@@ -82,8 +82,6 @@ for (tiff_path in tiff_files) {
       points_sf <- st_transform(points_sf, crs = st_crs(r))
     }
 
-
-
     # Extract raster values
     # Use method = "bilinear" explicitly if that's your intention as per description
     extracted_values <- terra::extract(r, vect(points_sf))
@@ -109,6 +107,8 @@ for (tiff_path in tiff_files) {
     # Only proceed if valid contingency table (more than one row AND column)
     contingency_table <- table(matching_entries$Cluster, matching_entries$Spectral_Species)
     # mosaicplot(contingency_table, shade = TRUE, main = "Cluster vs Raster Value")
+
+    print(contingency_table)
 
     # Number of unique Spectral_Species levels
     num_vals <- length(unique(matching_entries$Spectral_Species))
@@ -202,6 +202,8 @@ for (tiff_path in tiff_files) {
       })
       fisher_p_value <- fisher_result$p.value
       fisher_sig <- get_significance(fisher_p_value, is_fisher_simulated)
+
+      cat(paste0(tiff_name_clean, ' Fisher p-value: ', fisher_p_value))
 
       # G-test
       gtest_result <- GTest(contingency_table)

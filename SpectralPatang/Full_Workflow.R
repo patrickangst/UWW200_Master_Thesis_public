@@ -395,7 +395,7 @@ part_four <- function(test_site_folder_path) {
 
   # get the optimal cluster number
   cat(paste0('Start getting optimal cluster number: ', test_site_name, '\n'))
-  optimal_cluster_number <- get_optimal_cluster_number(
+  cluster_analysis_result <- get_optimal_cluster_number(
     pc_selection_geotiff_file_path,
     Downsample = FALSE,
     Downsample_factor = 2,
@@ -403,6 +403,9 @@ part_four <- function(test_site_folder_path) {
     Min_Cluster = 2,
     Max_Cluster = 50
   )
+
+  optimal_cluster_number <- cluster_analysis_result$optimal_cluster_number
+
   cat(
     paste0(
       'Getting optimal cluster number finished. Optimal number: ',
