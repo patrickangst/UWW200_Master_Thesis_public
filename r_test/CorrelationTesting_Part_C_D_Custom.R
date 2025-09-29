@@ -156,6 +156,8 @@ for (i in 1:nrow(cor_metrics)) {
   ggsave(file_path, base_plot, width = 8, height = 5)
   message(paste("Saved plot:", file_name))
   
+  print(base_plot)
+  
 }
 
 

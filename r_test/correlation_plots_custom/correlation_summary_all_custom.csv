@@ -1,4 +1,4 @@
 "Metric","Variable","R","P_value","Abs_R","Interpretation"
-"Plant Communities","Unique_Plant_Cummunities",0.157,0.609,0.157,"Weak positive"
-"Habitat Types","Unique_Habitat_Types",-0.183,0.549,0.183,"Weak negative"
-"Plant Species","Unique_Plant_Species",-0.029,0.925,0.029,"Negligible correlation"
+"Plant Communities","Unique_Plant_Cummunities",0.087,0.778,0.087,"Negligible correlation"
+"Habitat Types","Unique_Habitat_Types",0.294,0.329,0.294,"Weak positive"
+"Plant Species","Unique_Plant_Species",0.023,0.939,0.023,"Negligible correlation"
